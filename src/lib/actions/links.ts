@@ -1,4 +1,4 @@
-// import 'server-only';
+'use server';
 
 import type { NewLinkInput, EditLinkInput, TagConnection } from '@/types/index';
 import prisma from '@/lib/prisma/connect';
@@ -6,7 +6,6 @@ import prisma from '@/lib/prisma/connect';
 export const getAllLinks = async () => {
   return await prisma.link.findMany({});
 };
-
 
 export const getLinksBySearch = async (searchQuery: string) => {
   const searchTerms = searchQuery.toLowerCase().split(' ');
@@ -48,6 +47,8 @@ export const getLinksBySearch = async (searchQuery: string) => {
 };
 
 export const addLink = async (linkData: NewLinkInput) => {
+  console.log('this must be server');
+  
   const { title, url, tags } = linkData;
 
   // creating tags

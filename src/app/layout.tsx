@@ -1,10 +1,10 @@
 import { Open_Sans, Lato, Roboto } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
-
 import type { Metadata } from 'next';
-
 import './globals.css';
+
+import ModalContaner from '@/components/modal-container';
 
 export const metadata: Metadata = {
   title: 'Template Site'
@@ -48,6 +48,7 @@ export default function RootLayout({ children }: Props) {
     <html lang="en">
       <body className={`${rootLayoutClasses.join(' ')} antialiased`}>
         {children}
+        <ModalContaner />
       </body>
     </html>
   );
