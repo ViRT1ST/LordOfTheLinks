@@ -15,24 +15,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { cn } from '@/lib/chadcn/utils';
-
-import { NewLinkInput } from '@/types';
-import { addLink } from '@/lib/actions';
+import { createLink } from '@/server-actions';
 
 const FormSchema = z.object({
   url: z.string().min(2, {
-    message: 'Search must be at least 2 characters.',
+    message: 'URL must be at least 2 characters',
   }),
   title: z.string().min(2, {
-    message: 'Search must be at least 2 characters.',
+    message: 'Title must be at least 2 characters',
   }),
-  tags: z.string().min(2, {
-    message: 'Search must be at least 2 characters.',
-  }),
+  tags: z.string().optional(),
 });
 
-export default function LinkFormNew({ submitData }: { submitData: (linkData: any) => void }) {
-
+export default function LinkCreateForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -42,30 +37,20 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-
-    console.log(data);
-    
-    // 'use server';
-    await addLink({
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    await createLink({
       title: data.title,
       url: data.url,
-      tags: data.tags.split(','),
+      tags: data.tags
+        ? data.tags.split(' ')
+        : [],
     });
-    
+  };
 
-  }
-
-
-  //onSubmit={form.handleSubmit(onSubmit)}
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off" className={cn(
-        'bg-stone-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 w-[600px]',
-        'flex flex-col gap-y-4'
-      )}>
-
-        <h1 className="text-2xl mb-6 font-semibold">Add New Link</h1>
+      <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off" className={twForm}>
+        <h1 className={twTitle}>Add New Link</h1>
 
         <FormField
           control={form.control}
@@ -75,10 +60,8 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
               <FormLabel>URL</FormLabel>
               <FormControl>
                 <Input
-                  className={cn(
-                    'border-[#b2b2b2] border',
-                  )}
-                  placeholder="URL" 
+                  className={twInput}
+                  placeholder="https://example.com" 
                   {...field}
                 />
               </FormControl>
@@ -95,9 +78,7 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
               <FormLabel>Title</FormLabel>
               <FormControl>
                 <Input
-                  className={cn(
-                    'border-[#b2b2b2] border',
-                  )}
+                  className={twInput}
                   placeholder="Title" 
                   {...field}
                 />
@@ -115,10 +96,8 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
               <FormLabel>Tags</FormLabel>
               <FormControl>
                 <Input
-                  className={cn(
-                    'border-[#b2b2b2] border',
-                  )}
-                  placeholder="Tags (comma separated)" 
+                  className={twInput}
+                  placeholder="Tags (space separated)" 
                   {...field}
                 />
               </FormControl>
@@ -127,15 +106,11 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
           )}
         />
 
-        <div className="flex flex-row gap-x-4 w-full mt-20" >
-          <Button type="submit" className={cn(
-            'w-full'
-          )}>
+        <div className={twButtonsArea}>
+          <Button variant="outline" className={twCancelButton}>
             Cancel
           </Button>
-          <Button type="submit" className={cn(
-            'w-full'
-          )}>
+          <Button type="submit" className={twSubmitButton}>
             Create
           </Button>
         </div>
@@ -143,3 +118,28 @@ export default function LinkFormNew({ submitData }: { submitData: (linkData: any
     </Form>
   );
 }
+
+const twForm = cn(
+  'w-[600px] -mt-10 px-8 py-8 flex flex-col gap-y-4',
+  'bg-stone-200 shadow-md rounded'
+);
+
+const twTitle = cn(
+  'mb-6 text-2xl font-semibold'
+);
+
+const twInput = cn(
+  'border border-[#b2b2b2]'
+);
+
+const twButtonsArea = cn(
+  'w-full mt-24 flex flex-row gap-x-4'
+);
+
+const twCancelButton = cn(
+  'w-full text-md border border-black/50'
+);
+
+const twSubmitButton = cn(
+  'w-full text-md'
+);

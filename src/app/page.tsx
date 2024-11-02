@@ -1,12 +1,9 @@
 import { Suspense } from 'react';
 
-import SearchForm from '@/components/search-form';
-import LinkList from '@/components/link-list';
-import PageWrapper from '@/components/page-wrapper';
-import Modal from '@/components/modal-component';
-
-
-import { addLink } from '@/lib/prisma/queries';
+import PageWrapper from '@/components/common/page-wrapper';
+import MainContent from '@/components/common/main-content';
+import SearchForm from '@/components/forms/search-form';
+import LinkList from '@/components/lists/link-list';
 
 type HomePageProps = {
   searchParams: {
@@ -19,14 +16,15 @@ export default function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <PageWrapper >
+      <MainContent>
 
-      <div className="mx-auto w-[1280px] pt-20 flex flex-col justify-center">
         <SearchForm />
-
+        
         <Suspense fallback={<p>Loading...</p>}>
           <LinkList searchQuery={searchQuery} />
         </Suspense>
-      </div>
+
+      </MainContent>
     </PageWrapper>
   );
 }

@@ -1,12 +1,25 @@
-// import 'server-only';
+import 'server-only';
 
-import type { NewLinkInput, EditLinkInput, TagConnection } from '@/types/index';
+import type { Tag as TagRecord } from '@prisma/client';
+
+import type { NewLinkData, UpdateLinkData, TagId } from '@/types/index';
 import prisma from '@/lib/prisma/connect';
 
+/* =============================================================
+Get all links
+============================================================= */
+
 export const getAllLinks = async () => {
-  return await prisma.link.findMany({});
+  return await prisma.link.findMany({
+    include: {
+      tags: true,
+    },
+  });
 };
 
+/* =============================================================
+Get links that match all words in search query
+============================================================= */
 
 export const getLinksBySearch = async (searchQuery: string) => {
   const searchTerms = searchQuery.toLowerCase().split(' ');
@@ -15,15 +28,6 @@ export const getLinksBySearch = async (searchQuery: string) => {
   const searchConditions = searchTerms.map(term => ({
     OR: [
       {
-        tags: {
-          some: {
-            value: {
-              contains: term,
-            },
-          },
-        },
-      },
-      {
         title: {
           contains: term,
         },
@@ -31,6 +35,15 @@ export const getLinksBySearch = async (searchQuery: string) => {
       {
         url: {
           contains: term,
+        },
+      },
+      {
+        tags: {
+          some: {
+            value: {
+              contains: term,
+            },
+          },
         },
       },
     ],
@@ -47,20 +60,48 @@ export const getLinksBySearch = async (searchQuery: string) => {
   });
 };
 
-export const addLink = async (linkData: NewLinkInput) => {
-  const { title, url, tags } = linkData;
+/* =============================================================
+Create or update tag and return it record
+============================================================= */
 
-  // creating tags
-  const tagConnections: TagConnection[] = await Promise.all(
-    tags.map(async (tagName) => {
-      const tag = await prisma.tag.upsert({
-        where: { value: tagName },
-        update: {},
-        create: { value: tagName },
-      });
-      return { id: tag.id };
+const upsertTag = async (value: string): Promise<TagRecord> => {
+  return await prisma.tag.upsert({
+    where: {
+      value
+    },
+    create: {
+      value
+    },
+    update: {},
+  });
+};
+
+/* =============================================================
+Create or update tags and return it records
+============================================================= */
+
+const upsertTags = async (tags: string[]): Promise<TagRecord[]>  => {
+  return await Promise.all(
+    tags.map(async (tag) => {
+      return upsertTag(tag);
     })
   );
+};
+
+/* =============================================================
+Create new link
+============================================================= */
+
+export const createLink = async (data: NewLinkData) => {
+  const { title, url, tags } = data;
+
+  let tagIds: TagId[] = [];
+
+  // creating or updating tags and getting their ids
+  if (tags && tags.length > 0) {
+    const tagRecords = await upsertTags(tags);
+    tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
+  }
 
   // creating new link and connecting it with tags
   const newLink = await prisma.link.create({
@@ -68,7 +109,7 @@ export const addLink = async (linkData: NewLinkInput) => {
       title,
       url,
       tags: {
-        connect: tagConnections,
+        connect: tagIds,
       },
     },
     include: {
@@ -79,23 +120,19 @@ export const addLink = async (linkData: NewLinkInput) => {
   return newLink;
 };
 
+/* =============================================================
+Update link
+============================================================= */
 
-export const editLink = async (linkData: EditLinkInput) => {
-  const { id, title, url, tags } = linkData;
+export const updateLink = async (data: UpdateLinkData) => {
+  const { id, title, url, tags } = data;
 
-  // if tags are provided, handle them
-  let tagConnections: TagConnection[] = [];
+  let tagIds: TagId[] = [];
+
+  // creating or updating tags and getting their ids
   if (tags && tags.length > 0) {
-    tagConnections = await Promise.all(
-      tags.map(async (tagValue) => {
-        const tag = await prisma.tag.upsert({
-          where: { value: tagValue },
-          update: {},
-          create: { value: tagValue },
-        });
-        return { id: tag.id };
-      })
-    );
+    const tagRecords = await upsertTags(tags);
+    tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
   }
 
   // updating link
@@ -106,7 +143,7 @@ export const editLink = async (linkData: EditLinkInput) => {
       url,
       tags: {
         // replacing tags connections
-        set: tagConnections, 
+        set: tagIds, 
       },
     },
     include: {

@@ -2,7 +2,6 @@
 
 # my project
 .env
-/prisma/dev.db
 
 # dependencies
 /node_modules

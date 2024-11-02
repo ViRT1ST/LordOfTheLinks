@@ -8,20 +8,19 @@ type ModalProps = {
   children: React.ReactNode;
 };
 
-export default function Modal({ show, children }: ModalProps) {
+export default function ModalWindow({ show, children }: ModalProps) {
   const [ isOpen, setIsOpen ] = useState(false);
 
   useEffect(() => {
     setIsOpen(show);
   }, [show]);
   
-  
   if (!isOpen) {
     return null;
   }
 
   const modal = (
-    <div className="bg-black/50 w-full h-svh flex flex-col justify-center items-center" >
+    <div className="w-full h-svh flex flex-col justify-center items-center bg-black/50" >
       {children}
     </div>
   );
