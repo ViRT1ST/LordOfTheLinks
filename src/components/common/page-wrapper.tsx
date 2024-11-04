@@ -1,5 +1,5 @@
 import Header from '@/components/common/header';
-import { cn } from '@/lib/chadcn/utils';
+import { cn } from '@/utils/classes';
 
 type PageWrapperProps = {
   children: React.ReactNode;

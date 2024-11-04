@@ -65,12 +65,14 @@ Create or update tag and return it record
 ============================================================= */
 
 const upsertTag = async (value: string): Promise<TagRecord> => {
+  const lowerValue = value.toLowerCase();
+
   return await prisma.tag.upsert({
     where: {
-      value
+      value: lowerValue
     },
     create: {
-      value
+      value: lowerValue
     },
     update: {},
   });
@@ -152,4 +154,21 @@ export const updateLink = async (data: UpdateLinkData) => {
   });
 
   return updatedLink;
+};
+
+/* =============================================================
+Delete link
+============================================================= */
+
+export const deleteLink = async (id: number) => {
+  try {
+    const deletedLink = await prisma.link.delete({
+      where: { id },
+    });
+
+    return deletedLink;
+    
+  } catch (error) {
+    console.error(`Failed to delete link with id ${id}:`, error);
+  }
 };

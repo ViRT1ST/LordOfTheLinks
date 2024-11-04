@@ -17,7 +17,6 @@ export default function HomePage({ searchParams }: HomePageProps) {
   return (
     <PageWrapper >
       <MainContent>
-
         <SearchForm />
         
         <Suspense fallback={<p>Loading...</p>}>

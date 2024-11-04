@@ -1,5 +1,3 @@
-import { twMerge } from 'tailwind-merge';
-
 type MainContentProps = {
   children: React.ReactNode;
 };

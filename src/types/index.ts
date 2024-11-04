@@ -2,6 +2,8 @@
 DB schema types
 ============================================================= */
 
+import { z } from 'zod';
+
 export type DbLink = {
   id: number;
   title: string;
@@ -17,7 +19,7 @@ export type DbTag = {
   updatedAt: Date;
 }
 
-export type dbLinkWithTags = DbLink & {
+export type DbLinkWithTags = DbLink & {
   tags: DbTag[]
 }
 
@@ -41,4 +43,10 @@ export type UpdateLinkData = {
 export type TagId = {
   id: number;
 }
+
+export const LinkFormSchema = z.object({
+  url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
+  title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
+  tags: z.string().optional(),
+});
 

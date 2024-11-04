@@ -2,36 +2,36 @@
 
 import { useState } from 'react';
 
-import LinkCreateForm from '../forms/link-create-form';
+import { cn } from '@/utils/classes';
 import ModalWindow from '@/components/common/modal-window';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/chadcn/utils';
+import CreateLinkForm from '@/components/forms/create-link-form';
 
 export default function Header() {
-  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ isNewLinkModalOpen, setIsNewLinkModalOpen ] = useState(false);
 
   return (
-    <div className={headerContainer} >
+    <div className={headerContainer}>
 
       <div className={twContainerLeft}>
-        <Button className={twButton}>
+        <button className={twButton}>
           Show All Links
-        </Button>
-        <Button className={twButton}>
+        </button>
+        <button className={twButton}>
           Show All Tags
-        </Button>
+        </button>
       </div>
 
       <div className={twContainerRight}>
-        <Button className={twButton} onClick={() => setIsModalOpen(true)}>
+        <button className={twButton} onClick={() => setIsNewLinkModalOpen(true)}>
           Add New Link
-        </Button>
+        </button>
       </div>
 
-      <ModalWindow show={isModalOpen}>
-        <LinkCreateForm />
-      </ModalWindow>
-      
+      <ModalWindow
+        isOpen={isNewLinkModalOpen}
+        setIsOpen={setIsNewLinkModalOpen}
+        content={<CreateLinkForm />}
+      />
     </div>
   );
 }
@@ -50,5 +50,7 @@ const twContainerRight = cn(
 );
 
 const twButton = cn(
-  'h-7 bg-transparent border border-black/10 text-black/60'
+  'h-7 py-2 px-4 inline-flex justify-center items-center gap-2',
+  'bg-transparent border border-black/10 text-black/60 rounded-md',
+  'text-sm font-medium whitespace-nowrap'
 );
