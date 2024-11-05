@@ -1,19 +1,26 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { cn } from '@/utils/classes';
+import { cnJoin } from '@/utils/classes';
 import ModalWindow from '@/components/common/modal-window';
 import CreateLinkForm from '@/components/forms/create-link-form';
 
 export default function Header() {
+  const router = useRouter();
+
   const [ isNewLinkModalOpen, setIsNewLinkModalOpen ] = useState(false);
+
+  const handleShowAllLinks = () => {
+    router.push('/?show=all');
+  };
 
   return (
     <div className={headerContainer}>
 
       <div className={twContainerLeft}>
-        <button className={twButton}>
+        <button className={twButton} onClick={handleShowAllLinks}>
           Show All Links
         </button>
         <button className={twButton}>
@@ -36,20 +43,20 @@ export default function Header() {
   );
 }
 
-const headerContainer = cn(
+const headerContainer = cnJoin(
   'h-12 w-full px-5 flex justify-between',
   'bg-black/10'
 );
 
-const twContainerLeft = cn(
+const twContainerLeft = cnJoin(
   'h-full flex items-center gap-x-4'
 );
 
-const twContainerRight = cn(
+const twContainerRight = cnJoin(
   'h-full flex items-center'
 );
 
-const twButton = cn(
+const twButton = cnJoin(
   'h-7 py-2 px-4 inline-flex justify-center items-center gap-2',
   'bg-transparent border border-black/10 text-black/60 rounded-md',
   'text-sm font-medium whitespace-nowrap'

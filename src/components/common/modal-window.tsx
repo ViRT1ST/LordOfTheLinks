@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
-import { cn } from '@/utils/classes';
+import { cnJoin } from '@/utils/classes';
 
 type ModalWindowProps = {
   isOpen: boolean;
@@ -65,25 +65,29 @@ export default function ModalWindow({ content, isOpen, setIsOpen }: ModalWindowP
 
   return (
     ReactDOM.createPortal(
-      <div id="modal-overlay" className={twModalOverlay}>
-        <div className="relative">
+      (<div id="modal-overlay" className={twModalOverlay}>
+        <div className={twContentAndCloseButton}>
           <X className={twCloseButton} onClick={(e) => {
             e.stopPropagation();
             setIsOpen(false);
           }} />
           {content}
         </div>
-      </div>,
+      </div>),
       document.querySelector('#modal-container') as HTMLElement
     )
   );
 }
 
-const twModalOverlay = cn(
-  'z-50 w-full h-svh flex flex-col justify-center items-center bg-black/80'
+const twModalOverlay = cnJoin(
+  'z-50 w-screen h-screen fixed flex flex-col justify-center items-center bg-black/80'
 );
 
-const twCloseButton = cn(
+const twContentAndCloseButton = cnJoin(
+  'relative'
+);
+
+const twCloseButton = cnJoin(
   'absolute top-4 right-4 h-6 w-6',
   'text-neutral-600 border-2 border-transparent rounded-sm',
   'ring-offset-1 ring-offset-transparent',

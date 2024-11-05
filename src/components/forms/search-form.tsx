@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
-import { cn } from '@/utils/classes';
+import { cnJoin } from '@/utils/classes';
 
 export default function SearchForm() {
   const router = useRouter();
@@ -12,6 +11,8 @@ export default function SearchForm() {
 
     const formData = new FormData(e.currentTarget);
     const searchQuery = formData.get('searchQuery') as string;
+    e.currentTarget.reset();
+    
     router.push(`/?search=${searchQuery.trim()}`);
   };
 
@@ -30,19 +31,19 @@ export default function SearchForm() {
   );
 }
 
-const twForm = cn(
+const twForm = cnJoin(
   'w-[800px]',
   'flex flex-row gap-x-3 justify-center items-center self-center',
 );
 
-const twInput = cn(
+const twInput = cnJoin(
   'w-[600px] h-10 py-2 px-3',
   'text-sm bg-white placeholder:text-neutral-500',
   'rounded-md border-2 border-[#b2b2b2]',
   'outline-none'
 );
 
-const twSubmitButton = cn(
+const twSubmitButton = cnJoin(
   'h-10 px-4 py-2',
   'inline-flex items-center justify-center',
   'bg-black/10 rounded-md border-2 border-[#b2b2b2]',

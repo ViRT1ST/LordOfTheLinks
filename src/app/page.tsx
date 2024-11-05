@@ -7,12 +7,14 @@ import LinkList from '@/components/lists/link-list';
 
 type HomePageProps = {
   searchParams: {
-    search: string | undefined
+    search?: string | undefined
+    show?: string | undefined
   }
 };
 
 export default function HomePage({ searchParams }: HomePageProps) {  
   const searchQuery = searchParams.search || '';
+  const show = searchParams.show || '';
 
   return (
     <PageWrapper >
@@ -20,7 +22,7 @@ export default function HomePage({ searchParams }: HomePageProps) {
         <SearchForm />
         
         <Suspense fallback={<p>Loading...</p>}>
-          <LinkList searchQuery={searchQuery} />
+          <LinkList searchQuery={searchQuery} show={show} />
         </Suspense>
 
       </MainContent>

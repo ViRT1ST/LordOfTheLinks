@@ -37,7 +37,9 @@ const rootLayoutClasses = [
   roboto.variable,
   GeistSans.variable, 
   GeistMono.variable,
-];
+  'overflow-y-scroll',
+  'antialiased'
+].join(' ');
 
 type Props = Readonly<{
   children: React.ReactNode;
@@ -46,7 +48,7 @@ type Props = Readonly<{
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={`${rootLayoutClasses.join(' ')} antialiased`}>
+      <body className={rootLayoutClasses}>
         {children}
         <ModalContaner />
       </body>

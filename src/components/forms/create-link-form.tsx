@@ -1,14 +1,24 @@
 'use client';
 
 import { useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
-import { createLink } from '@/server-actions';
+import { createLink, fetchTitleByUrl } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
-import { cn } from '@/utils/classes';
+import { cnJoin } from '@/utils/classes';
 
 export default function CreateLinkForm() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+  const [ titleInputText, setTitleInputText ] = useState('');
+  const [ isLoadingTitle, setIsLoadingTitle ] = useState(false);
+
+  const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsLoadingTitle(true);
+    const fetchedTitle = await fetchTitleByUrl(e.target.value);
+    fetchedTitle && setTitleInputText(fetchedTitle);    
+    setIsLoadingTitle(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,6 +56,7 @@ export default function CreateLinkForm() {
           name="url"
           type="text"
           placeholder="https://example.com"
+          onChange={handleUrlInputChange}
         />
       </div>
 
@@ -56,6 +67,8 @@ export default function CreateLinkForm() {
           name="title"
           type="text"
           placeholder="Page title"
+          value={titleInputText}
+          onChange={(e) => setTitleInputText(e.target.value)}
         />
       </div>
 
@@ -69,13 +82,19 @@ export default function CreateLinkForm() {
         />
       </div>
 
-      <div className={twButtonsAndErrorsArea}>
+      <div className={twButtonsAndMsgArea}>
         <div>
           {errorMessages && errorMessages.map((message) => (
             <span key={message} className={twInputErrorMessage}>
               {message}
             </span>
           ))}
+          {isLoadingTitle && (
+            <div className={twFetchingTitleContainer}>
+              <LoaderCircle className="animate-spin" />
+              <span>Fetching title</span>
+            </div>
+          )}
         </div>
         <button type="submit" className={twSubmitButton}>
           Create
@@ -85,44 +104,49 @@ export default function CreateLinkForm() {
   );
 }
 
-const twForm = cn(
+const twForm = cnJoin(
   'z-50 w-[800px] p-6 flex flex-col gap-y-2',
   'bg-white rounded-lg'
 );
 
-const twTitle = cn(
+const twTitle = cnJoin(
   'text-lg font-semibold leading-none tracking-tight'
 );
 
-const twDescription = cn(
+const twDescription = cnJoin(
   'text-sm text-neutral-500 mb-6'
 );
 
-const twInputSection = cn(
+const twInputSection = cnJoin(
   'w-full mb-3 flex flex-row items-center'
 );
 
-const twLabel = cn(
+const twLabel = cnJoin(
   'pt-[1px] w-12',
   'text-sm font-medium leading-none'
 );
 
-const twInput = cn(
+const twInput = cnJoin(
   'w-full h-10 px-3 py-2 flex',
   'bg-white outline-none rounded ring-1 ring-neutral-200 ',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
 );
 
-const twInputErrorMessage = cn(
-  'block text-red-500 text-sm font-semibold'
-);
-
-const twButtonsAndErrorsArea = cn(
+const twButtonsAndMsgArea = cnJoin(
   'mt-4 flex flex-row justify-between',
 );
 
-const twSubmitButton = cn(
+const twInputErrorMessage = cnJoin(
+  'block text-red-500 text-sm font-semibold'
+);
+
+const twFetchingTitleContainer = cnJoin(
+  'flex flex-row items-center gap-x-2',
+  'text-teal-500 text-sm font-semibold'
+);
+
+const twSubmitButton = cnJoin(
   'h-10 px-4 py-2 inline-flex items-center justify-center gap-2',
   'bg-neutral-900 rounded-md',
   'text-neutral-50 font-medium text-md'

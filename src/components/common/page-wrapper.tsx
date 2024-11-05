@@ -1,5 +1,5 @@
 import Header from '@/components/common/header';
-import { cn } from '@/utils/classes';
+import { cnJoin } from '@/utils/classes';
 
 type PageWrapperProps = {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default function PageWrapper({ children }: PageWrapperProps) {
   );
 }
 
-const twPageWrapper = cn(
+const twPageWrapper = cnJoin(
   'z-50 flex flex-col w-full h-full min-h-screen',
   'font-geistsans bg-stone-200'
 );
