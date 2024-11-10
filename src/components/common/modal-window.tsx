@@ -12,17 +12,20 @@ type ModalWindowProps = {
   content: React.ReactNode;
 };
 
+const isOverlayClickDoClose = false;
+const isScrollLockedWhenOpen = true;
+
 export default function ModalWindow({ content, isOpen, setIsOpen }: ModalWindowProps) {
   useEffect(() => {
+    const closeOnBubblingSubmit = (e: SubmitEvent) => {
+      e.stopPropagation();
+      setIsOpen(false);
+    };
+
     const closeOnEscKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
       }
-    };
-
-    const closeOnBubblingSubmit = (e: SubmitEvent) => {
-      e.stopPropagation();
-      setIsOpen(false);
     };
 
     const closeOnOverlayClick = (e: MouseEvent) => {
@@ -34,20 +37,32 @@ export default function ModalWindow({ content, isOpen, setIsOpen }: ModalWindowP
     };
 
     function onShowModal() {
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-      document.body.addEventListener('keydown', closeOnEscKey);
-      document.body.addEventListener('click', closeOnOverlayClick);
       document.body.addEventListener('submit', closeOnBubblingSubmit);
+      document.body.addEventListener('keydown', closeOnEscKey);
+
+      if (isOverlayClickDoClose) {
+        document.body.addEventListener('click', closeOnOverlayClick);
+      }
+
+      if (isScrollLockedWhenOpen) {
+        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
     }
 
     function onCloseModal() {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-      document.body.removeEventListener('keydown', closeOnEscKey);
-      document.body.removeEventListener('click', closeOnOverlayClick);
       document.body.removeEventListener('submit', closeOnBubblingSubmit);
+      document.body.removeEventListener('keydown', closeOnEscKey);
+
+      if (isOverlayClickDoClose) {
+        document.body.removeEventListener('click', closeOnOverlayClick);
+      }
+
+      if (isScrollLockedWhenOpen) {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      }
     }
 
     if (isOpen) {

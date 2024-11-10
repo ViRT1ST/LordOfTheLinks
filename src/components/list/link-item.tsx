@@ -1,7 +1,7 @@
 'use client';
 
 import { Ellipsis } from 'lucide-react';
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import { type DbLinkWithTags } from '@/types/index';
@@ -9,6 +9,7 @@ import { cnJoin } from '@/utils/classes';
 import ModalWindow from '@/components/common/modal-window';
 import EditLinkForm from '@/components/forms/edit-link-form';
 import DeleteLinkForm from '@/components/forms/delete-link-form';
+import { getDomainFromUrl } from '@/utils/url';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
@@ -53,11 +54,14 @@ export default function LinkItem({ link }: LinkItemProps) {
     toggleMenuButton();
   };
 
+  //2024-12-01 &nbsp;&middot;&nbsp; 
   return (
     <div className={twLinkItemContainer}>
       <Link href={link.url} target="_blank" className={twLinkItemLeftPart}>
         <h2 className={twLinkTitle}>{link.title}</h2>
-        <p className={twLinkUrl}>{link.url}</p>
+        <p className={twLinkUrl}>
+          {getDomainFromUrl(link.url)}
+        </p>
       </Link>
 
       <div ref={linkMenuAreaRef} className={twLinkItemRightPart}>
@@ -93,8 +97,9 @@ export default function LinkItem({ link }: LinkItemProps) {
 }
 
 const twLinkItemContainer = cnJoin(
-  'mb-4 flex flex-row',
-  'bg-white/50 border rounded-sm border-black/20'
+  'mb-[4px] flex flex-row',
+  'bg-white/50 border rounded-sm border-black/20',
+  'font-geistsans'
 );
 
 const twLinkItemLeftPart= cnJoin(

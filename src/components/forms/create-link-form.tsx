@@ -14,8 +14,14 @@ export default function CreateLinkForm() {
   const [ isLoadingTitle, setIsLoadingTitle ] = useState(false);
 
   const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+
+    if (!url.startsWith('http')) {
+      return '';
+    }
+
     setIsLoadingTitle(true);
-    const fetchedTitle = await fetchTitleByUrl(e.target.value);
+    const fetchedTitle = await fetchTitleByUrl(url);
     fetchedTitle && setTitleInputText(fetchedTitle);    
     setIsLoadingTitle(false);
   };
@@ -37,9 +43,7 @@ export default function CreateLinkForm() {
       await createLink({
         url: result.data.url,
         title: result.data.title,
-        tags: result.data?.tags
-          ? result.data?.tags.split(' ')
-          : [],
+        tags: result.data.tags
       });
     }
   };
@@ -78,7 +82,7 @@ export default function CreateLinkForm() {
           className={twInput}
           name="tags"
           type="text"
-          placeholder="Space separated tags"
+          placeholder="Comma separated tags"
         />
       </div>
 
@@ -149,5 +153,5 @@ const twFetchingTitleContainer = cnJoin(
 const twSubmitButton = cnJoin(
   'h-10 px-4 py-2 inline-flex items-center justify-center gap-2',
   'bg-neutral-900 rounded-md',
-  'text-neutral-50 font-medium text-md'
+  'text-neutral-50 font-medium text-base'
 );

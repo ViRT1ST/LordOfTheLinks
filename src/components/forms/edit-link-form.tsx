@@ -32,9 +32,7 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
         id: link.id,
         url: result.data.url,
         title: result.data.title,
-        tags: result.data?.tags
-          ? result.data?.tags.split(' ')
-          : [],
+        tags: result.data.tags
       });
     }
   };
@@ -72,8 +70,8 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
           className={twInput}
           name="tags"
           type="text"
-          placeholder="Space separated tags"
-          defaultValue={link.tags?.map((tag) => tag.value).join(' ') || ''}
+          placeholder="Comma separated tags"
+          defaultValue={link.tags?.map((tag) => tag.value).join(', ') || ''}
         />
       </div>
 
@@ -133,5 +131,5 @@ const twButtonsAndErrorsArea = cnJoin(
 const twSubmitButton = cnJoin(
   'h-10 px-4 py-2 inline-flex items-center justify-center gap-2',
   'bg-neutral-900 rounded-md',
-  'text-neutral-50 font-medium text-md'
+  'text-neutral-50 font-medium text-base'
 );

@@ -30,14 +30,14 @@ Other
 export type NewLinkData = {
   title: string;
   url: string;
-  tags?: string[];
+  tags: string;
 };
 
 export type UpdateLinkData = {
   id: number;
   title: string;
   url: string;
-  tags?: string[];
+  tags: string;
 }
 
 export type TagId = {
@@ -47,6 +47,6 @@ export type TagId = {
 export const LinkFormSchema = z.object({
   url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
   title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
-  tags: z.string().optional(),
+  tags: z.string(),
 });
 

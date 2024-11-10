@@ -30,6 +30,10 @@ export const deleteLink = async (id: number) => {
 };
 
 export const fetchTitleByUrl = async (url: string) => {
+  if (!url.startsWith('http')) {
+    return '';
+  }
+
   try {
     const response = await fetch(url);
     const text = await response.text();

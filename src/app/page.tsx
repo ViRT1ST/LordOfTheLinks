@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import Header from '@/components/common/header';
 import MainContent from '@/components/common/main-content';
 import SearchForm from '@/components/forms/search-form';
-import LinkList from '@/components/lists/link-list';
+import LinkList from '@/components/list/link-list';
 
 type HomePageProps = {
   searchParams: {
@@ -18,8 +19,9 @@ export default function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <PageWrapper >
+      <Header />
       <MainContent>
-        <SearchForm />
+        {/* <SearchForm /> */}
         
         <Suspense fallback={<p>Loading...</p>}>
           <LinkList searchQuery={searchQuery} show={show} />

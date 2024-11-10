@@ -58,5 +58,5 @@ const twButtonsAndErrorsArea = cnJoin(
 const twSubmitButton = cnJoin(
   'h-10 px-4 py-2 inline-flex items-center justify-center gap-2',
   'bg-neutral-900 rounded-md',
-  'text-neutral-50 font-medium text-md'
+  'text-neutral-50 font-medium text-base'
 );

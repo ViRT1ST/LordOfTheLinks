@@ -3,6 +3,7 @@ import 'server-only';
 import type { Tag as TagRecord } from '@prisma/client';
 
 import type { NewLinkData, UpdateLinkData, TagId } from '@/types/index';
+import { tagStringToArray } from '@/utils/tags';
 import prisma from '@/lib/prisma/connect';
 
 /* =============================================================
@@ -64,15 +65,15 @@ export const getLinksBySearch = async (searchQuery: string) => {
 Create or update tag and return it record
 ============================================================= */
 
-const upsertTag = async (value: string): Promise<TagRecord> => {
-  const lowerValue = value.toLowerCase();
+const upsertTag = async (tag: string): Promise<TagRecord> => {
+  const value = tag.toLowerCase().trim();
 
   return await prisma.tag.upsert({
     where: {
-      value: lowerValue
+      value
     },
     create: {
-      value: lowerValue
+      value
     },
     update: {},
   });
@@ -97,11 +98,13 @@ Create new link
 export const createLink = async (data: NewLinkData) => {
   const { title, url, tags } = data;
 
+  const tagsArray: string[] = tagStringToArray(tags || '');
+
   let tagIds: TagId[] = [];
 
   // creating or updating tags and getting their ids
-  if (tags && tags.length > 0) {
-    const tagRecords = await upsertTags(tags);
+  if (tagsArray.length > 0) {
+    const tagRecords = await upsertTags(tagsArray);
     tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
   }
 
@@ -129,11 +132,13 @@ Update link
 export const updateLink = async (data: UpdateLinkData) => {
   const { id, title, url, tags } = data;
 
+  const tagsArray: string[] = tagStringToArray(tags || '');
+
   let tagIds: TagId[] = [];
 
   // creating or updating tags and getting their ids
-  if (tags && tags.length > 0) {
-    const tagRecords = await upsertTags(tags);
+  if (tagsArray.length > 0) {
+    const tagRecords = await upsertTags(tagsArray);
     tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
   }
 

@@ -7,7 +7,7 @@ import './globals.css';
 import ModalContaner from '@/components/common/modal-container';
 
 export const metadata: Metadata = {
-  title: 'Template Site'
+  title: 'Lord of the Links',
 };
 
 const open_sans = Open_Sans({
