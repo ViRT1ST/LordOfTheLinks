@@ -10,19 +10,35 @@ import prisma from '@/lib/prisma/connect';
 Get all links
 ============================================================= */
 
-export const getAllLinks = async () => {
-  return await prisma.link.findMany({
+export const getAllLinks = async (
+  page: number,
+  resultsPerPage: number
+) => {
+  const totalCount = await prisma.link.count();
+
+  const links = await prisma.link.findMany({
     include: {
       tags: true,
     },
+    take: resultsPerPage,
+    skip: (page - 1) * resultsPerPage,
   });
+
+  return {
+    links,
+    totalCount
+  };
 };
 
 /* =============================================================
 Get links that match all words in search query
 ============================================================= */
 
-export const getLinksBySearch = async (searchQuery: string) => {
+export const getLinksBySearch = async (
+  searchQuery: string,
+  page: number,
+  resultsPerPage: number
+) => {
   const searchTerms = searchQuery.toLowerCase().split(' ');
 
   // Creating condition for each search term
@@ -50,15 +66,27 @@ export const getLinksBySearch = async (searchQuery: string) => {
     ],
   }));
 
-  return await prisma.link.findMany({
+  const totalCount = await prisma.link.count({
     where: {
-      // Every word should be found in one of the fields
+      AND: searchConditions,
+    },
+  });
+
+  const links = await prisma.link.findMany({
+    where: {
       AND: searchConditions,
     },
     include: {
       tags: true,
     },
+    take: resultsPerPage,
+    skip: (page - 1) * resultsPerPage,
   });
+
+  return {
+    links,
+    totalCount
+  };
 };
 
 /* =============================================================
@@ -96,7 +124,7 @@ Create new link
 ============================================================= */
 
 export const createLink = async (data: NewLinkData) => {
-  const { title, url, tags } = data;
+  const { url, title, info, tags } = data;
 
   const tagsArray: string[] = tagStringToArray(tags || '');
 
@@ -111,8 +139,9 @@ export const createLink = async (data: NewLinkData) => {
   // creating new link and connecting it with tags
   const newLink = await prisma.link.create({
     data: {
-      title,
       url,
+      title,
+      info,
       tags: {
         connect: tagIds,
       },
@@ -130,7 +159,7 @@ Update link
 ============================================================= */
 
 export const updateLink = async (data: UpdateLinkData) => {
-  const { id, title, url, tags } = data;
+  const { id, url, title, info, tags } = data;
 
   const tagsArray: string[] = tagStringToArray(tags || '');
 
@@ -146,8 +175,9 @@ export const updateLink = async (data: UpdateLinkData) => {
   const updatedLink = await prisma.link.update({
     where: { id },
     data: {
-      title,
       url,
+      title,
+      info,
       tags: {
         // replacing tags connections
         set: tagIds, 

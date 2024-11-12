@@ -15,11 +15,13 @@
     "@prisma/client": "^5.21.1",
     "clsx": "^2.1.1",
     "geist": "^1.3.1",
+    "icojs": "^0.19.4",
     "lucide-react": "^0.454.0",
     "next": "14.2.9",
     "prisma": "^5.21.1",
     "react": "^18",
     "react-dom": "^18",
+    "sharp": "^0.33.5",
     "tailwind-merge": "^2.5.2",
     "zod": "^3.23.8"
   },

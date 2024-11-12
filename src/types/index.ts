@@ -6,8 +6,9 @@ import { z } from 'zod';
 
 export type DbLink = {
   id: number;
-  title: string;
   url: string;
+  title: string;
+  info: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,20 +24,32 @@ export type DbLinkWithTags = DbLink & {
   tags: DbTag[]
 }
 
+export type DbGetLinksQuery = {
+  links: DbLinkWithTags[],
+  totalCount: number
+}
+
 /* =============================================================
 Other
 ============================================================= */
 
-export type NewLinkData = {
+export type fetchedUrlData = {
   title: string;
+  description: string;
+};
+
+export type NewLinkData = {
   url: string;
+  title: string;
+  info: string;
   tags: string;
 };
 
 export type UpdateLinkData = {
   id: number;
-  title: string;
   url: string;
+  title: string;
+  info: string;
   tags: string;
 }
 
@@ -47,6 +60,7 @@ export type TagId = {
 export const LinkFormSchema = z.object({
   url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
   title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
+  info: z.string(),
   tags: z.string(),
 });
 

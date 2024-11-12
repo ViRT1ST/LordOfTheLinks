@@ -1,4 +1,3 @@
-import { type DbLinkWithTags } from '@/types/index';
 import { getLinksAll, getLinksBySearch } from '@/server-actions';
 import { cnJoin } from '@/utils/classes';
 import LinkItem from '@/components/list/link-item';
@@ -8,38 +7,48 @@ import ControlsTop from '@/components/list/controls-top';
 type LinkListProps = {
   searchQuery: string;
   show: string;
+  page: number;
 };
 
-export default async function LinkList({ searchQuery, show }: LinkListProps) {   
-  let links: DbLinkWithTags[] = [];
+const resultsPerPage = 9;
 
-  if (show === 'all' || searchQuery === '') {
-    links = await getLinksAll();
-  } else {
-    links = await getLinksBySearch(searchQuery);
-  }
+export default async function LinkList({ searchQuery, show, page }: LinkListProps) {   
+  const isShowAll = show === 'all' || searchQuery === '';
 
-  const tempList = links.slice(0, 9);
-  
+  const { links, totalCount } = isShowAll
+    ? await getLinksAll(page, resultsPerPage)
+    : await getLinksBySearch(searchQuery, page, resultsPerPage);
+
+  const totalPages = Math.ceil(totalCount / resultsPerPage);
+  const prevPage = page === 1 ? null : page - 1;
+  const nextPage = page === totalPages ? null : page + 1;
+
   return (
     <div className={twContainer}>
-      <ControlsTop />
+      <ControlsTop
+        totalCount={totalCount}
+      />
 
       <div className={twLinksContainer}>
-        {tempList.map((link) => (
+        {links.map((link) => (
           <LinkItem key={link.id} link={link} />
         ))}
       </div>
 
-      <ControlsBottom />
+      <ControlsBottom
+        currentPage={page}
+        lastPage={totalPages}
+        prevPage={prevPage}
+        nextPage={nextPage}
+      />
     </div>
   );
 }
 
 const twContainer = cnJoin(
-  'relative'
+  'relative grow flex flex-col',
 );
 
 const twLinksContainer = cnJoin(
-  'flex flex-col',
+  'flex flex-col grow',
 );

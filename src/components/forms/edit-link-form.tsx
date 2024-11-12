@@ -32,6 +32,7 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
         id: link.id,
         url: result.data.url,
         title: result.data.title,
+        info: result.data.info,
         tags: result.data.tags
       });
     }
@@ -61,6 +62,16 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
           type="text"
           placeholder="Page title"
           defaultValue={link.title}
+        />
+      </div>
+
+      <div className={twInputSection}>
+        <label htmlFor="info" className={twTextAreaLabel}>Info</label>
+        <textarea
+          className={twTextArea}
+          name="info"
+          placeholder="Notes or description"
+          defaultValue={link.info}
         />
       </div>
 
@@ -119,6 +130,18 @@ const twInput = cnJoin(
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
 );
+
+const twTextAreaLabel = cnJoin(
+  'pt-[11px] w-12 self-start',
+  'text-sm font-medium leading-none',
+);
+
+const twTextArea = cnJoin(
+  'w-full min-h-32 max-h-64 px-3 py-2 flex',
+  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
+  'text-sm placeholder:text-neutral-500',
+  'focus-visible:ring-2 focus-visible:ring-neutral-700'
+)
 
 const twInputErrorMessage = cnJoin(
   'block text-red-500 text-sm font-semibold'

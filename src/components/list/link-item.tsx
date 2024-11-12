@@ -57,7 +57,7 @@ export default function LinkItem({ link }: LinkItemProps) {
   //2024-12-01 &nbsp;&middot;&nbsp; 
   return (
     <div className={twLinkItemContainer}>
-      <Link href={link.url} target="_blank" className={twLinkItemLeftPart}>
+      <Link href={link.url} target="_blank" className={twLinkItemLeftPart} title={link.info}>
         <h2 className={twLinkTitle}>{link.title}</h2>
         <p className={twLinkUrl}>
           {getDomainFromUrl(link.url)}

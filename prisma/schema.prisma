@@ -12,8 +12,9 @@ datasource db {
 
 model Link {
   id            Int         @id @default(autoincrement())
-  title         String      @default("")
   url           String
+  title         String      
+  info          String      @default("")
   tags          Tag[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now()) @updatedAt

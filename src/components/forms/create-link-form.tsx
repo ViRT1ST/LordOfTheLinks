@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
-import { createLink, fetchTitleByUrl } from '@/server-actions';
+import { createLink, fetchLinkDataByUrl } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { cnJoin } from '@/utils/classes';
 
 export default function CreateLinkForm() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
   const [ titleInputText, setTitleInputText ] = useState('');
+  const [ infoInputText, setInfoInputText ] = useState('');
   const [ isLoadingTitle, setIsLoadingTitle ] = useState(false);
 
   const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +22,11 @@ export default function CreateLinkForm() {
     }
 
     setIsLoadingTitle(true);
-    const fetchedTitle = await fetchTitleByUrl(url);
-    fetchedTitle && setTitleInputText(fetchedTitle);    
+    const { title, description } = await fetchLinkDataByUrl(url);
+
+    title && setTitleInputText(title);
+    description && setInfoInputText(description);
+
     setIsLoadingTitle(false);
   };
 
@@ -43,6 +47,7 @@ export default function CreateLinkForm() {
       await createLink({
         url: result.data.url,
         title: result.data.title,
+        info: result.data.info,
         tags: result.data.tags
       });
     }
@@ -54,7 +59,7 @@ export default function CreateLinkForm() {
       <p className={twDescription}>Create new link with url, title and tags</p>
 
       <div className={twInputSection}>
-        <label htmlFor="url" className={twLabel}>URL</label>
+        <label htmlFor="url" className={twInputLabel}>URL</label>
         <input
           className={twInput}
           name="url"
@@ -65,7 +70,7 @@ export default function CreateLinkForm() {
       </div>
 
       <div className={twInputSection}>
-        <label htmlFor="title" className={twLabel}>Title</label>
+        <label htmlFor="title" className={twInputLabel}>Title</label>
         <input
           className={twInput}
           name="title"
@@ -77,7 +82,18 @@ export default function CreateLinkForm() {
       </div>
 
       <div className={twInputSection}>
-        <label htmlFor="tags" className={twLabel}>Tags</label>
+        <label htmlFor="info" className={twTextAreaLabel}>Info</label>
+        <textarea
+          className={twTextArea}
+          name="info"
+          placeholder="Notes or description"
+          value={infoInputText}
+          onChange={(e) => setInfoInputText(e.target.value)}
+        />
+      </div>
+
+      <div className={twInputSection}>
+        <label htmlFor="tags" className={twInputLabel}>Tags</label>
         <input
           className={twInput}
           name="tags"
@@ -125,13 +141,25 @@ const twInputSection = cnJoin(
   'w-full mb-3 flex flex-row items-center'
 );
 
-const twLabel = cnJoin(
+const twInputLabel = cnJoin(
   'pt-[1px] w-12',
   'text-sm font-medium leading-none'
 );
 
 const twInput = cnJoin(
   'w-full h-10 px-3 py-2 flex',
+  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
+  'text-sm placeholder:text-neutral-500',
+  'focus-visible:ring-2 focus-visible:ring-neutral-700'
+);
+
+const twTextAreaLabel = cnJoin(
+  'pt-[11px] w-12 self-start',
+  'text-sm font-medium leading-none',
+);
+
+const twTextArea = cnJoin(
+  'w-full min-h-32 max-h-64 px-3 py-2 flex',
   'bg-white outline-none rounded ring-1 ring-neutral-200 ',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'

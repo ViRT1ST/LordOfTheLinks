@@ -10,12 +10,14 @@ type HomePageProps = {
   searchParams: {
     search?: string | undefined
     show?: string | undefined
+    page?: string | undefined
   }
 };
 
 export default function HomePage({ searchParams }: HomePageProps) {  
   const searchQuery = searchParams.search || '';
   const show = searchParams.show || '';
+  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
 
   return (
     <PageWrapper >
@@ -24,7 +26,7 @@ export default function HomePage({ searchParams }: HomePageProps) {
         {/* <SearchForm /> */}
         
         <Suspense fallback={<p>Loading...</p>}>
-          <LinkList searchQuery={searchQuery} show={show} />
+          <LinkList searchQuery={searchQuery} show={show} page={page} />
         </Suspense>
 
       </MainContent>

@@ -4,7 +4,11 @@ import { useState } from 'react';
 
 import { cnJoin } from '@/utils/classes';
 
-export default function ControlsTop() {
+type ControlsTopProps = {
+  totalCount: number;
+};
+
+export default function ControlsTop({ totalCount }: ControlsTopProps) {
   const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
 
   const handleDropdownClick = () => {
@@ -19,7 +23,7 @@ export default function ControlsTop() {
     <div className={twContainer}>
 
       <div className={twSection}>
-        <span className={twInfo}>TOTAL LINKS FOUND: 38</span>
+        <span className={twInfo}>TOTAL LINKS FOUND: {totalCount}</span>
       </div>
 
       <div className={twSection}>
