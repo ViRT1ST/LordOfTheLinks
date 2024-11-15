@@ -71,7 +71,7 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
           className={twTextArea}
           name="info"
           placeholder="Notes or description"
-          defaultValue={link.info}
+          defaultValue={link.info || ''}
         />
       </div>
 
@@ -141,7 +141,7 @@ const twTextArea = cnJoin(
   'bg-white outline-none rounded ring-1 ring-neutral-200 ',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
-)
+);
 
 const twInputErrorMessage = cnJoin(
   'block text-red-500 text-sm font-semibold'

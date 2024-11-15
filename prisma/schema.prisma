@@ -11,21 +11,31 @@ datasource db {
 }
 
 model Link {
-  id            Int         @id @default(autoincrement())
-  url           String
-  title         String      
-  info          String      @default("")
-  tags          Tag[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now()) @updatedAt
+  id                  Int         @id @default(autoincrement())
+  url                 String
+  title               String      
+  info                String?
+  isFaviconOnDisk     Boolean     @default(false)
+  tags                Tag[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
 }
 
 model Tag {
-  id            Int         @id @default(autoincrement())
-  value         String
-  links         Link[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now()) @updatedAt
+  id                  Int         @id @default(autoincrement())
+  value               String
+  links               Link[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
 
   @@unique([value])
+}
+
+model Pinned {
+  id                  Int         @id @default(autoincrement())
+  label               String
+  query               String      
+  priority            Int         @default(0)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
 }

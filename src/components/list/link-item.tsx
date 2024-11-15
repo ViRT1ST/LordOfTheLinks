@@ -3,17 +3,19 @@
 import { Ellipsis } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/classes';
 import ModalWindow from '@/components/common/modal-window';
 import EditLinkForm from '@/components/forms/edit-link-form';
 import DeleteLinkForm from '@/components/forms/delete-link-form';
-import { getDomainFromUrl } from '@/utils/url';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
 };
+
+const faviconSize = 48;
 
 export default function LinkItem({ link }: LinkItemProps) {
   const [ isLinkMenuOpen, setIsLinkMenuOpen ] = useState(false);
@@ -21,6 +23,12 @@ export default function LinkItem({ link }: LinkItemProps) {
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState(false);
 
   const linkMenuAreaRef = useRef<HTMLDivElement>(null);
+
+  const linkHint = link.info || '';
+  const linkHost = new URL(link.url).hostname;
+  const linkImageSrc = link.isFaviconOnDisk
+    ? `/images/site-icons/${linkHost}.png`
+    : '/images/site-icons/_default.png';
 
   useEffect(() => {
     const handleMouseLeave = () => {
@@ -54,15 +62,25 @@ export default function LinkItem({ link }: LinkItemProps) {
     toggleMenuButton();
   };
 
-  //2024-12-01 &nbsp;&middot;&nbsp; 
   return (
     <div className={twLinkItemContainer}>
-      <Link href={link.url} target="_blank" className={twLinkItemLeftPart} title={link.info}>
-        <h2 className={twLinkTitle}>{link.title}</h2>
-        <p className={twLinkUrl}>
-          {getDomainFromUrl(link.url)}
-        </p>
-      </Link>
+      <div className={twLinkItemLeftPart}>
+        <Link className={twNextLinkContainer} href={link.url}  title={linkHint} target="_blank">
+          <div className={twFaviconConatiner}>
+            <Image
+              src={linkImageSrc}
+              alt="Favicon"
+              width={faviconSize}
+              height={faviconSize}
+            />
+          </div>
+          <div className={'pl-2.5'}>
+            <h2 className={twLinkTitle}>{link.title}</h2>
+            <p className={twLinkUrl}>{linkHost}</p>
+          </div>
+
+        </Link>
+      </div>
 
       <div ref={linkMenuAreaRef} className={twLinkItemRightPart}>
         <button className={twLinkMenuButton} onClick={toggleMenuButton}>
@@ -102,8 +120,17 @@ const twLinkItemContainer = cnJoin(
   'font-geistsans'
 );
 
-const twLinkItemLeftPart= cnJoin(
+const twLinkItemLeftPart = cnJoin(
   'p-3 flex flex-col flex-grow'
+);
+
+const twNextLinkContainer = cnJoin(
+  'flex flex-row items-center'
+);
+
+const twFaviconConatiner = cnJoin(
+  `w-[${faviconSize}px] h-[${faviconSize}x]`,
+  'flex rounded-sm overflow-hidden'
 );
 
 const twLinkTitle = cnJoin(
@@ -114,7 +141,7 @@ const twLinkUrl = cnJoin(
   'text-sm text-black/50'
 );
 
-const twLinkItemRightPart= cnJoin(
+const twLinkItemRightPart = cnJoin(
   'relative w-40 px-1 flex flex-col items-end',
 );
 

@@ -12,7 +12,8 @@ export default function CreateLinkForm() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
   const [ titleInputText, setTitleInputText ] = useState('');
   const [ infoInputText, setInfoInputText ] = useState('');
-  const [ isLoadingTitle, setIsLoadingTitle ] = useState(false);
+  const [ faviconUrl, setFaviconUrl ] = useState('');
+  const [ isFetchingLinkData, setIsLoadingTitle ] = useState(false);
 
   const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value;
@@ -22,10 +23,12 @@ export default function CreateLinkForm() {
     }
 
     setIsLoadingTitle(true);
-    const { title, description } = await fetchLinkDataByUrl(url);
+    const { title, description, faviconUrl } = await fetchLinkDataByUrl(url);
+    console.log(faviconUrl)
 
     title && setTitleInputText(title);
     description && setInfoInputText(description);
+    faviconUrl && setFaviconUrl(faviconUrl);
 
     setIsLoadingTitle(false);
   };
@@ -48,7 +51,8 @@ export default function CreateLinkForm() {
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
-        tags: result.data.tags
+        tags: result.data.tags,
+        faviconUrl: faviconUrl,
       });
     }
   };
@@ -109,10 +113,10 @@ export default function CreateLinkForm() {
               {message}
             </span>
           ))}
-          {isLoadingTitle && (
-            <div className={twFetchingTitleContainer}>
+          {isFetchingLinkData && (
+            <div className={twFetchingContainer}>
               <LoaderCircle className="animate-spin" />
-              <span>Fetching title</span>
+              <span>Fetching link data</span>
             </div>
           )}
         </div>
@@ -173,7 +177,7 @@ const twInputErrorMessage = cnJoin(
   'block text-red-500 text-sm font-semibold'
 );
 
-const twFetchingTitleContainer = cnJoin(
+const twFetchingContainer = cnJoin(
   'flex flex-row items-center gap-x-2',
   'text-teal-500 text-sm font-semibold'
 );

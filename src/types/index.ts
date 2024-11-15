@@ -8,7 +8,8 @@ export type DbLink = {
   id: number;
   url: string;
   title: string;
-  info: string;
+  info: string | null;
+  isFaviconOnDisk: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,19 +30,30 @@ export type DbGetLinksQuery = {
   totalCount: number
 }
 
+export type DbPinned = {
+  id: number;
+  label: string;
+  query: string;
+  priority: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 /* =============================================================
 Other
 ============================================================= */
 
-export type fetchedUrlData = {
+export type FetchedUrlData = {
   title: string;
   description: string;
+  faviconUrl: string;
 };
 
 export type NewLinkData = {
   url: string;
   title: string;
-  info: string;
+  info: string | null;
+  faviconUrl: string | null;
   tags: string;
 };
 
@@ -49,7 +61,7 @@ export type UpdateLinkData = {
   id: number;
   url: string;
   title: string;
-  info: string;
+  info: string | null
   tags: string;
 }
 
