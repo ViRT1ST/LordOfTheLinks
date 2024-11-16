@@ -11,9 +11,9 @@ import { cnJoin } from '@/utils/classes';
 export default function CreateLinkForm() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
   const [ titleInputText, setTitleInputText ] = useState('');
-  const [ infoInputText, setInfoInputText ] = useState('');
-  const [ faviconUrl, setFaviconUrl ] = useState('');
-  const [ isFetchingLinkData, setIsLoadingTitle ] = useState(false);
+  const [ infoInputText, setInfoInputText ] = useState<string | null>(null);
+  const [ faviconUrls, setFaviconUrls ] = useState<string[]>([]);
+  const [ isFetchingLinkData, setIsFetchingLinkData ] = useState(false);
 
   const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value;
@@ -22,15 +22,14 @@ export default function CreateLinkForm() {
       return '';
     }
 
-    setIsLoadingTitle(true);
-    const { title, description, faviconUrl } = await fetchLinkDataByUrl(url);
-    console.log(faviconUrl)
+    setIsFetchingLinkData(true);
+    const { title, description, faviconUrls } = await fetchLinkDataByUrl(url);
 
     title && setTitleInputText(title);
     description && setInfoInputText(description);
-    faviconUrl && setFaviconUrl(faviconUrl);
+    faviconUrls && setFaviconUrls(faviconUrls);
 
-    setIsLoadingTitle(false);
+    setIsFetchingLinkData(false);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,15 +44,19 @@ export default function CreateLinkForm() {
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
+      // e.stopPropagation();
       e.currentTarget.reset();
       setErrorMessages([]);
+
+      setIsFetchingLinkData(true);
       await createLink({
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
         tags: result.data.tags,
-        faviconUrl: faviconUrl,
+        faviconUrls,
       });
+      setIsFetchingLinkData(false);
     }
   };
 
@@ -91,7 +94,7 @@ export default function CreateLinkForm() {
           className={twTextArea}
           name="info"
           placeholder="Notes or description"
-          value={infoInputText}
+          value={infoInputText || ''}
           onChange={(e) => setInfoInputText(e.target.value)}
         />
       </div>

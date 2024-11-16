@@ -22,9 +22,9 @@ export default function HomePage({ searchParams }: HomePageProps) {
     <PageWrapper >
       <Header />
       <MainContent>
-        <Suspense fallback={<p>Loading...</p>}>
+        {/* <Suspense fallback={<div />}> */}
           <LinkList searchQuery={searchQuery} show={show} page={page} />
-        </Suspense>
+        {/* </Suspense> */}
       </MainContent>
     </PageWrapper>
   );

@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { getLinksAll, getLinksBySearch } from '@/server-actions';
 import { cnJoin } from '@/utils/classes';
 import LinkItem from '@/components/list/link-item';
@@ -16,8 +18,8 @@ export default async function LinkList({ searchQuery, show, page }: LinkListProp
   const isShowAll = show === 'all' || searchQuery === '';
 
   const { links, totalCount } = isShowAll
-    ? await getLinksAll(page, resultsPerPage)
-    : await getLinksBySearch(searchQuery, page, resultsPerPage);
+    ? await getLinksAll(page)
+    : await getLinksBySearch(searchQuery, page);
 
   const totalPages = Math.ceil(totalCount / resultsPerPage);
   const prevPage = page === 1 ? null : page - 1;
@@ -29,11 +31,13 @@ export default async function LinkList({ searchQuery, show, page }: LinkListProp
         totalCount={totalCount}
       />
 
-      <div className={twLinksContainer}>
-        {links.map((link) => (
-          <LinkItem key={link.id} link={link} />
-        ))}
-      </div>
+      {/* <Suspense fallback={<div />}> */}
+        <div className={twLinksContainer}>
+          {links.map((link) => (
+            <LinkItem key={link.id} link={link} />
+          ))}
+        </div>
+      {/* </Suspense> */}
 
       <ControlsBottom
         currentPage={page}

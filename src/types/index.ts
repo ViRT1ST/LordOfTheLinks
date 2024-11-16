@@ -9,7 +9,6 @@ export type DbLink = {
   url: string;
   title: string;
   info: string | null;
-  isFaviconOnDisk: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,15 +45,15 @@ Other
 export type FetchedUrlData = {
   title: string;
   description: string;
-  faviconUrl: string;
+  faviconUrls: string[];
 };
 
 export type NewLinkData = {
   url: string;
   title: string;
   info: string | null;
-  faviconUrl: string | null;
   tags: string;
+  faviconUrls: string[];
 };
 
 export type UpdateLinkData = {
@@ -76,3 +75,8 @@ export const LinkFormSchema = z.object({
   tags: z.string(),
 });
 
+export type IconImageData = {
+  buffer: Buffer | null;
+  width: number;
+  height: number;
+}

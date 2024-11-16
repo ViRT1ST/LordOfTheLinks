@@ -7,6 +7,8 @@ import Image from 'next/image';
 
 import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/classes';
+import { getDomain } from '@/utils/parsing';
+import { FAVICON_SIZE_TO_DISPLAY } from '@/config/public';
 import ModalWindow from '@/components/common/modal-window';
 import EditLinkForm from '@/components/forms/edit-link-form';
 import DeleteLinkForm from '@/components/forms/delete-link-form';
@@ -15,7 +17,7 @@ type LinkItemProps = {
   link: DbLinkWithTags;
 };
 
-const faviconSize = 48;
+const faviconSize = FAVICON_SIZE_TO_DISPLAY / 2;
 
 export default function LinkItem({ link }: LinkItemProps) {
   const [ isLinkMenuOpen, setIsLinkMenuOpen ] = useState(false);
@@ -25,10 +27,8 @@ export default function LinkItem({ link }: LinkItemProps) {
   const linkMenuAreaRef = useRef<HTMLDivElement>(null);
 
   const linkHint = link.info || '';
-  const linkHost = new URL(link.url).hostname;
-  const linkImageSrc = link.isFaviconOnDisk
-    ? `/images/site-icons/${linkHost}.png`
-    : '/images/site-icons/_default.png';
+  const linkDomain = getDomain(link.url);
+  const linkImageSrc = `/images/site-icons/${linkDomain}.png`;
 
   useEffect(() => {
     const handleMouseLeave = () => {
@@ -72,11 +72,12 @@ export default function LinkItem({ link }: LinkItemProps) {
               alt="Favicon"
               width={faviconSize}
               height={faviconSize}
+              priority={true}
             />
           </div>
           <div className={'pl-2.5'}>
             <h2 className={twLinkTitle}>{link.title}</h2>
-            <p className={twLinkUrl}>{linkHost}</p>
+            <p className={twLinkUrl}>{linkDomain}</p>
           </div>
 
         </Link>

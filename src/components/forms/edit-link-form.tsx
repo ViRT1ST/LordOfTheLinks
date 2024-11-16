@@ -41,7 +41,7 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
   return (
     <form onSubmit={handleSubmit} className={twForm} autoComplete="off">
       <h1 className={twTitle}>Edit Current Link</h1>
-      <p className={twDescription}>Update link url, title or tags</p>
+      <p className={twDescription}>Update link data</p>
 
       <div className={twInputSection}>
         <label htmlFor="url" className={twLabel}>URL</label>

@@ -1,12 +1,10 @@
 import 'server-only';
 
 import type { Tag as TagRecord } from '@prisma/client';
-import path from "path";
 
 import type { NewLinkData, UpdateLinkData, TagId } from '@/types/index';
 import { tagStringToArray } from '@/utils/tags';
 import prisma from '@/lib/prisma/connect';
-import * as images from '@/utils/images';
 
 /* =============================================================
 Get all links
@@ -24,6 +22,11 @@ export const getAllLinks = async (
     },
     take: resultsPerPage,
     skip: (page - 1) * resultsPerPage,
+    // orderBy: [
+    //   {
+    //     priority: 'desc',
+    //   },
+    // ],
   });
 
   return {
@@ -83,6 +86,11 @@ export const getLinksBySearch = async (
     },
     take: resultsPerPage,
     skip: (page - 1) * resultsPerPage,
+    orderBy: [
+      {
+        priority: 'desc',
+      },
+    ],
   });
 
   return {
@@ -126,24 +134,7 @@ Create new link
 ============================================================= */
 
 export const createLink = async (data: NewLinkData) => {
-  const { url, title, info, faviconUrl, tags } = data;
-
-  let isFaviconOnDisk = false;
-
-  const fileName = new URL(url).hostname + '.png';
-  const filePath = path.join(process.cwd(), 'public', 'images', 'site-icons', fileName);
-  const isFileExists = await images.checkFileExists(filePath);
-
-  if (isFileExists) {
-    isFaviconOnDisk = true;
-  } else {
-    if (faviconUrl) {
-      const iconBuffer = await images.getImageBufferByUrl(faviconUrl);
-      const finalBuffer = await images.prepareIconBufferToSave(iconBuffer);
-      const base64Image = images.createBase64Image(finalBuffer);
-      isFaviconOnDisk = await images.saveFileOnDisk(base64Image, filePath);
-    }
-  }
+  const { url, title, info, tags } = data;
 
   const tagsArray: string[] = tagStringToArray(tags || '');
 
@@ -161,7 +152,6 @@ export const createLink = async (data: NewLinkData) => {
       url,
       title,
       info: info || null,
-      isFaviconOnDisk,
       tags: {
         connect: tagIds,
       },

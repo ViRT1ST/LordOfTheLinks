@@ -1,11 +1,23 @@
 import 'server-only';
 
-import { parseICO } from 'icojs';
 import sharp from 'sharp';
-import fs from "fs";
+import path from 'path';
+import fs from 'fs';
 
-export const getImageBufferByUrl = async (url: string) => {
-  let imageBuffer: Buffer | null = null;
+import { FAVICON_MIN_SIZE_FOR_SAVE, FAVICON_SIZE_TO_DISPLAY } from '@/config/public';
+import { type NewLinkData } from '@/types';
+import { defaultBase64Icon } from '@/utils/other';
+import * as parsing from '@/utils/parsing';
+
+export const createBase64Image = (buffer: Buffer | null) => {
+  return buffer ? buffer.toString('base64') : null;
+};
+
+export const getGoodBase64IconFromUrl = async (url: string) => {
+  let base64Icon: string | null = null;
+
+  const iconSizeToSave = FAVICON_MIN_SIZE_FOR_SAVE;
+  const iconSizeToResize = FAVICON_SIZE_TO_DISPLAY;
 
   try {
     const imageResponse = await fetch(url);
@@ -14,71 +26,31 @@ export const getImageBufferByUrl = async (url: string) => {
       const iconArrayBuffer = await imageResponse.arrayBuffer();
       const iconBuffer = Buffer.from(iconArrayBuffer);
 
-      // Handling ico format
-      if (url.endsWith('.ico')) {
-        const pngImages = await parseICO(iconBuffer, 'image/png');
+      const sourceSharpObj = sharp(iconBuffer);
+      const sourceMetadata = await sourceSharpObj.metadata();
 
-        if (pngImages.length > 0) {
-          const biggestImage = pngImages.reduce((biggest, current) => {
-            return current.width > biggest.width
-              ? current
-              : biggest;
-          }, pngImages[0]);
+      const isGoodSvg =
+        sourceMetadata.format === 'svg' &&
+        sourceMetadata.width === sourceMetadata.height;
+      const isGoodRaster =
+        sourceMetadata.width === sourceMetadata.height &&
+        sourceMetadata.width !== undefined &&
+        sourceMetadata.width >= iconSizeToSave;
 
-          imageBuffer = Buffer.from(biggestImage.buffer);
-        }
+      if (isGoodSvg || isGoodRaster) {
+        const pngBuffer = await sourceSharpObj
+          .resize({ width: iconSizeToResize, height: iconSizeToResize })
+          .toFormat('png')
+          .toBuffer();
 
-      // Handling non-ico formats
-      } else {
-        imageBuffer = Buffer.from(iconBuffer.buffer);
+        base64Icon = createBase64Image(pngBuffer);
       }
     }
   } catch (error) {
     /* Do nothing */
   }
 
-  return imageBuffer;
-};
-
-export const prepareIconBufferToSave = async (buffer: Buffer | null) => {
-  let finalBuffer: Buffer | null = null;
-
-  if (!buffer) {
-    return finalBuffer;
-  }
-
-  // Get width and height
-  const sizeToSave = 96;
-  const metadata = await sharp(buffer).metadata();
-  const { width = 0, height = 0 } = metadata;
-
-  // We only need images that are at least 96x96
-  if (width >= sizeToSave && height >= sizeToSave) {
-    let croppedBuffer = buffer;
-
-    // Check if the image is a square
-    if (width && height && width !== height) {
-      const size = Math.min(width, height); // Min side
-      const left = Math.floor((width - size) / 2); // Cut left
-      const top = Math.floor((height - size) / 2); // Cut top
-
-      // Cut to the square
-      croppedBuffer = await sharp(buffer)
-        .extract({ left, top, width: size, height: size })
-        .toBuffer();
-    }
-
-    finalBuffer = await sharp(croppedBuffer)
-      .resize(sizeToSave, sizeToSave)
-      .toFormat('png')
-      .toBuffer();
-  }
-
-  return finalBuffer;
-};
-
-export const createBase64Image = (buffer: Buffer | null) => {
-  return buffer ? buffer.toString('base64') : null;
+  return base64Icon;
 };
 
 export const checkFileExists = async (filePath: string) => {
@@ -89,22 +61,67 @@ export const checkFileExists = async (filePath: string) => {
       .catch(() => false);
   };
 
-  return await fileExists(filePath)
+  return await fileExists(filePath);
 };
 
-export const saveFileOnDisk = async (base64Data: string | null, filePath: string) => {
-  let isFileSaved = false;
+export const saveBase64ImageOnDisk = async (base64Data: string | null, filePath: string) => {
+  let isSaved = false;
 
   if (!base64Data) {
-    return isFileSaved;
+    return isSaved;
   }
 
   try {        
     await fs.promises.writeFile(filePath, base64Data, 'base64');
-    isFileSaved = true;
+    isSaved = true;
   } catch (error) {
     /* Do nothing */
   }
 
-  return isFileSaved;
-}
+  return isSaved;
+};
+
+export const copyFile = async (src: string, dest: string) => {
+  try {
+    await fs.promises.copyFile(src, dest);
+  } catch (error) {
+    /* Do nothing */
+  }
+};
+
+export const createImageForLink = async (data: NewLinkData) => {
+  const { url, faviconUrls } = data;
+
+  // extract to config
+  const publicIconsFolder = path.join(process.cwd(), 'public', 'images', 'site-icons');
+
+  const fileName = parsing.getDomain(url) + '.png';
+  const filePath = path.join(publicIconsFolder, fileName);
+  const isFileExists = await checkFileExists(filePath);
+
+  let iconIsSavedOnDisk = false;
+
+  if (!isFileExists) {
+    const allFaviconUrls = [
+      ...faviconUrls,
+      ...parsing.getIconUrlsFrom3dPartyServices(url)
+    ];
+
+    for (const faviconUrl of allFaviconUrls) {
+      if (!iconIsSavedOnDisk) {
+
+        // delete later
+        console.log(faviconUrl);
+        const goodBase64Icon  = await getGoodBase64IconFromUrl(faviconUrl);
+
+        if (goodBase64Icon) {
+          iconIsSavedOnDisk = await saveBase64ImageOnDisk(goodBase64Icon, filePath);
+        }
+      }
+    }
+
+    if (!iconIsSavedOnDisk) {
+      await saveBase64ImageOnDisk(defaultBase64Icon, filePath);
+    }
+  }
+};
