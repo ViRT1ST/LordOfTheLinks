@@ -26,6 +26,13 @@ export default function ControlsTop({ totalCount }: ControlsTopProps) {
         <span className={twInfo}>TOTAL LINKS FOUND: {totalCount}</span>
       </div>
 
+      {/* {!isDropdownOpen && (<div className={twSection}>
+        <button className={twButton} onClick={handleDropdownClick}>
+          SORTED BY DOMAIN DESC
+        </button>
+      </div>)
+      } */}
+
       <div className={twSection}>
         <button className={twButton} onClick={handleDropdownClick}>
           SORTED BY DOMAIN DESC
@@ -83,9 +90,10 @@ const twDropdown = cnJoin(
   'bg-white border border-black/40',
 );
 
+// hover: show arrow icon near text
 const twDropdownButton = cnJoin(
   'h-7 inline-flex justify-end items-center gap-x-2',
-  'text-sm font-medium whitespace-nowrap  text-xs'
+  'text-sm font-medium whitespace-nowrap text-xs',
 );
 
 const twDropdownDivider = cnJoin(

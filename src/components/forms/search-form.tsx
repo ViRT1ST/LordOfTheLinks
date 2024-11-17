@@ -16,7 +16,7 @@ export default function SearchForm() {
 
     const formData = new FormData(e.currentTarget);
     const searchQuery = formData.get('searchQuery') as string;
-    setSearchText('');
+    // setSearchText('');
     
     const inputElement = e.currentTarget.children[0] as HTMLInputElement;
     inputElement.blur();

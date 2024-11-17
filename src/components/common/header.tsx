@@ -18,7 +18,7 @@ export default function Header() {
   };
 
   return (
-    <div className={headerContainer}>
+    <header className={twHeader}>
 
       <div className={twContainerLeft}>
         <button className={twButton} onClick={handleShowAllLinks}>
@@ -47,11 +47,12 @@ export default function Header() {
         setIsOpen={setIsNewLinkModalOpen}
         content={<CreateLinkForm />}
       />
-    </div>
+      
+    </header>
   );
 }
 
-const headerContainer = cnJoin(
+const twHeader = cnJoin(
   'z-10 fixed top-0 left-0 h-14 py-1 w-full flex',
   'bg-[#cfcecd]',
 );

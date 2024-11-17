@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
 
-import { FAVICON_MIN_SIZE_FOR_SAVE, FAVICON_SIZE_TO_DISPLAY } from '@/config/public';
+import { FAVICON_SIZE } from '@/config/public';
 import { type NewLinkData } from '@/types';
 import { defaultBase64Icon } from '@/utils/other';
 import * as parsing from '@/utils/parsing';
@@ -15,9 +15,6 @@ export const createBase64Image = (buffer: Buffer | null) => {
 
 export const getGoodBase64IconFromUrl = async (url: string) => {
   let base64Icon: string | null = null;
-
-  const iconSizeToSave = FAVICON_MIN_SIZE_FOR_SAVE;
-  const iconSizeToResize = FAVICON_SIZE_TO_DISPLAY;
 
   try {
     const imageResponse = await fetch(url);
@@ -35,11 +32,11 @@ export const getGoodBase64IconFromUrl = async (url: string) => {
       const isGoodRaster =
         sourceMetadata.width === sourceMetadata.height &&
         sourceMetadata.width !== undefined &&
-        sourceMetadata.width >= iconSizeToSave;
+        sourceMetadata.width >= FAVICON_SIZE;
 
       if (isGoodSvg || isGoodRaster) {
         const pngBuffer = await sourceSharpObj
-          .resize({ width: iconSizeToResize, height: iconSizeToResize })
+          .resize({ width: FAVICON_SIZE, height: FAVICON_SIZE })
           .toFormat('png')
           .toBuffer();
 
