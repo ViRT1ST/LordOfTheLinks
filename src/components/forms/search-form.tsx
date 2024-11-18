@@ -21,7 +21,7 @@ export default function SearchForm() {
     const inputElement = e.currentTarget.children[0] as HTMLInputElement;
     inputElement.blur();
     
-    router.push(`/?search=${searchQuery.trim()}`);
+    router.push(`/?query=${searchQuery.trim()}`);
   };
 
   //Search links by title, url or tags
@@ -32,7 +32,7 @@ export default function SearchForm() {
         placeholder="Search"
         type="text"
         name="searchQuery"
-        autoFocus={true}
+        // autoFocus={true}
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
@@ -51,16 +51,17 @@ export default function SearchForm() {
 }
 
 const twForm = cnJoin(
-  'relative w-[600px] self-center',
+  'relative self-center',
   // 'font-medium'
 );
 
 const twInput = cnJoin(
-  'w-full h-10 py-2 px-3',
-  'bg-white rounded-md border-2 border-[#b2b2b2]',
-  'text-sm outline-0',
+  'w-[600px] h-10 py-2 px-3',
+  ' rounded-md border-2 border-[#b2b2b2]', //bg-white
+  'text-sm outline-0 transition-all',
   'placeholder:text-neutral-500',
   'focus:border-neutral-500',
+       'bg-[#f3f2f2]'
 );
 
 const twSearchButton = cnJoin(

@@ -49,8 +49,10 @@ export default function LinkItem({ link }: LinkItemProps) {
 }
 const twItemContainer = cnJoin(
   'mb-[4px] flex flex-row',
-  'bg-white/50 border rounded-sm border-black/20',
-  'font-geistsans'
+  'border rounded-sm border-black/20',
+  'font-geistsans',
+  // 'bg-white/50 '
+  'bg-[#f3f2f2]'
 );
 
 const twItemLeftPart = cnJoin(
@@ -62,7 +64,6 @@ const twNextLink = cnJoin(
 );
 
 const twFavicon = cnJoin(
-  `w-[${faviconSize}px] h-[${faviconSize}x]`,
   'flex rounded-sm overflow-hidden'
 );
 
@@ -71,11 +72,11 @@ const twTitleAndUrlContainer = cnJoin(
 );
 
 const twTitle = cnJoin(
-  'text-lg text-black truncate'
+  'text-lg text-black truncate font-geistsans'
 );
 
 const twDomain = cnJoin(
-  'text-sm text-black/50'
+  'text-sm text-black/50 font-geistsans'
 );
 
 const twItemRightPart = cnJoin(

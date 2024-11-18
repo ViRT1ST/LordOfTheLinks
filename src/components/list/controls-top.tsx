@@ -67,7 +67,8 @@ export default function ControlsTop({ totalCount }: ControlsTopProps) {
 }
 
 const twContainer = cnJoin(
-  'flex flex-row justify-between items-center mt-4 mb-4 font-medium'
+  'flex flex-row justify-between items-center mt-4 mb-4',
+  'font-medium font-geistsans'
 );
 
 const twSection = cnJoin(
@@ -75,13 +76,16 @@ const twSection = cnJoin(
 );
 
 const twInfo = cnJoin(
-  'text-xs text-black/70'
+  'text-xs text-black/70',
 );
 
 const twButton = cnJoin(
   'z-30 h-6 py-2 px-2 inline-flex justify-center items-center gap-2',
   'bg-transparent border border-black/10 text-black/70 rounded-md',
-  'text-sm font-medium whitespace-nowrap  text-xs'
+  'font-medium whitespace-nowrap text-xs transition-all',
+  // 'hover:text-black focus:text-black',
+  'hover:text-black hover:border-black/15',
+  'focus:text-black focus:border-black/15'
 );
 
 const twDropdown = cnJoin(

@@ -103,8 +103,9 @@ const twContentAndCloseButton = cnJoin(
 );
 
 const twCloseButton = cnJoin(
-  'absolute top-4 right-4 h-6 w-6',
-  'text-neutral-600 border-2 border-transparent rounded-sm',
+  'absolute top-4 right-4 h-9 w-9 p-1',
+  'text-neutral-600 border-0 rounded-sm',
+  'cursor-pointer transition-all duration-75',
   'ring-offset-1 ring-offset-transparent',
-  'hover:ring-1 hover:ring-neutral-400',
+  'hover:ring-1 hover:ring-neutral-400 hover:text-black/80',
 );

@@ -7,8 +7,9 @@ type MainContentProps = {
 export default function MainContent({ children }: MainContentProps) {
   return (
     <main className={cnJoin(
-      'w-[1200px] mx-auto px-8 pt-16 pb-5',
-      'flex flex-col min-h-svh'
+      'w-[1400px] mx-auto px-16 pt-16 pb-5',
+      'flex flex-col min-h-svh',
+      'bg-stone-200'
     )}>
       {children}
     </main>

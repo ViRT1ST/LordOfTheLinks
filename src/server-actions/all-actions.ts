@@ -3,11 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { decode } from 'html-entities';
 
-import type {
-  DbGetLinksQuery,
-  FetchedUrlData,
-  NewLinkData,
-  UpdateLinkData
+import {
+  type DbGetLinksResponse,
+  type DbPinnedQuery,
+  type FetchedUrlData,
+  type NewLinkData,
+  type NewPinnedQueryData,
+  type UpdateLinkData
 } from '@/types/index';
 import { LINKS_PER_PAGE } from '@/config/public';
 import * as queries from '@/lib/prisma/queries';
@@ -15,12 +17,12 @@ import * as parsing from '@/utils/parsing';
 import * as images from '@/utils/images';
 
 export const getLinksAll = async (page = 1):
-  Promise<DbGetLinksQuery> => {
+  Promise<DbGetLinksResponse> => {
   return await queries.getAllLinks(page, LINKS_PER_PAGE);
 };
 
 export const getLinksBySearch = async (searchQuery: string, page = 1):
-  Promise<DbGetLinksQuery> => {
+  Promise<DbGetLinksResponse> => {
   return await queries.getLinksBySearch(searchQuery, page, LINKS_PER_PAGE);
 };
 
@@ -73,5 +75,15 @@ export const fetchLinkDataByUrl = async (url: string): Promise<FetchedUrlData> =
   }
 
   return data;
+};
+
+export const createPinnedQuery = async (data: NewPinnedQueryData) => {
+  const pinnedQuery = await queries.createPinnedQuery(data);
+  revalidatePath('/');
+  return pinnedQuery;
+};
+
+export const getPinnedQueriesAll = async () => {
+  return await queries.getAllPinnedQueries();
 };
 

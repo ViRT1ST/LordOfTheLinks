@@ -6,3 +6,6 @@ export { updateLink } from './all-actions';
 export { deleteLink } from './all-actions';
 
 export { fetchLinkDataByUrl } from './all-actions';
+
+export { createPinnedQuery } from './all-actions';
+export { getPinnedQueriesAll } from './all-actions';

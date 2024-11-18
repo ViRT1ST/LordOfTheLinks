@@ -24,12 +24,12 @@ export type DbLinkWithTags = DbLink & {
   tags: DbTag[]
 }
 
-export type DbGetLinksQuery = {
+export type DbGetLinksResponse = {
   links: DbLinkWithTags[],
   totalCount: number
 }
 
-export type DbPinned = {
+export type DbPinnedQuery = {
   id: number;
   label: string;
   query: string;
@@ -41,6 +41,18 @@ export type DbPinned = {
 /* =============================================================
 Other
 ============================================================= */
+
+export const LinkFormSchema = z.object({
+  url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
+  title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
+  info: z.string(),
+  tags: z.string(),
+});
+
+export const PinnedFormSchema = z.object({
+  label: z.string().min(2, { message: 'Label must be at least 2 characters' }),
+  query: z.string().min(2, { message: 'Query must be at least 2 characters' }),
+});
 
 export type FetchedUrlData = {
   title: string;
@@ -68,15 +80,13 @@ export type TagId = {
   id: number;
 }
 
-export const LinkFormSchema = z.object({
-  url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
-  title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
-  info: z.string(),
-  tags: z.string(),
-});
-
 export type IconImageData = {
   buffer: Buffer | null;
   width: number;
   height: number;
+}
+
+export type NewPinnedQueryData = {
+  label: string;
+  query: string;
 }

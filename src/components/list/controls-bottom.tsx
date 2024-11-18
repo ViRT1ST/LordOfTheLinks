@@ -23,6 +23,9 @@ export default function ControlsBottom({
   const router = useRouter();
   
   const allParamsString = searchParams.toString();
+
+  const lastPageNumberLength = String(lastPage).length;
+  const paddedCurrentPage = String(currentPage).padStart(lastPageNumberLength, '0');
   
   const handleChangePage = (page: number | null) => {
     if (page === null) {
@@ -50,10 +53,10 @@ export default function ControlsBottom({
       </div>
 
       <div className={twPagesInfo}>
-        Page&nbsp;
-          <span className={twPagesInfoMonoNumber}>{currentPage}</span>
-        &nbsp;of&nbsp;
-          <span className={twPagesInfoMonoNumber}>{lastPage}</span>
+        PAGE&nbsp;&nbsp;
+        <span className={twPagesInfoMonoNumber}>{paddedCurrentPage}</span>
+        &nbsp;&nbsp;/&nbsp;&nbsp;
+        <span className={twPagesInfoMonoNumber}>{lastPage}</span>
       </div>
 
       <div className={twButtonGroup}>
@@ -72,15 +75,16 @@ export default function ControlsBottom({
 
 const twContainer = cnJoin(
   'h-14 w-full mt-2 flex flex-row items-center justify-center gap-x-6',
+  'font-roboto '
 );
 
 const twPagesInfo = cnJoin(
-  'text-base font-medium whitespace-nowrap text-black/70 text-center',
-  'min-w-24',
+  'whitespace-nowrap text-black/70 text-center text-sm font-medium',
+  // 'min-w-24',
 );
 
 const twPagesInfoMonoNumber = cnJoin(
-  'font-geistmono'
+  'font-roboto'
 );
 
 const twIcon = cnJoin(
@@ -93,9 +97,8 @@ const twButtonGroup = cnJoin(
 
 const twButton = cnJoin(
   'h-10 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'border border-black/10 text-black/50 rounded-md',
-  'text-sm font-medium whitespace-nowrap',
-  'bg-transparent',
-  'disabled:text-black/10'
-  //bg-white/30 
+  'rounded-md border border-black/10 text-black/40',
+  'text-xs font-medium whitespace-nowrap transition-all',
+  'hover:text-black/70 hover:border-black/15',
+  'disabled:text-black/10 disabled:border-black/10',
 );

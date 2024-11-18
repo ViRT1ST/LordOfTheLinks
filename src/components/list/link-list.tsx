@@ -7,19 +7,17 @@ import ControlsBottom from '@/components/list/controls-bottom';
 import ControlsTop from '@/components/list/controls-top';
 
 type LinkListProps = {
-  searchQuery: string;
-  show: string;
+  all: boolean;
+  query: string;
   page: number;
 };
 
 const resultsPerPage = 9;
 
-export default async function LinkList({ searchQuery, show, page }: LinkListProps) {   
-  const isShowAll = show === 'all' || searchQuery === '';
-
-  const { links, totalCount } = isShowAll
+export default async function LinkList({ all, query, page }: LinkListProps) {   
+  const { links, totalCount } = all
     ? await getLinksAll(page)
-    : await getLinksBySearch(searchQuery, page);
+    : await getLinksBySearch(query, page);
 
   const totalPages = Math.ceil(totalCount / resultsPerPage);
   const prevPage = page === 1 ? null : page - 1;

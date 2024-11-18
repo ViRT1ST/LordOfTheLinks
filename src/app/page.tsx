@@ -4,27 +4,31 @@ import PageWrapper from '@/components/common/page-wrapper';
 import Header from '@/components/common/header';
 import MainContent from '@/components/common/main-content';
 import LinkList from '@/components/list/link-list';
+import PinnedQueriesList from '@/components/list/pq-list';
 
 type HomePageProps = {
   searchParams: {
-    search?: string | undefined
     show?: string | undefined
+    query?: string | undefined
     page?: string | undefined
   }
 };
 
-export default function HomePage({ searchParams }: HomePageProps) {  
-  const searchQuery = searchParams.search || '';
-  const show = searchParams.show || '';
+export default function HomePage({ searchParams }: HomePageProps) {
+  const all = searchParams.show === 'all';
+  const query = searchParams.query || '';
   const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
 
   return (
     <PageWrapper >
-      <Header />
+      
       <MainContent>
-        {/* <Suspense fallback={<div />}> */}
-          <LinkList searchQuery={searchQuery} show={show} page={page} />
-        {/* </Suspense> */}
+      <Header />
+          {all || query ? (
+            <LinkList all={all} query={query} page={page} />
+          ) : (
+            <PinnedQueriesList />
+          )}
       </MainContent>
     </PageWrapper>
   );

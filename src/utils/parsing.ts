@@ -57,7 +57,7 @@ export const getIconUrlsFromHtmlSource = (pageHtml: string, pageUrl: string) => 
     /<link[^>]*rel=["']icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']96x96["'][^>]*href=["']([^"']+)["']/i,
 
     // Icons: Mask
-    /<link[^>]*rel=["']mask-icon["'][^>]*href=["']([^"']+)["']/i,
+    // /<link[^>]*rel=["']mask-icon["'][^>]*href=["']([^"']+)["']/i,
 
     // Site images
     /<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i,
@@ -83,6 +83,8 @@ export const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
 
   return [
     `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
+    `https://api.faviconkit.com/${pageUrlObj.host}`,
+    `https://icon.horse/icon/${pageUrlObj.host}`,
     `https://logo.clearbit.com/${pageUrlObj.host}`,
   ];
 };

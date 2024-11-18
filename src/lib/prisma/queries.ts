@@ -1,8 +1,13 @@
 import 'server-only';
 
-import type { Tag as TagRecord } from '@prisma/client';
+import { type Tag as TagRecord } from '@prisma/client';
 
-import type { NewLinkData, UpdateLinkData, TagId } from '@/types/index';
+import {
+  type NewLinkData,
+  type UpdateLinkData,
+  type TagId,
+  type NewPinnedQueryData
+} from '@/types/index';
 import { tagStringToArray } from '@/utils/tags';
 import prisma from '@/lib/prisma/connect';
 
@@ -216,4 +221,44 @@ export const deleteLink = async (id: number) => {
   } catch (error) {
     console.error(`Failed to delete link with id ${id}:`, error);
   }
+};
+
+/* =============================================================
+Create pinned query
+============================================================= */
+
+export const createPinnedQuery = async (data: NewPinnedQueryData) => {
+  const { label, query } = data;
+
+  // creating new link and connecting it with tags
+  const newLink = await prisma.pinned.create({
+    data: {
+      label,
+      query,
+      // priority: priority || undefined,
+    },
+  });
+
+  return newLink;
+};
+
+/* =============================================================
+Get all links
+============================================================= */
+
+export const getAllPinnedQueries = async () => {
+  const totalCount = await prisma.pinned.count();
+
+  const pinnedQueries = await prisma.pinned.findMany({
+    orderBy: [
+      {
+        priority: 'desc',
+      },
+    ],
+  });
+
+  return {
+    pinnedQueries: pinnedQueries,
+    totalCount
+  };
 };

@@ -89,10 +89,11 @@ const twContainer = cnJoin(
 );
 
 const twMenuTrigger = cnJoin(
-  'px-3 py-2',
+  'px-3 py-2 opacity-30 transition-all',
+  'hover:opacity-60',
 );
 const twMenuTriggerIcon = cnJoin(
-  'opacity-30 h-6 w-6',
+  'h-6 w-6',
 );
 
 const twMenuContainer = cnJoin(
@@ -103,6 +104,7 @@ const twMenuContainer = cnJoin(
 const twMenuButton = cnJoin(
   'w-20 h-7 py-2 px-4 inline-flex justify-center items-center gap-2',
   'bg-transparent border border-black/10 text-black/60 rounded-sm',
-  'text-sm font-medium whitespace-nowrap'
+  'text-sm font-medium whitespace-nowrap transition-all',
+  'hover:text-black hover:border-black/15',
 );
 
