@@ -20,7 +20,7 @@ export default async function PinnedQueriesList() {
         <div className={'text-center'}>
           {pinnedQueries.map((pq) => (
             <div key={pq.id} className={twLinkContainer}>
-              <Link className={twLink} href={`/?query=${pq.query}`}>
+              <Link className={twLink} href={`/?q=${pq.query}`}>
                 {pq.label}
               </Link>
             </div>
@@ -50,8 +50,13 @@ const twLinkContainer = cnJoin(
 );
 
 const twLink = cnJoin(
-  'h-8 inline-flex rounded-md border border-black/20 bg-white/40 px-5 py-4',
+  'h-8 inline-flex rounded-md border border-black/20  px-5 py-4',
   'justify-center items-center',
   ' text-base font-medium text-black/70',
-  'font-rubik'
+  'font-rubik transition-all',
+
+  //bg-white/40
+  // bg-based on flowers backround
+  'bg-[#f4f4f4]',
+  'hover:text-black/90'
 );

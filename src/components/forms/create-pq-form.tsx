@@ -36,7 +36,7 @@ export default function CreatePinnedQueryForm() {
   return (
     <form onSubmit={handleSubmit} className={twForm} autoComplete="off">
       <h1 className={twTitle}>Add Pinned Query</h1>
-      <p className={twDescription}>Create new pinned query and add it to the list</p>
+      <p className={twDescription}>Create new pinned search query</p>
 
       <div className={twInputSection}>
         <label htmlFor="label" className={twInputLabel}>Label</label>

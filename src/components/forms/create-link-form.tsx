@@ -5,10 +5,13 @@ import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
 import { createLink, fetchLinkDataByUrl } from '@/server-actions';
+import { useStore } from '@/store/useStore';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { cnJoin } from '@/utils/classes';
 
 export default function CreateLinkForm() {
+  const runBooleanStateReseter = useStore((state) => state.runBooleanStateReseter);
+
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
   const [ titleInputText, setTitleInputText ] = useState('');
   const [ infoInputText, setInfoInputText ] = useState<string | null>(null);
@@ -44,7 +47,7 @@ export default function CreateLinkForm() {
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
-      // e.stopPropagation();
+      e.stopPropagation();
       e.currentTarget.reset();
       setErrorMessages([]);
 
@@ -57,6 +60,8 @@ export default function CreateLinkForm() {
         faviconUrls,
       });
       setIsFetchingLinkData(false);
+
+      runBooleanStateReseter();
     }
   };
 
@@ -70,6 +75,7 @@ export default function CreateLinkForm() {
         <input
           className={twInput}
           name="url"
+          id="url"
           type="text"
           placeholder="https://example.com"
           onChange={handleUrlInputChange}
@@ -81,6 +87,7 @@ export default function CreateLinkForm() {
         <input
           className={twInput}
           name="title"
+          id="title"
           type="text"
           placeholder="Page title"
           value={titleInputText}
@@ -93,6 +100,7 @@ export default function CreateLinkForm() {
         <textarea
           className={twTextArea}
           name="info"
+          id="info"
           placeholder="Notes or description"
           value={infoInputText || ''}
           onChange={(e) => setInfoInputText(e.target.value)}
@@ -104,6 +112,7 @@ export default function CreateLinkForm() {
         <input
           className={twInput}
           name="tags"
+          id="tags"
           type="text"
           placeholder="Comma separated tags"
         />

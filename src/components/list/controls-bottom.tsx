@@ -97,8 +97,13 @@ const twButtonGroup = cnJoin(
 
 const twButton = cnJoin(
   'h-10 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'rounded-md border border-black/10 text-black/40',
+  'rounded-md border border-black/15 text-black/40',
   'text-xs font-medium whitespace-nowrap transition-all',
-  'hover:text-black/70 hover:border-black/15',
+  
+  'hover:text-black/80 hover:border-black/20',
   'disabled:text-black/10 disabled:border-black/10',
+
+  // bg-based on flowers backround
+  'bg-[#e9e9e9]'
+  // 'bg-white/40'
 );

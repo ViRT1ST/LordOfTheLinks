@@ -8,15 +8,15 @@ import PinnedQueriesList from '@/components/list/pq-list';
 
 type HomePageProps = {
   searchParams: {
-    show?: string | undefined
-    query?: string | undefined
+    v?: string | undefined
+    q?: string | undefined
     page?: string | undefined
   }
 };
 
 export default function HomePage({ searchParams }: HomePageProps) {
-  const all = searchParams.show === 'all';
-  const query = searchParams.query || '';
+  const showLinks = searchParams.v === 'links';
+  const query = searchParams.q || '';
   const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
 
   return (
@@ -24,8 +24,8 @@ export default function HomePage({ searchParams }: HomePageProps) {
       
       <MainContent>
       <Header />
-          {all || query ? (
-            <LinkList all={all} query={query} page={page} />
+          {showLinks || query ? (
+            <LinkList query={query} page={page} />
           ) : (
             <PinnedQueriesList />
           )}

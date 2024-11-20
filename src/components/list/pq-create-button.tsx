@@ -37,4 +37,7 @@ const twButton = cnJoin(
   'justify-center items-center',
   'text-sm  font-medium text-black/60',
   // 'text-base font-roboto'
+
+    // bg-based on flowers backround
+  'bg-[#e9e9e9]'
 );

@@ -42,7 +42,7 @@ export default function LinkItem({ link }: LinkItemProps) {
       </div>
 
       <div className={twItemRightPart}>
-        <LinkItemMenu link={link} />
+        {/* <LinkItemMenu link={link} /> */}
       </div>
     </div>
   );
@@ -52,7 +52,8 @@ const twItemContainer = cnJoin(
   'border rounded-sm border-black/20',
   'font-geistsans',
   // 'bg-white/50 '
-  'bg-[#f3f2f2]'
+  // 'bg-[#f3f2f2]'
+   'bg-[#f2f2f2]',
 );
 
 const twItemLeftPart = cnJoin(

@@ -9,18 +9,23 @@ import ModalWindow from '@/components/common/modal-window';
 import CreateLinkForm from '@/components/forms/create-link-form';
 import SearchForm from '@/components/forms/search-form';
 
-export default function Header() {
+import { useStore } from '@/store/useStore';
+
+export default function Header() {  
   const [ isNewLinkModalOpen, setIsNewLinkModalOpen ] = useState(false);
+
+  const booleanStateReseter = useStore((state) => state.booleanStateReseter);
+  const runBooleanStateReseter = useStore((state) => state.runBooleanStateReseter);
 
   return (
     <header className={twHeader}>
       {/* <div className={twHeaderLimiter}> */}
 
         <div className={twContainerLeft}>
-          <Link className={twButton} href="/?show=all">
+          <Link className={twButton} href="/?v=links">
             All Links
           </Link>
-          <Link className={twButton} href="/?show=pq">
+          <Link className={twButton} href="/?v=queries">
             Pinned Queries
           </Link>
         </div>
@@ -38,12 +43,15 @@ export default function Header() {
           </button>
         </div>
 
+
         <ModalWindow
+          content={<CreateLinkForm />}
           isOpen={isNewLinkModalOpen}
           setIsOpen={setIsNewLinkModalOpen}
-          content={<CreateLinkForm />}
+          isOverlayClickDoClose={false}
+          isOverlayDarkened={true}
         />
-
+ 
       {/* </div> */}
     </header>
   );
@@ -52,11 +60,12 @@ export default function Header() {
 const twHeader = cnJoin(
   'z-10 fixed top-0 left-0 px-5 h-14 w-full flex justify-center',
   // 'bg-[#cfcecd]',
-  'bg-[#dad7d7]',
+  // 'bg-[#dad7d7]',
+  'bg-white/50',
 );
 
 // const twHeaderLimiter = cnJoin(
-//   'w-[1400px] px-5 flex flex-row', // w-[1200px] w-full
+//   'w-[1320px] px-5 flex flex-row', // w-[1200px] w-full
   
 // );
 
@@ -78,4 +87,7 @@ const twButton = cnJoin(
   'bg-transparent border border-black/10 text-black/60 rounded-md',
   'text-sm font-medium whitespace-nowrap transition-all',
   'hover:text-black hover:border-black/15', 
+
+  // bg-based on flowers backround
+  'bg-[#f4f4f4]'
 );
