@@ -7,7 +7,7 @@ import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/classes';
 import { getDomain } from '@/utils/parsing';
 import { FAVICON_SIZE } from '@/config/public';
-import LinkItemMenu from '@/components/list/link-item-menu';
+import LinkItemMenu from '@/components/links-view/link-item-menu';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
@@ -42,7 +42,7 @@ export default function LinkItem({ link }: LinkItemProps) {
       </div>
 
       <div className={twItemRightPart}>
-        {/* <LinkItemMenu link={link} /> */}
+        <LinkItemMenu link={link} />
       </div>
     </div>
   );

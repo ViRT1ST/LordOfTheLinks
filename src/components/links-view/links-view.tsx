@@ -1,19 +1,17 @@
-import { Suspense } from 'react';
-
 import { getLinksAll, getLinksBySearch } from '@/server-actions';
 import { cnJoin } from '@/utils/classes';
-import LinkItem from '@/components/list/link-item';
-import ControlsBottom from '@/components/list/controls-bottom';
-import ControlsTop from '@/components/list/controls-top';
+import LinkItem from '@/components/links-view/link-item';
+import LinksControlsBottom from '@/components/links-view/links-controls-bottom';
+import LinksControlsTop from '@/components/links-view/links-controls-top';
 
-type LinkListProps = {
+type LinksViewProps = {
   query: string;
   page: number;
 };
 
 const resultsPerPage = 9;
 
-export default async function LinkList({ query, page }: LinkListProps) {   
+export default async function LinksView({ query, page }: LinksViewProps) {   
   const { links, totalCount } = query
     ? await getLinksBySearch(query, page)
     : await getLinksAll(page);
@@ -24,19 +22,17 @@ export default async function LinkList({ query, page }: LinkListProps) {
 
   return (
     <div className={twContainer}>
-      <ControlsTop
+      <LinksControlsTop
         totalCount={totalCount}
       />
 
-      {/* <Suspense fallback={<div />}> */}
-        <div className={twLinksContainer}>
-          {links.map((link) => (
-            <LinkItem key={link.id} link={link} />
-          ))}
-        </div>
-      {/* </Suspense> */}
+      <div className={twLinksContainer}>
+        {links.map((link) => (
+          <LinkItem key={link.id} link={link} />
+        ))}
+      </div>
 
-      <ControlsBottom
+      <LinksControlsBottom
         currentPage={page}
         lastPage={totalPages}
         prevPage={prevPage}

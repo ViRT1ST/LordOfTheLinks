@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function useClickOnElementId(elementId: string) {
+export default function useClickOnElement(elementId: string) {
   const [ isClicked, setIsClicked ] = useState(false);
 
   useEffect(() => {

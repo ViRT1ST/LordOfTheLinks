@@ -9,12 +9,17 @@ import {
   type FetchedUrlData,
   type NewLinkData,
   type NewPinnedQueryData,
-  type UpdateLinkData
+  type UpdateLinkData,
+  type UpdatePinnedQueryData
 } from '@/types/index';
 import { LINKS_PER_PAGE } from '@/config/public';
 import * as queries from '@/lib/prisma/queries';
 import * as parsing from '@/utils/parsing';
 import * as images from '@/utils/images';
+
+/* =============================================================
+Links
+============================================================= */
 
 export const getLinksAll = async (page = 1):
   Promise<DbGetLinksResponse> => {
@@ -77,6 +82,10 @@ export const fetchLinkDataByUrl = async (url: string): Promise<FetchedUrlData> =
   return data;
 };
 
+/* =============================================================
+Pinned Queries
+============================================================= */
+
 export const createPinnedQuery = async (data: NewPinnedQueryData) => {
   const pinnedQuery = await queries.createPinnedQuery(data);
   revalidatePath('/');
@@ -85,5 +94,15 @@ export const createPinnedQuery = async (data: NewPinnedQueryData) => {
 
 export const getPinnedQueriesAll = async () => {
   return await queries.getAllPinnedQueries();
+};
+
+export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
+  await queries.updatePinnedQuery(data);
+  revalidatePath('/');
+};
+
+export const deletePinnedQuery = async (id: number) => {
+  await queries.deletePinnedQuery(id);
+  revalidatePath('/');
 };
 

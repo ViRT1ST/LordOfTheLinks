@@ -6,19 +6,19 @@ import { useRouter } from 'next/navigation';
 
 import { cnJoin } from '@/utils/classes';
 
-type ControlsBottomProps = {
+type LinksControlsBottomProps = {
   prevPage: number | null;
   nextPage: number | null;
   currentPage: number;
   lastPage: number;
 };
 
-export default function ControlsBottom({
+export default function LinksControlsBottom({
   prevPage,
   nextPage,
   currentPage,
   lastPage,
-}: ControlsBottomProps) {
+}: LinksControlsBottomProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   

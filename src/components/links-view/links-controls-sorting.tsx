@@ -1,20 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-
+import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
 
-type SortingMenuProps = {
-  setIsShowing: React.Dispatch<React.SetStateAction<boolean>>;
-};
+export default function LinksControlsSorting() {
+  const resetModalWindowRelatedStates = useStore(
+    (state) => state.resetModalWindowRelatedStates
+  );
 
-export default function SortingMenu({ setIsShowing }: SortingMenuProps) {
   const handleDropdownClick = () => {
-    setIsShowing((prev) => !prev);
+    resetModalWindowRelatedStates();
   };
 
   const sort = () => {
-    setIsShowing((prev) => !prev);
+    resetModalWindowRelatedStates();
   };
 
   return (

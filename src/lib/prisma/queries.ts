@@ -6,7 +6,8 @@ import {
   type NewLinkData,
   type UpdateLinkData,
   type TagId,
-  type NewPinnedQueryData
+  type NewPinnedQueryData,
+  type UpdatePinnedQueryData
 } from '@/types/index';
 import { tagStringToArray } from '@/utils/tags';
 import prisma from '@/lib/prisma/connect';
@@ -238,7 +239,7 @@ export const createPinnedQuery = async (data: NewPinnedQueryData) => {
 };
 
 /* =============================================================
-Get all links
+Get all pinned queries
 ============================================================= */
 
 export const getAllPinnedQueries = async () => {
@@ -256,4 +257,40 @@ export const getAllPinnedQueries = async () => {
     pinnedQueries: pinnedQueries,
     totalCount
   };
+};
+
+/* =============================================================
+Update pinned query
+============================================================= */
+
+export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
+  const { id, label, query } = data;
+
+  const updatedLink = await prisma.pinned.update({
+    where: { id },
+    data: {
+      label,
+      query,
+      // priority later
+    },
+  });
+
+  return updatedLink;
+};
+
+/* =============================================================
+Delete pinned query
+============================================================= */
+
+export const deletePinnedQuery = async (id: number) => {
+  try {
+    const deletedPinnedQuery = await prisma.pinned.delete({
+      where: { id },
+    });
+
+    return deletedPinnedQuery;
+    
+  } catch (error) {
+    console.error(`Failed to delete pinned query with id ${id}:`, error);
+  }
 };

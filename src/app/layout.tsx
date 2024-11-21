@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';
 import './globals.css';
 
-import ModalContaner from '@/components/common/modal-container';
+import ModalContaner from '@/components/[common-ui]/modal-container';
 
 export const metadata: Metadata = {
   title: 'Lord of the Links',

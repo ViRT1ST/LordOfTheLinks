@@ -90,3 +90,9 @@ export type NewPinnedQueryData = {
   label: string;
   query: string;
 }
+
+export type UpdatePinnedQueryData = {
+  id: number;
+  label: string;
+  query: string;
+}

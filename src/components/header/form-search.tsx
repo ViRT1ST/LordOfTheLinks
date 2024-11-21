@@ -6,7 +6,7 @@ import { Search, X } from 'lucide-react';
 
 import { cn, cnJoin } from '@/utils/classes';
 
-export default function SearchForm() {
+export default function FormSearch() {
   const searchParams = useSearchParams();
   const router = useRouter();
 

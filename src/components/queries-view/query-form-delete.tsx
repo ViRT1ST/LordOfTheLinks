@@ -1,26 +1,26 @@
 'use client';
 
-import { type DbLinkWithTags } from '@/types/index';
-import { deleteLink } from '@/server-actions';
+import { type DbPinnedQuery } from '@/types/index';
+import { deletePinnedQuery } from '@/server-actions';
 import { cnJoin } from '@/utils/classes';
 
-type EditLinkFormProps = {
-  link: DbLinkWithTags;
+type QueryFormDeleteProps = {
+  query: DbPinnedQuery;
 };
 
-export default function DeleteLinkForm({ link }: EditLinkFormProps) {
+export default function QueryFormDelete({ query }: QueryFormDeleteProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await deleteLink(link.id);
+    await deletePinnedQuery(query.id);
   };
 
   return (
     <form onSubmit={handleSubmit} className={twForm} autoComplete="off">
-      <h1 className={twTitle}>Delete Link</h1>
-      <p className={twDescription}>Are you sure you want to delete this link?</p>
+      <h1 className={twTitle}>Delete Pinned Query</h1>
+      <p className={twDescription}>Are you sure you want to delete this query?</p>
 
       <div className={twLinkTitle}>
-        {link.title}
+        {query.label}
       </div>
 
       <div className={twButtonsAndErrorsArea}>

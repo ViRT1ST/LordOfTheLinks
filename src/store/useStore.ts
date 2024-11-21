@@ -1,18 +1,63 @@
 import { create } from 'zustand';
 
-type storeState = {
-  booleanStateReseter: number,
-  runBooleanStateReseter: () => void
-}
+import { DbLinkWithTags, DbPinnedQuery } from '@/types';
 
-// sorting (must save in local storage)
+type ModalWindowVariants = 
+  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
+  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
+  'settings';
 
-export const useStore = create<storeState>((set, get) => ({
-  booleanStateReseter: 0,
+type StoreState = {
+  currentModalWindow: null | ModalWindowVariants;
+  currentModalWindowPos: null | React.CSSProperties;
+  currentLinkData : null | DbLinkWithTags;
+  currentQueryData : null | DbPinnedQuery;
+  setCurrentModalWindow: (value: null | ModalWindowVariants) => void;
+  setCurrentModalWindowPos: (value: null | React.CSSProperties) => void;
+  setCurrentLinkData: (value: null | DbLinkWithTags) => void;
+  setCurrentQueryData: (value: null | DbPinnedQuery) => void;
+  resetModalWindowRelatedStates: () => void;
+};
 
-  runBooleanStateReseter: () => {
+export const useStore = create<StoreState>((set, get) => ({
+  currentModalWindow: null,
+  currentLinkData: null,
+  currentQueryData: null,
+  currentModalWindowPos: null,
+
+  setCurrentModalWindow: (value: null | ModalWindowVariants) => {
     set(() => ({
-      booleanStateReseter: Math.random()
+      currentModalWindow: value
     }));
-  }
+  },
+
+  setCurrentModalWindowPos: (value: null | React.CSSProperties) => {
+    set(() => ({
+      currentModalWindowPos: value
+    }));
+  },
+
+  setCurrentLinkData: (value: null | DbLinkWithTags) => {
+    set(() => ({
+      currentLinkData: value
+    }));
+  },
+
+  setCurrentQueryData: (value: null | DbPinnedQuery) => {
+    set(() => ({
+      currentQueryData: value
+    }));
+  },
+
+  resetModalWindowRelatedStates: () => {
+    set(() => ({
+      currentModalWindow: null,
+      currentModalWindowPos: null,
+      currentLinkData: null,
+      currentQueryData: null,
+    }));
+  },
 }));
+
+// TODO:
+// sorting (must save in local storage)

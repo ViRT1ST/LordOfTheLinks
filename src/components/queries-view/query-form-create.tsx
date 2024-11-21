@@ -7,7 +7,7 @@ import { createPinnedQuery } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { cnJoin } from '@/utils/classes';
 
-export default function CreatePinnedQueryForm() {
+export default function QueryFormCreate() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,6 +43,7 @@ export default function CreatePinnedQueryForm() {
         <input
           className={twInput}
           name="label"
+          id="label"
           type="text"
           placeholder="Label text"
         />
@@ -53,6 +54,7 @@ export default function CreatePinnedQueryForm() {
         <input
           className={twInput}
           name="query"
+          id="query"
           type="text"
           placeholder="Search text"
         />

@@ -7,5 +7,9 @@ export { deleteLink } from './all-actions';
 
 export { fetchLinkDataByUrl } from './all-actions';
 
-export { createPinnedQuery } from './all-actions';
 export { getPinnedQueriesAll } from './all-actions';
+
+export { createPinnedQuery } from './all-actions';
+export { updatePinnedQuery } from './all-actions';
+export { deletePinnedQuery } from './all-actions';
+

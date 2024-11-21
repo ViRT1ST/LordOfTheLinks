@@ -1,67 +1,95 @@
 'use client';
 
 import { useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
 
-import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
-import { updateLink } from '@/server-actions';
+import { LinkFormSchema } from '@/types/index';
+import { createLink, fetchLinkDataByUrl } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
+import { dispathSubmitEventToBody } from '@/utils/forms';
 import { cnJoin } from '@/utils/classes';
 
-type EditLinkFormProps = {
-  link: DbLinkWithTags;
-};
-
-export default function EditLinkForm({ link }: EditLinkFormProps) {
+export default function LinkFormCreate() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+  const [ titleInputText, setTitleInputText ] = useState('');
+  const [ infoInputText, setInfoInputText ] = useState<string | null>(null);
+  const [ faviconUrls, setFaviconUrls ] = useState<string[]>([]);
+  const [ isFetchingLinkData, setIsFetchingLinkData ] = useState(false);
+
+  const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+
+    if (!url.startsWith('http')) {
+      return '';
+    }
+
+    setIsFetchingLinkData(true);
+    const { title, description, faviconUrls } = await fetchLinkDataByUrl(url);
+
+    title && setTitleInputText(title);
+    description && setInfoInputText(description);
+    faviconUrls && setFaviconUrls(faviconUrls);
+
+    setIsFetchingLinkData(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
     const result = LinkFormSchema.safeParse(formDataObject);
 
     if (!result.success) {
-      e.stopPropagation();
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
       e.currentTarget.reset();
       setErrorMessages([]);
-      await updateLink({
-        id: link.id,
+
+      setIsFetchingLinkData(true);
+      await createLink({
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
-        tags: result.data.tags
+        tags: result.data.tags,
+        faviconUrls,
       });
+      setIsFetchingLinkData(false);
+      
+      dispathSubmitEventToBody();
+      // goto last page of links
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className={twForm} autoComplete="off">
-      <h1 className={twTitle}>Edit Current Link</h1>
-      <p className={twDescription}>Update link data</p>
+      <h1 className={twTitle}>Add New Link</h1>
+      <p className={twDescription}>Create new link with url, title and tags</p>
 
       <div className={twInputSection}>
-        <label htmlFor="url" className={twLabel}>URL</label>
+        <label htmlFor="url" className={twInputLabel}>URL</label>
         <input
           className={twInput}
           name="url"
+          id="url"
           type="text"
           placeholder="https://example.com"
-          defaultValue={link.url}
+          onChange={handleUrlInputChange}
         />
       </div>
 
       <div className={twInputSection}>
-        <label htmlFor="title" className={twLabel}>Title</label>
+        <label htmlFor="title" className={twInputLabel}>Title</label>
         <input
           className={twInput}
           name="title"
+          id="title"
           type="text"
           placeholder="Page title"
-          defaultValue={link.title}
+          value={titleInputText}
+          onChange={(e) => setTitleInputText(e.target.value)}
         />
       </div>
 
@@ -70,32 +98,40 @@ export default function EditLinkForm({ link }: EditLinkFormProps) {
         <textarea
           className={twTextArea}
           name="info"
+          id="info"
           placeholder="Notes or description"
-          defaultValue={link.info || ''}
+          value={infoInputText || ''}
+          onChange={(e) => setInfoInputText(e.target.value)}
         />
       </div>
 
       <div className={twInputSection}>
-        <label htmlFor="tags" className={twLabel}>Tags</label>
+        <label htmlFor="tags" className={twInputLabel}>Tags</label>
         <input
           className={twInput}
           name="tags"
+          id="tags"
           type="text"
           placeholder="Comma separated tags"
-          defaultValue={link.tags?.map((tag) => tag.value).join(', ') || ''}
         />
       </div>
 
-      <div className={twButtonsAndErrorsArea}>
+      <div className={twButtonsAndMsgArea}>
         <div>
           {errorMessages && errorMessages.map((message) => (
             <span key={message} className={twInputErrorMessage}>
               {message}
             </span>
           ))}
+          {isFetchingLinkData && (
+            <div className={twFetchingContainer}>
+              <LoaderCircle className="animate-spin" />
+              <span>Fetching link data</span>
+            </div>
+          )}
         </div>
         <button type="submit" className={twSubmitButton}>
-          Update
+          Create
         </button>
       </div>
     </form>
@@ -119,14 +155,14 @@ const twInputSection = cnJoin(
   'w-full mb-3 flex flex-row items-center'
 );
 
-const twLabel = cnJoin(
+const twInputLabel = cnJoin(
   'pt-[1px] w-12',
   'text-sm font-medium leading-none'
 );
 
 const twInput = cnJoin(
   'w-full h-10 px-3 py-2 flex',
-  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
+  'bg-white outline-none rounded ring-1 ring-neutral-200',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
 );
@@ -138,17 +174,22 @@ const twTextAreaLabel = cnJoin(
 
 const twTextArea = cnJoin(
   'w-full min-h-32 max-h-64 px-3 py-2 flex',
-  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
+  'bg-white outline-none rounded ring-1 ring-neutral-200',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
+);
+
+const twButtonsAndMsgArea = cnJoin(
+  'mt-4 flex flex-row justify-between',
 );
 
 const twInputErrorMessage = cnJoin(
   'block text-red-500 text-sm font-semibold'
 );
 
-const twButtonsAndErrorsArea = cnJoin(
-  'mt-4 flex flex-row justify-between',
+const twFetchingContainer = cnJoin(
+  'flex flex-row items-center gap-x-2',
+  'text-teal-500 text-sm font-semibold'
 );
 
 const twSubmitButton = cnJoin(

@@ -5,9 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/classes';
-import ModalWindow from '@/components/common/modal-window';
-import EditLinkForm from '@/components/forms/edit-link-form';
-import DeleteLinkForm from '@/components/forms/delete-link-form';
+import { useStore } from '@/store/useStore';
+import useMouseLeave from '@/hooks/useMouseLeave';
 
 type LinkItemMenuProps = {
   link: DbLinkWithTags;
@@ -15,41 +14,31 @@ type LinkItemMenuProps = {
 
 export default function LinkItemMenu({ link }: LinkItemMenuProps) {
   const [ isLinkMenuOpen, setIsLinkMenuOpen ] = useState(false);
-  const [ isEditModalOpen, setIsEditModalOpen ] = useState(false);
-  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState(false);
- 
+
+  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
+  const setCurrentLinkData = useStore((state) => state.setCurrentLinkData);
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMouseLeaved = useMouseLeave(containerRef);
 
   useEffect(() => {
-    const handleMouseLeave = () => {
+    if (isMouseLeaved) {
       setIsLinkMenuOpen(false);
-    };
-
-    const element = containerRef.current;
-
-    if (element) {
-      element.addEventListener('mouseleave', handleMouseLeave);
     }
-    
-    return () => {
-      if (element) {
-        element.removeEventListener('mouseleave', handleMouseLeave);
-      }
-    };
-  }, []);
+  }, [isMouseLeaved]);
 
   const toggleMenuButton = () => {
     setIsLinkMenuOpen((prev) => !prev);
   };
 
   const handleEditButtonClick = () => {
-    setIsEditModalOpen(true);
-    toggleMenuButton();
+    setCurrentLinkData(link);
+    setCurrentModalWindow('link-update');
   };
 
   const handleDeleteButtonClick = () => {
-    setIsDeleteModalOpen(true);
-    toggleMenuButton();
+    setCurrentLinkData(link);
+    setCurrentModalWindow('link-delete');
   };
 
   return (
@@ -68,18 +57,6 @@ export default function LinkItemMenu({ link }: LinkItemMenuProps) {
           </button>
         </div>
       )}
-
-      <ModalWindow
-        isOpen={isEditModalOpen}
-        setIsOpen={setIsEditModalOpen}
-        content={<EditLinkForm link={link} />}
-      />
-
-      <ModalWindow
-        isOpen={isDeleteModalOpen}
-        setIsOpen={setIsDeleteModalOpen}
-        content={<DeleteLinkForm link={link} />}
-      />
     </div>
   );
 }

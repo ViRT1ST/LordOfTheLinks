@@ -5,17 +5,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { cnJoin } from '@/utils/classes';
-import ModalWindow from '@/components/common/modal-window';
-import CreateLinkForm from '@/components/forms/create-link-form';
-import SearchForm from '@/components/forms/search-form';
-
 import { useStore } from '@/store/useStore';
+import ModalWindow from '@/components/[common-ui]/modal-window';
+import FormCreateLink from '@/components/links-view/link-form-create';
+import FormSearch from '@/components/header/form-search';
 
 export default function Header() {  
-  const [ isNewLinkModalOpen, setIsNewLinkModalOpen ] = useState(false);
+  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
 
-  const booleanStateReseter = useStore((state) => state.booleanStateReseter);
-  const runBooleanStateReseter = useStore((state) => state.runBooleanStateReseter);
 
   return (
     <header className={twHeader}>
@@ -31,27 +28,18 @@ export default function Header() {
         </div>
 
         <div className={twContainerMiddle}>
-          <SearchForm />
+          <FormSearch />
         </div>
 
         <div className={twContainerRight}>
-          <button className={twButton} onClick={() => setIsNewLinkModalOpen(true)}>
+          <button className={twButton} onClick={() => setCurrentModalWindow('link-create')}>
             Add New Link
           </button>
-          <button className={twButton} onClick={() => setIsNewLinkModalOpen(true)}>
+          <button className={twButton} onClick={() => {}}>
             Settings
           </button>
         </div>
 
-
-        <ModalWindow
-          content={<CreateLinkForm />}
-          isOpen={isNewLinkModalOpen}
-          setIsOpen={setIsNewLinkModalOpen}
-          isOverlayClickDoClose={false}
-          isOverlayDarkened={true}
-        />
- 
       {/* </div> */}
     </header>
   );
