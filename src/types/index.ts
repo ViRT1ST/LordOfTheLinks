@@ -49,6 +49,11 @@ export const LinkFormSchema = z.object({
   tags: z.string(),
 });
 
+export const QueryFormSchema = z.object({
+  label: z.string().min(2, { message: 'Label must be at least 2 characters' }),
+  query: z.string().min(2, { message: 'Query must be at least 2 characters' }),
+});
+
 export const PinnedFormSchema = z.object({
   label: z.string().min(2, { message: 'Label must be at least 2 characters' }),
   query: z.string().min(2, { message: 'Query must be at least 2 characters' }),

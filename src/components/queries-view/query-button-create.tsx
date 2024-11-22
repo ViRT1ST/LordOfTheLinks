@@ -9,15 +9,13 @@ export default function QueryButtonCreate() {
   const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
 
   return (
-    <div className={twCreateNewQueryContainer}>
-      <button onClick={() => setCurrentModalWindow('link-create')}>
-        <Plus />
-      </button>
-    </div>
+    <button className={twButton} onClick={() => setCurrentModalWindow('query-create')}>
+      <Plus />
+    </button>
   );
 }
 
-const twCreateNewQueryContainer = cnJoin(
+const twButton = cnJoin(
   'absolute right-[42px] top-[100px]',
 
   'text-black rounded-full trasnsition-all duration-150 ',
@@ -26,3 +24,4 @@ const twCreateNewQueryContainer = cnJoin(
   'bg-[#e4e4e4] text-neutral-600 border border-black/10',
   'hover:bg-[#f4f4f4] hover:text-neutral-800 hover:border-black/20',
 );
+

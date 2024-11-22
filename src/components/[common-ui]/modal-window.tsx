@@ -26,7 +26,7 @@ export default function ModalWindow({
 }: ModalWindowProps) {
   const [ isOpen, setIsOpen ] = useState(true);
 
-  const resetModalWindowRelatedStates = useStore((state) => state.resetModalWindowRelatedStates);
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const isEscPressed = useKeyDown('Escape');
   const isOverlayClicked = useClickOnElement('modal-window');
@@ -37,7 +37,7 @@ export default function ModalWindow({
 
   useEffect(() => {
     if (!isOpen) {
-      resetModalWindowRelatedStates();
+      resetModalWindowStates();
     }
   }, [isOpen]);
 

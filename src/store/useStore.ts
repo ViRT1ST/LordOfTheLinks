@@ -16,7 +16,7 @@ type StoreState = {
   setCurrentModalWindowPos: (value: null | React.CSSProperties) => void;
   setCurrentLinkData: (value: null | DbLinkWithTags) => void;
   setCurrentQueryData: (value: null | DbPinnedQuery) => void;
-  resetModalWindowRelatedStates: () => void;
+  resetModalWindowStates: () => void;
 };
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -49,7 +49,7 @@ export const useStore = create<StoreState>((set, get) => ({
     }));
   },
 
-  resetModalWindowRelatedStates: () => {
+  resetModalWindowStates: () => {
     set(() => ({
       currentModalWindow: null,
       currentModalWindowPos: null,

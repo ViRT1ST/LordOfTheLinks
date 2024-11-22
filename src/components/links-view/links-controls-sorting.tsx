@@ -4,16 +4,14 @@ import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
 
 export default function LinksControlsSorting() {
-  const resetModalWindowRelatedStates = useStore(
-    (state) => state.resetModalWindowRelatedStates
-  );
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const handleDropdownClick = () => {
-    resetModalWindowRelatedStates();
+    resetModalWindowStates();
   };
 
   const sort = () => {
-    resetModalWindowRelatedStates();
+    resetModalWindowStates();
   };
 
   return (
