@@ -48,16 +48,22 @@ export const getIconUrlsFromHtmlSource = (pageHtml: string, pageUrl: string) => 
     /<link[^>]*rel=["']icon["'][^>]*href=["']([^"']+)["'][^>]*type=["']image\/svg\+xml["']/i,
 
     // Icons: Apple
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']256x256["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']228x228["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']192x192["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']180x180["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']152x152["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']128x128["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']120x120["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*rel=["']apple-touch-icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']96x96["'][^>]*href=["']([^"']+)["']/i,
     /<link[^>]*rel=["']apple-touch-icon["'][^>]*href=["']([^"']+)["']/i,
+    /<link[^>]*href=["']([^"']+)["'][^>]*rel=["']apple-touch-icon["']/i,
 
     // Icons: PNG larger than 96x96
     /<link[^>]*rel=["']icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']228x228["'][^>]*href=["']([^"']+)["']/i,
     /<link[^>]*rel=["']icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']192x192["'][^>]*href=["']([^"']+)["']/i,
     /<link[^>]*rel=["']icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']128x128["'][^>]*href=["']([^"']+)["']/i,
     /<link[^>]*rel=["']icon["'][^>]*type=["']image\/png["'][^>]*sizes=["']96x96["'][^>]*href=["']([^"']+)["']/i,
-
-    // Icons: Mask
-    // /<link[^>]*rel=["']mask-icon["'][^>]*href=["']([^"']+)["']/i,
 
     // Site images
     /<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i,
@@ -84,7 +90,7 @@ export const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
   return [
     `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
     `https://api.faviconkit.com/${pageUrlObj.host}`,
-    `https://icon.horse/icon/${pageUrlObj.host}`,
+    // `https://icon.horse/icon/${pageUrlObj.host}`,
     `https://logo.clearbit.com/${pageUrlObj.host}`,
   ];
 };

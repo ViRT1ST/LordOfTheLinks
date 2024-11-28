@@ -40,9 +40,9 @@ export default function QueryItem({ query }: QueryItemProps) {
 }
 
 const twLink = cnJoin(
-  'h-8 inline-flex rounded-md border border-black/20  px-5 py-4',
+  'h-8 inline-flex rounded-md border border-black/20 px-4 pt-[1px] ',
   'justify-center items-center',
-  ' text-base font-medium text-black/70',
+  ' text-sm font-medium text-black/70',
   'font-rubik transition-all',
 
   // bg-white/40

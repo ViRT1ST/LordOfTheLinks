@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/classes';
 import { getDomain } from '@/utils/parsing';
+import { buildHintForLinkItem } from '@/utils/links';
 import { FAVICON_SIZE } from '@/config/public';
 import LinkItemMenu from '@/components/links-view/link-item-menu';
 
@@ -16,9 +17,10 @@ type LinkItemProps = {
 const faviconSize = FAVICON_SIZE / 2;
 
 export default function LinkItem({ link }: LinkItemProps) {
-  const linkHint = link.info || '';
+
   const linkDomain = getDomain(link.url);
   const linkImageSrc = `/images/site-icons/${linkDomain}.png`;
+  const linkHint = buildHintForLinkItem(link);
 
   return (
     <div className={twItemContainer}>
@@ -65,19 +67,19 @@ const twNextLink = cnJoin(
 );
 
 const twFavicon = cnJoin(
-  'flex rounded-sm overflow-hidden'
+  'min-w-[48px] min-h-[48px] flex rounded-sm overflow-hidden'
 );
 
 const twTitleAndUrlContainer = cnJoin(
-  'pl-3 w-[900px]'
+  'max-w-[1000px] pl-3'
 );
 
 const twTitle = cnJoin(
-  'text-lg text-black truncate font-geistsans'
+  'text-lg text-black truncate '
 );
 
 const twDomain = cnJoin(
-  'text-sm text-black/50 font-geistsans'
+  'text-sm text-black/50 '
 );
 
 const twItemRightPart = cnJoin(

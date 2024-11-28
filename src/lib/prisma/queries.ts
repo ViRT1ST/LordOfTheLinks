@@ -28,6 +28,11 @@ export const getAllLinks = async (
     },
     take: resultsPerPage,
     skip: (page - 1) * resultsPerPage,
+    orderBy: [
+      {
+        priority: 'desc',
+      },
+    ],
   });
 
   return {

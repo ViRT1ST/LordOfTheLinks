@@ -38,7 +38,7 @@ export default function QueryItemMenu() {
 }
 
 const twMenu = cnJoin(
-  'font-geistsans',
+
   'z-20 w-[120px] py-2 px-3 rounded-md border-black/10',
   'flex flex-col items-end',
   'bg-white border border-black/40',
@@ -49,6 +49,7 @@ const twMenu = cnJoin(
 const twMenuItem = cnJoin(
   'h-7 items-center ', //h-7 is 28px
   'text-sm font-medium whitespace-nowrap text-xs',
+  ' font-geistsans',
 );
 
 const twMenuDivider = cnJoin(
