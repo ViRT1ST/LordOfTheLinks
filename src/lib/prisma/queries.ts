@@ -106,6 +106,19 @@ export const getLinksBySearch = async (
 };
 
 /* =============================================================
+Get link by ID
+============================================================= */
+
+export const getLinkById = async (id: number) => {
+  return await prisma.link.findUnique({
+    where: { id },
+    include: {
+      tags: true,
+    },
+  });
+};
+
+/* =============================================================
 Create or update tag and return it record
 ============================================================= */
 
@@ -171,19 +184,58 @@ export const createLink = async (data: NewLinkData) => {
 };
 
 /* =============================================================
+Delete non existing tags
+============================================================= */
+
+const deleteNonExistingTags = async (tags: string[]) => {
+  for (const tag of tags) {
+    // count how many links have this tag
+    const count = await prisma.link.count({
+      where: {
+        tags: {
+          some: {
+            value: tag,
+          },
+        },
+      },
+    });
+
+    // if there are no links with this tag, delete it
+    if (count === 0) {
+      await prisma.tag.delete({
+        where: {
+          value: tag,
+        },
+      });
+    }
+  }
+};
+
+/* =============================================================
+Get tags strings from link
+============================================================= */
+
+const getTagsFromLink = async (linkId: number) => {
+  const link = await getLinkById(linkId);
+  return link?.tags.map((tag) => tag.value) || [];
+};
+
+/* =============================================================
 Update link
 ============================================================= */
 
 export const updateLink = async (data: UpdateLinkData) => {
   const { id, url, title, info, tags } = data;
 
-  const tagsArray: string[] = tagStringToArray(tags || '');
+  const newTagsArray: string[] = tagStringToArray(tags || '');
+  const existingTagsArray = await getTagsFromLink(id);
+  const deletedTagsArray = existingTagsArray.filter((tag) => !newTagsArray?.includes(tag));
 
   let tagIds: TagId[] = [];
 
   // creating or updating tags and getting their ids
-  if (tagsArray.length > 0) {
-    const tagRecords = await upsertTags(tagsArray);
+  if (newTagsArray.length > 0) {
+    const tagRecords = await upsertTags(newTagsArray);
     tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
   }
 
@@ -203,6 +255,8 @@ export const updateLink = async (data: UpdateLinkData) => {
       tags: true,
     },
   });
+
+  await deleteNonExistingTags(deletedTagsArray);
 
   return updatedLink;
 };
