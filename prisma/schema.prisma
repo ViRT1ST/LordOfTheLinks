@@ -10,6 +10,7 @@ datasource db {
 model Link {
   id        Int      @id @default(autoincrement())
   url       String
+  domain    String
   title     String
   info      String?
   priority  Int      @default(10)

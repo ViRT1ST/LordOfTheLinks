@@ -1,4 +1,4 @@
-import { getLinksAll, getLinksBySearch } from '@/server-actions';
+import { getLinks } from '@/server-actions';
 import { cnJoin } from '@/utils/classes';
 import LinkItem from '@/components/links-view/link-item';
 import LinksControlsBottom from '@/components/links-view/links-controls-bottom';
@@ -11,10 +11,8 @@ type LinksViewProps = {
 
 const resultsPerPage = 9;
 
-export default async function LinksView({ query, page }: LinksViewProps) {   
-  const { links, totalCount } = query
-    ? await getLinksBySearch(query, page)
-    : await getLinksAll(page);
+export default async function LinksView({ query, page }: LinksViewProps) { 
+  const { links, totalCount } = await getLinks(query, page);
 
   const totalPages = Math.ceil(totalCount / resultsPerPage);
   const prevPage = page === 1 ? null : page - 1;

@@ -21,15 +21,31 @@ import * as images from '@/utils/images';
 Links
 ============================================================= */
 
-export const getLinksAll = async (page = 1):
+export const getLinks = async (searchQuery: string, page = 1):
   Promise<DbGetLinksResponse> => {
-  return await queries.getAllLinks(page, LINKS_PER_PAGE);
+  return await queries.getLinks(searchQuery, page, LINKS_PER_PAGE);
 };
 
-export const getLinksBySearch = async (searchQuery: string, page = 1):
-  Promise<DbGetLinksResponse> => {
-  return await queries.getLinksBySearch(searchQuery, page, LINKS_PER_PAGE);
-};
+
+// export const getLinksAll = async (page = 1):
+//   Promise<DbGetLinksResponse> => {
+//   return await queries.getAllLinks(page, LINKS_PER_PAGE);
+// };
+
+// export const getLinksBySearch = async (searchQuery: string, page = 1):
+//   Promise<DbGetLinksResponse> => {
+//   return await queries.getLinksBySearch(searchQuery, page, LINKS_PER_PAGE);
+// };
+
+// export const getLinkById = async (id: number):
+//   Promise<DbGetLinksResponse> => {
+//   const link = await queries.getLinkById(id);
+  
+//   return {
+//     links: link ? [link] : [],
+//     totalCount: 1
+//   };
+// };
 
 export const createLink = async (data: NewLinkData) => {
   await images.createImageForLink(data);

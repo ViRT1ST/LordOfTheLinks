@@ -2,6 +2,7 @@
 
 import { type DbLinkWithTags } from '@/types/index';
 import { deleteLink } from '@/server-actions';
+import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
 
 type LinkFormDeleteProps = {
@@ -9,9 +10,12 @@ type LinkFormDeleteProps = {
 };
 
 export default function LinkFormDelete({ link }: LinkFormDeleteProps) {
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await deleteLink(link.id);
+    resetModalWindowStates();
   };
 
   return (

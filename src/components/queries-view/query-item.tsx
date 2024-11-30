@@ -15,6 +15,8 @@ export default function QueryItem({ query }: QueryItemProps) {
   const setCurrentModalWindowPos = useStore((state) => state.setCurrentModalWindowPos);
   const setCurrentQueryData = useStore((state) => state.setCurrentQueryData);
 
+  const correctedQuery = query.query.replaceAll(' ', '+');
+
   const handleRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -32,7 +34,7 @@ export default function QueryItem({ query }: QueryItemProps) {
 
   return (
     <div onContextMenu={handleRightClick}>
-      <Link className={twLink} href={`/?q=${query.query}`}>
+      <Link className={twLink} href={`/?q=${correctedQuery}`}>
         {query.label}
       </Link>
     </div>

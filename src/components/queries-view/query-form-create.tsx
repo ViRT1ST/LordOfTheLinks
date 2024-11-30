@@ -5,31 +5,35 @@ import { useState } from 'react';
 import { PinnedFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
+import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
 
 export default function QueryFormCreate() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
 
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
     const result = PinnedFormSchema.safeParse(formDataObject);
 
     if (!result.success) {
-      e.stopPropagation();
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
-      e.currentTarget.reset();
       setErrorMessages([]);
 
-      console.log('create pq');
       await createPinnedQuery({
         label: result.data.label,
         query: result.data.query
       });
+
+      // e.currentTarget.reset();
+      resetModalWindowStates();
     }
   };
 

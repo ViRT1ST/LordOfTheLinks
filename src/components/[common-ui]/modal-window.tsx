@@ -7,7 +7,6 @@ import { cn, cnJoin } from '@/utils/classes';
 import { useStore } from '@/store/useStore';
 import useKeyDown from '@/hooks/useKeyDown';
 import useClickOnElement from '@/hooks/useClickOnElement';
-import useSubmitEvent from '@/hooks/useSubmitEvent';
 
 type ModalWindowProps = {
   content: React.ReactNode;
@@ -30,7 +29,6 @@ export default function ModalWindow({
 
   const isEscPressed = useKeyDown('Escape');
   const isOverlayClicked = useClickOnElement('modal-window');
-  const isSubmitDisaptched = useSubmitEvent();
 
   const contentClassNames = positionStyles ? 'absolute' : 'relative';
   const contentStyles = positionStyles ? positionStyles : {};
@@ -42,14 +40,10 @@ export default function ModalWindow({
   }, [isOpen]);
 
   useEffect(() => {
-    if (
-      isEscPressed ||
-      isSubmitDisaptched ||
-      (isOverlayClickDoClose && isOverlayClicked)
-    ) {
+    if (isEscPressed || (isOverlayClickDoClose && isOverlayClicked)) {
       setIsOpen(false);
     }
-  }, [isEscPressed, isSubmitDisaptched, isOverlayClickDoClose, isOverlayClicked]);
+  }, [isEscPressed, isOverlayClickDoClose, isOverlayClicked]);
 
   return (isOpen ? (
     <div id="modal-window" className={cn(twModalOverlay, isOverlayDarkened && 'bg-black/80')}>

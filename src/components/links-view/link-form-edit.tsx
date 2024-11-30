@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { updateLink } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
+import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
-import { dispathSubmitEventToBody } from '@/utils/forms';
 
 type LinkFormEditProps = {
   link: DbLinkWithTags;
@@ -14,6 +14,8 @@ type LinkFormEditProps = {
 
 export default function LinkFormEdit({ link }: LinkFormEditProps) {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,18 +29,20 @@ export default function LinkFormEdit({ link }: LinkFormEditProps) {
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
-      e.currentTarget.reset();
-      
       setErrorMessages([]);
+
+      //setIsFetchingLinkData(true);
       await updateLink({
         id: link.id,
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
-        tags: result.data.tags
+        tags: result.data.tags,
+        priority: result.data.priority
       });
+      //setIsFetchingLinkData(false);
 
-      dispathSubmitEventToBody();
+      resetModalWindowStates();
     }
   };
 
@@ -94,6 +98,18 @@ export default function LinkFormEdit({ link }: LinkFormEditProps) {
         />
       </div>
 
+      <div className={twInputSection}>
+        <label htmlFor="priority" className={twLabel}>Priority</label>
+        <input
+          className={twInput}
+          name="priority"
+          id="priority"
+          type="text"
+          placeholder="Set priority in display order (0-100, default 10)"
+          defaultValue={link.priority}
+        />
+      </div>
+
       <div className={twButtonsAndErrorsArea}>
         <div>
           {errorMessages && errorMessages.map((message) => (
@@ -128,7 +144,7 @@ const twInputSection = cnJoin(
 );
 
 const twLabel = cnJoin(
-  'pt-[1px] w-12',
+  'pt-[1px] w-20',
   'text-sm font-medium leading-none'
 );
 
@@ -140,7 +156,7 @@ const twInput = cnJoin(
 );
 
 const twTextAreaLabel = cnJoin(
-  'pt-[11px] w-12 self-start',
+  'pt-[11px] w-20 self-start',
   'text-sm font-medium leading-none',
 );
 

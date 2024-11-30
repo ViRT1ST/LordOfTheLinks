@@ -19,7 +19,7 @@ export default function LinksControlsTop({ totalCount }: LinksControlsTopProps) 
     const reactCssPosStyles = {
       top: `${rect.top - menuOffsetTop}px`,
       right: `${window.innerWidth - rect.right - menuOffsetRight}px`,
-    }
+    };
     
     setCurrentModalWindowPos(reactCssPosStyles);
     setCurrentModalWindow('links-sorting-menu');

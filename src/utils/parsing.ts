@@ -84,17 +84,26 @@ export const getIconUrlsFromHtmlSource = (pageHtml: string, pageUrl: string) => 
   return iconUrls;
 };
 
-export const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
-  const pageUrlObj = new URL(pageUrl);
-
-  return [
-    `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
-    `https://api.faviconkit.com/${pageUrlObj.host}`,
-    // `https://icon.horse/icon/${pageUrlObj.host}`,
-    `https://logo.clearbit.com/${pageUrlObj.host}`,
-  ];
+export const getDomain = (url: string) => {
+  try {
+    return new URL(url).hostname.replace('www.', '').toLowerCase();
+    
+  } catch (error) {
+    return url;
+  }
 };
 
-export const getDomain = (url: string) => {
-  return new URL(url).host.replace('www.', '');
+export const getShortDomain = (url: string) => {
+  try {
+    const domain  = getDomain(url);
+
+    const parts = domain.split('.');
+    
+    return parts.length > 1
+      ? parts.slice(-2).join('.')
+      : domain;
+
+  } catch (error: any) {
+    return url;
+  }
 };

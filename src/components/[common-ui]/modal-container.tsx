@@ -61,7 +61,7 @@ export default function ModalContaner() {
       {currentModalWindow === 'query-create' && (
         <ModalWindow
           content={<QueryFormCreate />}
-          isOverlayClickDoClose={true}
+          isOverlayClickDoClose={false}
           isOverlayDarkened={true}
         />
       )}

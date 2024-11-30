@@ -1,15 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
 import { createLink, fetchLinkDataByUrl } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
-import { dispathSubmitEventToBody } from '@/utils/forms';
+import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/classes';
 
 export default function LinkFormCreate() {
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+  const router = useRouter();
+
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
   const [ titleInputText, setTitleInputText ] = useState('');
   const [ infoInputText, setInfoInputText ] = useState<string | null>(null);
@@ -45,21 +49,21 @@ export default function LinkFormCreate() {
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
-      e.currentTarget.reset();
       setErrorMessages([]);
 
       setIsFetchingLinkData(true);
-      await createLink({
+      const link = await createLink({
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
         tags: result.data.tags,
+        priority: result.data.priority,
         faviconUrls,
       });
       setIsFetchingLinkData(false);
-      
-      dispathSubmitEventToBody();
-      // goto last page of links
+
+      resetModalWindowStates();
+      router.push(`/?q=id:${link.id}`);
     }
   };
 
@@ -116,6 +120,17 @@ export default function LinkFormCreate() {
         />
       </div>
 
+      <div className={twInputSection}>
+        <label htmlFor="priority" className={twInputLabel}>Priority</label>
+        <input
+          className={twInput}
+          name="priority"
+          id="priority"
+          type="text"
+          placeholder="Set priority in display order (0-100, default 10)"
+        />
+      </div>
+
       <div className={twButtonsAndMsgArea}>
         <div>
           {errorMessages && errorMessages.map((message) => (
@@ -156,7 +171,7 @@ const twInputSection = cnJoin(
 );
 
 const twInputLabel = cnJoin(
-  'pt-[1px] w-12',
+  'pt-[1px] w-20 ',
   'text-sm font-medium leading-none'
 );
 
@@ -168,7 +183,7 @@ const twInput = cnJoin(
 );
 
 const twTextAreaLabel = cnJoin(
-  'pt-[11px] w-12 self-start',
+  'pt-[11px] w-20 self-start',
   'text-sm font-medium leading-none',
 );
 

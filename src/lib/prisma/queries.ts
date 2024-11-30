@@ -7,10 +7,12 @@ import {
   type UpdateLinkData,
   type TagId,
   type NewPinnedQueryData,
-  type UpdatePinnedQueryData
+  type UpdatePinnedQueryData,
+  DbGetLinksResponse
 } from '@/types/index';
 import { tagStringToArray } from '@/utils/tags';
 import prisma from '@/lib/prisma/connect';
+import { getDomain } from '@/utils/parsing';
 
 /* =============================================================
 Get all links
@@ -61,7 +63,7 @@ export const getLinksBySearch = async (
         },
       },
       {
-        url: {
+        domain: {
           contains: term,
         },
       },
@@ -119,6 +121,47 @@ export const getLinkById = async (id: number) => {
 };
 
 /* =============================================================
+Get links
+============================================================= */
+
+export const getLinks = async (
+  searchQuery?: string,
+  page?: number,
+  resultsPerPage?: number
+) => {
+  const response: DbGetLinksResponse = {
+    links: [],
+    totalCount: 0
+  };
+
+  const isSearchById = searchQuery && searchQuery.match(/^id:\d+$/);
+
+  if (isSearchById) {
+    const id = parseInt(searchQuery.replace('id:', ''), 10);
+    const link = await getLinkById(id);
+
+    if (link) {
+      response.links = [link];
+      response.totalCount = 1;
+    }
+
+  } else if (searchQuery && page && resultsPerPage) {
+    const { links, totalCount } = await getLinksBySearch(searchQuery, page, resultsPerPage);
+
+    response.links = links;
+    response.totalCount = totalCount;
+
+  } else if (!searchQuery && page && resultsPerPage) {
+    const { links, totalCount } = await getAllLinks(page, resultsPerPage);
+
+    response.links = links;
+    response.totalCount = totalCount;
+  }
+
+  return response;
+};
+
+/* =============================================================
 Create or update tag and return it record
 ============================================================= */
 
@@ -153,7 +196,7 @@ Create new link
 ============================================================= */
 
 export const createLink = async (data: NewLinkData) => {
-  const { url, title, info, tags } = data;
+  const { url, title, info, tags, priority } = data;
 
   const tagsArray: string[] = tagStringToArray(tags || '');
 
@@ -169,8 +212,10 @@ export const createLink = async (data: NewLinkData) => {
   const newLink = await prisma.link.create({
     data: {
       url,
+      domain: getDomain(url),
       title,
       info: info || null,
+      priority,
       tags: {
         connect: tagIds,
       },
@@ -225,7 +270,7 @@ Update link
 ============================================================= */
 
 export const updateLink = async (data: UpdateLinkData) => {
-  const { id, url, title, info, tags } = data;
+  const { id, url, title, info, tags, priority } = data;
 
   const newTagsArray: string[] = tagStringToArray(tags || '');
   const existingTagsArray = await getTagsFromLink(id);
@@ -244,8 +289,10 @@ export const updateLink = async (data: UpdateLinkData) => {
     where: { id },
     data: {
       url,
+      domain: getDomain(url),
       title,
       info: info || null,
+      priority,
       tags: {
         // replacing tags connections
         set: tagIds, 

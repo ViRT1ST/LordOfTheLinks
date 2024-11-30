@@ -6,7 +6,7 @@ import { type DbPinnedQuery, QueryFormSchema } from '@/types/index';
 import { updatePinnedQuery } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { cnJoin } from '@/utils/classes';
-import { dispathSubmitEventToBody } from '@/utils/forms';
+import { useStore } from '@/store/useStore';
 
 type QueryFormEditProps = {
   query: DbPinnedQuery;
@@ -14,6 +14,8 @@ type QueryFormEditProps = {
 
 export default function QueryFormEdit({ query }: QueryFormEditProps) {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+
+  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,16 +29,16 @@ export default function QueryFormEdit({ query }: QueryFormEditProps) {
       setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
-      e.currentTarget.reset();
-      
       setErrorMessages([]);
+
       await updatePinnedQuery({
         id: query.id,
         label: result.data.label,
         query: result.data.query,
       });
 
-      dispathSubmitEventToBody();
+      // e.currentTarget.reset();
+      resetModalWindowStates();
     }
   };
 

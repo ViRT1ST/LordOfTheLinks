@@ -9,6 +9,16 @@ import { type NewLinkData } from '@/types';
 import { defaultBase64Icon } from '@/utils/other';
 import * as parsing from '@/utils/parsing';
 
+const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
+  const pageUrlObj = new URL(pageUrl);
+
+  return [
+    `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
+    `https://api.faviconkit.com/${pageUrlObj.host}`,
+    `https://logo.clearbit.com/${pageUrlObj.host}`,
+  ];
+};
+
 export const createBase64Image = (buffer: Buffer | null) => {
   return buffer ? buffer.toString('base64') : null;
 };
@@ -101,7 +111,7 @@ export const createImageForLink = async (data: NewLinkData) => {
   if (!isFileExists) {
     const allFaviconUrls = [
       ...faviconUrls,
-      ...parsing.getIconUrlsFrom3dPartyServices(url)
+      ...getIconUrlsFrom3dPartyServices(url)
     ];
 
     for (const faviconUrl of allFaviconUrls) {

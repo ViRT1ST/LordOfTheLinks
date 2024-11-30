@@ -7,8 +7,10 @@ import { z } from 'zod';
 export type DbLink = {
   id: number;
   url: string;
+  domain: string;
   title: string;
   info: string | null;
+  priority: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,21 +44,34 @@ export type DbPinnedQuery = {
 Other
 ============================================================= */
 
+const invalidPriorityMsg = 'Priority must be a number between 0 and 100';
+
 export const LinkFormSchema = z.object({
-  url: z.string().min(2, { message: 'URL must be at least 2 characters' }),
-  title: z.string().min(2, { message: 'Title must be at least 2 characters' }),
+  url: z.string().trim().url({'message': 'Invalid URL'}),
+  title: z.string().trim().min(2, { message: 'Title must be at least 2 characters' }),
+  priority: z
+    .string()
+    .trim()
+    // Replacing empty string with "10"
+    .transform((val) => (val === '' ? '10' : val))
+    // Checking if it's a number
+    .refine((val) => !isNaN(Number(val)), { message: invalidPriorityMsg })
+    // Transforming it to number
+    .transform((val) => Number(val))
+    // Checking if it's between 0 and 100
+    .refine((val) => val >= 0 && val <= 100, { message: invalidPriorityMsg }),
   info: z.string(),
   tags: z.string(),
 });
 
 export const QueryFormSchema = z.object({
-  label: z.string().min(2, { message: 'Label must be at least 2 characters' }),
-  query: z.string().min(2, { message: 'Query must be at least 2 characters' }),
+  label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
+  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
 });
 
 export const PinnedFormSchema = z.object({
-  label: z.string().min(2, { message: 'Label must be at least 2 characters' }),
-  query: z.string().min(2, { message: 'Query must be at least 2 characters' }),
+  label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
+  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
 });
 
 export type FetchedUrlData = {
@@ -70,15 +85,19 @@ export type NewLinkData = {
   title: string;
   info: string | null;
   tags: string;
+  priority: number;
   faviconUrls: string[];
 };
 
+// NewLinkData & id must be
 export type UpdateLinkData = {
   id: number;
   url: string;
   title: string;
   info: string | null
   tags: string;
+  priority: number;
+  // faviconUrls //todo
 }
 
 export type TagId = {
