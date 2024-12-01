@@ -80,8 +80,8 @@ const twMenuContainer = cnJoin(
 
 const twMenuButton = cnJoin(
   'w-20 h-7 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'bg-transparent border border-black/10 text-black/60 rounded-sm',
+  'bg-transparent border border-black/20 text-black/60 rounded-sm',
   'text-sm font-medium whitespace-nowrap transition-all',
-  'hover:text-black hover:border-black/15',
+  'hover:text-black hover:border-black/30',
 );
 

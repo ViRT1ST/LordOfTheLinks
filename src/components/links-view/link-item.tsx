@@ -19,6 +19,9 @@ export default function LinkItem({ link }: LinkItemProps) {
 ;
   const linkImageSrc = `/images/site-icons/${link.domain}.png`;
   const linkHint = buildHintForLinkItem(link);
+  
+  // Sort tags by value
+  link.tags.sort((a, b) => a.value.localeCompare(b.value));
 
   return (
     <div className={twItemContainer}>

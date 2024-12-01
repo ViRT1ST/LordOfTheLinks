@@ -33,7 +33,7 @@ export default function LinksControlsTop({ totalCount }: LinksControlsTopProps) 
 
       <div className={twSection}>
         <button className={twButton} onClick={handleButtonClick}>
-          SORTED BY DOMAIN DESC
+          SORTED BY PRORITY DESC
         </button>
       </div>
     </div>

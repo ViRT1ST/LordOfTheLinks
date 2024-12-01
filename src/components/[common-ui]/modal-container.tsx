@@ -3,23 +3,19 @@
 import { useStore } from '@/store/useStore';
 import ModalWindow from '@/components/[common-ui]/modal-window';
 import LinkFormDelete from '@/components/links-view/link-form-delete';
-import LinkFormEdit from '../links-view/link-form-edit';
-import LinkFormCreate from '../links-view/link-form-create';
-import LinksControlsSorting from '../links-view/links-controls-sorting';
-import QueryFormCreate from '../queries-view/query-form-create';
-import QueryFormEdit from '../queries-view/query-form-edit';
-import QueryFormDelete from '../queries-view/query-form-delete';
-import QueryItemMenu from '../queries-view/query-item-menu';
+import LinkFormEdit from '@/components/links-view/link-form-edit';
+import LinkFormCreate from '@/components/links-view/link-form-create';
+import LinksControlsSorting from '@/components/links-view/links-controls-sorting';
+import QueryFormCreate from '@/components/queries-view/query-form-create';
+import QueryFormEdit from '@/components/queries-view/query-form-edit';
+import QueryFormDelete from '@/components/queries-view/query-form-delete';
+import QueryItemMenu from '@/components/queries-view/query-item-menu';
 
 export default function ModalContaner() {
   const currentModalWindow = useStore((state) => state.currentModalWindow);
   const currentModalWindowPos = useStore((state) => state.currentModalWindowPos);
   const currentLinkData = useStore((state) => state.currentLinkData);
   const currentQueryData = useStore((state) => state.currentQueryData);
-
-  // console.log(currentModalWindow);
-  // console.log(currentLinkData);
-  // console.log(currentQueryData);
 
   return (
     <div id="modal-container" className="z-40 absolute top-0 left-0">

@@ -18,7 +18,7 @@ export default function LinksControlsSorting() {
     <div className={twMenu}>
       {/* <div> */}
         <button className={twCurrentSortingButton} onClick={handleDropdownClick}>
-          SORTED BY DOMAIN DESC
+          SORTED BY PRORITY DESC
         </button>
       {/* </div> */}
 
