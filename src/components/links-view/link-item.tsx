@@ -16,13 +16,11 @@ type LinkItemProps = {
 const faviconSize = FAVICON_SIZE / 2;
 
 export default function LinkItem({ link }: LinkItemProps) {
-;
-  const linkImageSrc = `/images/site-icons/${link.domain}.png`;
-  const linkHint = buildHintForLinkItem(link);
-  
-  // Sort tags by value
-  link.tags.sort((a, b) => a.value.localeCompare(b.value));
+  link.tags =  [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
 
+  const linkImageSrc = `/images/site-icons/${link.domain}.png`;
+  const linkHint = buildHintForLinkItem(link) || 'N/A';
+  
   return (
     <div className={twItemContainer}>
       <div className={twItemLeftPart}>

@@ -1,12 +1,13 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { cn, cnJoin } from '@/utils/classes';
 import { useStore } from '@/store/useStore';
 import useKeyDown from '@/hooks/useKeyDown';
 import useClickOnElement from '@/hooks/useClickOnElement';
+import useTrapFocus from '@/hooks/useTrapFocus';
 
 type ModalWindowProps = {
   content: React.ReactNode;
@@ -14,6 +15,7 @@ type ModalWindowProps = {
   isOverlayDarkened?: boolean;
   isCloseButtonVisible?: boolean;
   positionStyles?: React.CSSProperties | null;
+  focusOnFirstElement?: boolean;
 };
 
 export default function ModalWindow({
@@ -22,13 +24,21 @@ export default function ModalWindow({
   isOverlayDarkened = true,
   isCloseButtonVisible = true,
   positionStyles = null,
+  focusOnFirstElement = false,
 }: ModalWindowProps) {
   const [ isOpen, setIsOpen ] = useState(true);
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const isEscPressed = useKeyDown('Escape');
-  const isOverlayClicked = useClickOnElement('modal-window');
+  const isOverlayClicked = useClickOnElement(modalRef);
+  useTrapFocus(modalRef, focusOnFirstElement);
+
+  const dialogClassNames = cn(
+    twModalOverlay,
+    isOverlayDarkened ? 'bg-black/80' : 'bg-transparent'
+  );
 
   const contentClassNames = positionStyles ? 'absolute' : 'relative';
   const contentStyles = positionStyles ? positionStyles : {};
@@ -46,16 +56,21 @@ export default function ModalWindow({
   }, [isEscPressed, isOverlayClickDoClose, isOverlayClicked]);
 
   return (isOpen ? (
-    <div id="modal-window" className={cn(twModalOverlay, isOverlayDarkened && 'bg-black/80')}>
+    <dialog
+      ref={modalRef}
+      id="modal-window"
+      role="dialog"
+      aria-modal="true"
+      className={dialogClassNames}>
       <div className={contentClassNames} style={contentStyles}>
+        {content}
         {isCloseButtonVisible && (
           <button className={twCloseButton} onClick={() => setIsOpen(false)}>
             <X />
           </button>
         )}
-        {content}
       </div>
-    </div>
+    </dialog>
   ) : (
     null
   ));

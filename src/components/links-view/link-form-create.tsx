@@ -18,7 +18,7 @@ export default function LinkFormCreate() {
   const [ titleInputText, setTitleInputText ] = useState('');
   const [ infoInputText, setInfoInputText ] = useState<string | null>(null);
   const [ faviconUrls, setFaviconUrls ] = useState<string[]>([]);
-  const [ isFetchingLinkData, setIsFetchingLinkData ] = useState(false);
+  const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
   const handleUrlInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value;
@@ -27,14 +27,14 @@ export default function LinkFormCreate() {
       return '';
     }
 
-    setIsFetchingLinkData(true);
+    setProcessingMessage('Parsing URL...');
     const { title, description, faviconUrls } = await fetchLinkDataByUrl(url);
 
     title && setTitleInputText(title);
     description && setInfoInputText(description);
     faviconUrls && setFaviconUrls(faviconUrls);
 
-    setIsFetchingLinkData(false);
+    setProcessingMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,7 +51,7 @@ export default function LinkFormCreate() {
     } else {
       setErrorMessages([]);
 
-      setIsFetchingLinkData(true);
+      setProcessingMessage('Looking for icon...');
       const link = await createLink({
         url: result.data.url,
         title: result.data.title,
@@ -60,7 +60,7 @@ export default function LinkFormCreate() {
         priority: result.data.priority,
         faviconUrls,
       });
-      setIsFetchingLinkData(false);
+      setProcessingMessage(null);
 
       resetModalWindowStates();
       router.push(`/?q=id:${link.id}`);
@@ -81,6 +81,7 @@ export default function LinkFormCreate() {
           type="text"
           placeholder="https://example.com"
           onChange={handleUrlInputChange}
+          // autoFocus={true}
         />
       </div>
 
@@ -138,10 +139,10 @@ export default function LinkFormCreate() {
               {message}
             </span>
           ))}
-          {isFetchingLinkData && (
+          {processingMessage && (
             <div className={twFetchingContainer}>
               <LoaderCircle className="animate-spin" />
-              <span>Fetching link data</span>
+              <span>{processingMessage}</span>
             </div>
           )}
         </div>

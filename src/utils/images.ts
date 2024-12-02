@@ -10,13 +10,22 @@ import { defaultBase64Icon } from '@/utils/other';
 import * as parsing from '@/utils/parsing';
 
 const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
-  const pageUrlObj = new URL(pageUrl);
+  let iconsUrls: string[] = [];
 
-  return [
-    `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
-    `https://api.faviconkit.com/${pageUrlObj.host}`,
-    `https://logo.clearbit.com/${pageUrlObj.host}`,
-  ];
+  try {
+    const pageUrlObj = new URL(pageUrl);
+    
+    iconsUrls = [
+      `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
+      `https://api.faviconkit.com/${pageUrlObj.host}`,
+      `https://logo.clearbit.com/${pageUrlObj.host}`,
+    ];
+
+  } catch (error) {
+    /* Do nothing */
+  }
+
+  return iconsUrls;
 };
 
 export const createBase64Image = (buffer: Buffer | null) => {

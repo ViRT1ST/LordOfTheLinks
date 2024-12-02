@@ -14,7 +14,6 @@ export default function useKey(eventKey: string) {
       
     return () => {
       document.body.removeEventListener('keydown', onKeyDown);
-      setIsPressed(false);
     };
   });
 

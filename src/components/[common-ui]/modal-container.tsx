@@ -18,13 +18,14 @@ export default function ModalContaner() {
   const currentQueryData = useStore((state) => state.currentQueryData);
 
   return (
-    <div id="modal-container" className="z-40 absolute top-0 left-0">
+    <div id="modal-container" tabIndex={-1} className="z-40 absolute top-0 left-0">
 
       {currentModalWindow === 'link-create' && (
         <ModalWindow
           content={<LinkFormCreate />}
           isOverlayClickDoClose={false}
           isOverlayDarkened={true}
+          focusOnFirstElement={true}
         />
       )}
 
@@ -41,6 +42,7 @@ export default function ModalContaner() {
           content={<LinkFormDelete link={currentLinkData} />}
           isOverlayClickDoClose={true}
           isOverlayDarkened={true}
+          focusOnFirstElement={true}
         />
       )}
 
@@ -59,6 +61,7 @@ export default function ModalContaner() {
           content={<QueryFormCreate />}
           isOverlayClickDoClose={false}
           isOverlayDarkened={true}
+          focusOnFirstElement={true}
         />
       )}
 
@@ -75,6 +78,7 @@ export default function ModalContaner() {
           content={<QueryFormDelete query={currentQueryData} />}
           isOverlayClickDoClose={true}
           isOverlayDarkened={true}
+          focusOnFirstElement={true}
         />
       )}
 

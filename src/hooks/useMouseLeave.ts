@@ -1,16 +1,19 @@
 import { useState, useEffect, RefObject } from 'react';
-import { set } from 'zod';
 
-export default function useMouseLeave(reactRef: RefObject<HTMLElement>) {
+export default function useMouseLeave(ref: RefObject<HTMLElement>) {
   const [ isMouseLeaved, setIsMouseLeaved ] = useState(false);
 
   useEffect(() => {
+    if (!ref.current) {
+      return;
+    };
+
+    const element = ref.current;
+
     const handleMouseLeave = () => {
       setIsMouseLeaved(true);
-      setTimeout(() => setIsMouseLeaved(false), 100);
+      setTimeout(() => setIsMouseLeaved(false), 10);
     };
-  
-    const element = reactRef.current;
   
     if (element) {
       element.addEventListener('mouseleave', handleMouseLeave);
