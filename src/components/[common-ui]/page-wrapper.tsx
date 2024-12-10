@@ -1,4 +1,4 @@
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 
 type PageWrapperProps = {
   children: React.ReactNode;

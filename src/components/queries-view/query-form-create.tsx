@@ -4,9 +4,8 @@ import { useState } from 'react';
 
 import { PinnedFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
-import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/classes';
+import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
 export default function QueryFormCreate() {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);

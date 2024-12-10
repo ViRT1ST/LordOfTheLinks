@@ -3,7 +3,7 @@
 import { type DbPinnedQuery } from '@/types/index';
 import { deletePinnedQuery } from '@/server-actions';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 
 type QueryFormDeleteProps = {
   query: DbPinnedQuery;

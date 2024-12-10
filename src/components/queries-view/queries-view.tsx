@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 
 import { getPinnedQueriesAll } from '@/server-actions';
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 import QueryButtonCreate from '@/components/queries-view/query-button-create';
 import QueryItem from '@/components/queries-view/query-item';
 import ModalWindow from '../[common-ui]/modal-window';

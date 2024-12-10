@@ -40,9 +40,31 @@ export type DbPinnedQuery = {
   updatedAt: Date;
 }
 
+export type DbSettings = {
+  id: number;
+  sortLinksBy: SortingOrderVariants;
+  sortLinksByPriorityFirst: boolean;
+  theme: 'light' | 'dark';
+}
+
+/* =============================================================
+Zustand state
+============================================================= */
+
+export type ModalWindowVariants = 
+  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
+  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
+  'settings';
+
+export type SortingOrderVariants =
+  'date-asc' | 'title-asc' | 'domain-asc' |
+  'date-desc' | 'title-desc' | 'domain-desc' ;
+
 /* =============================================================
 Other
 ============================================================= */
+
+
 
 const invalidPriorityMsg = 'Priority must be a number between 0 and 100';
 
@@ -120,3 +142,4 @@ export type UpdatePinnedQueryData = {
   label: string;
   query: string;
 }
+

@@ -4,8 +4,7 @@ import { useState } from 'react';
 
 import { type DbPinnedQuery, QueryFormSchema } from '@/types/index';
 import { updatePinnedQuery } from '@/server-actions';
-import { convertErrorZodResultToMsgArray } from '@/utils/zod';
-import { cnJoin } from '@/utils/classes';
+import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 
 type QueryFormEditProps = {

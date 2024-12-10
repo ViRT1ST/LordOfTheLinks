@@ -1,18 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 import ModalWindow from '@/components/[common-ui]/modal-window';
 import FormCreateLink from '@/components/links-view/link-form-create';
 import FormSearch from '@/components/header/form-search';
+import { DbSettings } from '@/types';
 
-export default function Header() {  
+type HeaderProps = {
+  settings: DbSettings | null;
+};
+
+export default function Header({ settings }: HeaderProps) {
   const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
+  const setSettingsFromDb = useStore((state) => state.setSettingsFromDb);
 
+  useEffect(() => { 
+    setSettingsFromDb(settings);
+  }, []);
 
   return (
     <header className={twHeader}>

@@ -8,11 +8,14 @@ import {
   type TagId,
   type NewPinnedQueryData,
   type UpdatePinnedQueryData,
-  DbGetLinksResponse
+  type DbGetLinksResponse,
+  type SortingOrderVariants,
+  DbSettings
 } from '@/types/index';
-import { tagStringToArray } from '@/utils/tags';
+import { convertStringTagsToArray } from '@/utils/formatting';
+import { getDomain } from '@/utils/formatting';
+import { getSortingOptionsForPrisma } from '@/utils/formatting';
 import prisma from '@/lib/prisma/connect';
-import { getDomain } from '@/utils/parsing';
 
 /* =============================================================
 Get all links
@@ -20,9 +23,15 @@ Get all links
 
 export const getAllLinks = async (
   page: number,
-  resultsPerPage: number
+  resultsPerPage: number,
+  sorting: SortingOrderVariants | null
 ) => {
   const totalCount = await prisma.link.count();
+
+  const orderBy = [
+    { priority: 'desc'},
+    getSortingOptionsForPrisma(sorting)
+  ];
 
   const links = await prisma.link.findMany({
     include: {
@@ -30,11 +39,7 @@ export const getAllLinks = async (
     },
     take: resultsPerPage,
     skip: (page - 1) * resultsPerPage,
-    orderBy: [
-      {
-        priority: 'desc',
-      },
-    ],
+    orderBy: orderBy,
   });
 
   return {
@@ -50,7 +55,8 @@ Get links that match all words in search query
 export const getLinksBySearch = async (
   searchQuery: string,
   page: number,
-  resultsPerPage: number
+  resultsPerPage: number,
+  sorting: SortingOrderVariants | null
 ) => {
   const searchTerms = searchQuery.toLowerCase().split(' ');
 
@@ -85,6 +91,11 @@ export const getLinksBySearch = async (
     },
   });
 
+  const orderBy = [
+    { priority: 'desc'},
+    getSortingOptionsForPrisma(sorting)
+  ];
+
   const links = await prisma.link.findMany({
     where: {
       AND: searchConditions,
@@ -94,11 +105,7 @@ export const getLinksBySearch = async (
     },
     take: resultsPerPage,
     skip: (page - 1) * resultsPerPage,
-    orderBy: [
-      {
-        priority: 'desc',
-      },
-    ],
+    orderBy: orderBy
   });
 
   return {
@@ -125,16 +132,18 @@ Get links
 ============================================================= */
 
 export const getLinks = async (
-  searchQuery?: string,
-  page?: number,
-  resultsPerPage?: number
+  searchQuery: string | null,
+  sorting: SortingOrderVariants | null,
+  page: number,
+  resultsPerPage: number,
 ) => {
   const response: DbGetLinksResponse = {
     links: [],
     totalCount: 0
   };
 
-  const isSearchById = searchQuery && searchQuery.match(/^id:\d+$/);
+  const isSearchById =  searchQuery && searchQuery.match(/^id:\d+$/);
+  const isSearchByText = searchQuery && !isSearchById;
 
   if (isSearchById) {
     const id = parseInt(searchQuery.replace('id:', ''), 10);
@@ -145,15 +154,19 @@ export const getLinks = async (
       response.totalCount = 1;
     }
 
-  } else if (searchQuery && page && resultsPerPage) {
-    const { links, totalCount } = await getLinksBySearch(searchQuery, page, resultsPerPage);
+  } else if (isSearchByText) {
+    const { links, totalCount } = await getLinksBySearch(
+      searchQuery, page, resultsPerPage, sorting
+    );
 
     response.links = links;
     response.totalCount = totalCount;
 
-  } else if (!searchQuery && page && resultsPerPage) {
-    const { links, totalCount } = await getAllLinks(page, resultsPerPage);
-
+  } else {
+    const { links, totalCount } = await getAllLinks(
+      page, resultsPerPage, sorting
+    );
+    
     response.links = links;
     response.totalCount = totalCount;
   }
@@ -198,7 +211,7 @@ Create new link
 export const createLink = async (data: NewLinkData) => {
   const { url, title, info, tags, priority } = data;
 
-  const tagsArray: string[] = tagStringToArray(tags || '');
+  const tagsArray: string[] = convertStringTagsToArray(tags || '');
 
   let tagIds: TagId[] = [];
 
@@ -272,7 +285,7 @@ Update link
 export const updateLink = async (data: UpdateLinkData) => {
   const { id, url, title, info, tags, priority } = data;
 
-  const newTagsArray: string[] = tagStringToArray(tags || '');
+  const newTagsArray: string[] = convertStringTagsToArray(tags || '');
   const existingTagsArray = await getTagsFromLink(id);
   const deletedTagsArray = existingTagsArray.filter((tag) => !newTagsArray?.includes(tag));
 
@@ -399,4 +412,27 @@ export const deletePinnedQuery = async (id: number) => {
   } catch (error) {
     console.error(`Failed to delete pinned query with id ${id}:`, error);
   }
+};
+
+/* =============================================================
+Get settings
+============================================================= */
+
+export const getSettings = async () => {
+  const settings = await prisma.settings.findUnique({
+    where: { id: 1 },
+  });
+
+  return settings as DbSettings || null;
+};
+
+/* =============================================================
+Set sorting in settings
+============================================================= */
+
+export const updateSettingsValue = async (field: any, value: any) => {
+  await prisma.settings.update({
+    where: { id: 1 },
+    data: { [field]: value },
+  }); 
 };

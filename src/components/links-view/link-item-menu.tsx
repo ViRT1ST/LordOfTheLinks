@@ -4,7 +4,7 @@ import { Ellipsis } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { type DbLinkWithTags } from '@/types/index';
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 import useMouseLeave from '@/hooks/useMouseLeave';
 

@@ -4,10 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { type DbLinkWithTags } from '@/types/index';
-import { cnJoin } from '@/utils/classes';
-import { buildHintForLinkItem } from '@/utils/links';
+import { cnJoin } from '@/utils/formatting';
 import { FAVICON_SIZE } from '@/config/public';
 import LinkItemMenu from '@/components/links-view/link-item-menu';
+import { createTooltipTextForLink } from '@/utils/formatting';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
@@ -19,7 +19,7 @@ export default function LinkItem({ link }: LinkItemProps) {
   link.tags =  [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
 
   const linkImageSrc = `/images/site-icons/${link.domain}.png`;
-  const linkHint = buildHintForLinkItem(link) || 'N/A';
+  const linkHint = createTooltipTextForLink(link) || 'N/A';
   
   return (
     <div className={twItemContainer}>

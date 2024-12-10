@@ -1,3 +1,5 @@
+import { getDomain } from '@/utils/formatting';
+
 export const getTitleFromHtmlSource = (pageHtml: string) => {
   return pageHtml.match(/<title>(.*?)<\/title>/is)?.[1]?.trim() ?? '';
 };
@@ -82,15 +84,6 @@ export const getIconUrlsFromHtmlSource = (pageHtml: string, pageUrl: string) => 
   // delete later
   console.log(iconUrls);
   return iconUrls;
-};
-
-export const getDomain = (url: string) => {
-  try {
-    return new URL(url).hostname.replace('www.', '').toLowerCase();
-    
-  } catch (error) {
-    return url;
-  }
 };
 
 export const getShortDomain = (url: string) => {

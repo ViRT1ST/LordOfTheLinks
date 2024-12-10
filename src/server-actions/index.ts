@@ -15,3 +15,5 @@ export { createPinnedQuery } from './all-actions';
 export { updatePinnedQuery } from './all-actions';
 export { deletePinnedQuery } from './all-actions';
 
+export { getSettings } from './all-actions';
+export { setSortingInSettings } from './all-actions';

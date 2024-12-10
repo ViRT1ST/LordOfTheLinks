@@ -10,45 +10,28 @@ import {
   type NewLinkData,
   type NewPinnedQueryData,
   type UpdateLinkData,
-  type UpdatePinnedQueryData
+  type UpdatePinnedQueryData,
+  type SortingOrderVariants
 } from '@/types/index';
-import { LINKS_PER_PAGE } from '@/config/public';
+import * as htmlParsing from '@/utils/html-parsing';
 import * as queries from '@/lib/prisma/queries';
-import * as parsing from '@/utils/parsing';
-import * as images from '@/utils/images';
+import * as icons from '@/utils/icons';
 
 /* =============================================================
 Links
 ============================================================= */
 
-export const getLinks = async (searchQuery: string, page = 1):
-  Promise<DbGetLinksResponse> => {
-  return await queries.getLinks(searchQuery, page, LINKS_PER_PAGE);
+export const getLinks = async (
+  searchQuery: string | null,
+  sort: SortingOrderVariants | null,
+  page: number,
+  resultsPerPage: number
+): Promise<DbGetLinksResponse> => {
+  return await queries.getLinks(searchQuery, sort, page, resultsPerPage);
 };
 
-
-// export const getLinksAll = async (page = 1):
-//   Promise<DbGetLinksResponse> => {
-//   return await queries.getAllLinks(page, LINKS_PER_PAGE);
-// };
-
-// export const getLinksBySearch = async (searchQuery: string, page = 1):
-//   Promise<DbGetLinksResponse> => {
-//   return await queries.getLinksBySearch(searchQuery, page, LINKS_PER_PAGE);
-// };
-
-// export const getLinkById = async (id: number):
-//   Promise<DbGetLinksResponse> => {
-//   const link = await queries.getLinkById(id);
-  
-//   return {
-//     links: link ? [link] : [],
-//     totalCount: 1
-//   };
-// };
-
 export const createLink = async (data: NewLinkData) => {
-  await images.createImageForLink(data);
+  await icons.createImageForLink(data);
   const link = await queries.createLink(data);
   revalidatePath('/');
   return link;
@@ -87,9 +70,9 @@ export const fetchLinkDataByUrl = async (url: string): Promise<FetchedUrlData> =
     const text = await response.text();
 
     if (text && text.length !== 0) {
-      data.title = decode(parsing.getTitleFromHtmlSource(text));
-      data.description = decode(parsing.getDescriptionFromHtmlSource(text));
-      data.faviconUrls = parsing.getIconUrlsFromHtmlSource(text, url);
+      data.title = decode(htmlParsing.getTitleFromHtmlSource(text));
+      data.description = decode(htmlParsing.getDescriptionFromHtmlSource(text));
+      data.faviconUrls = htmlParsing.getIconUrlsFromHtmlSource(text, url);
     }
   } catch (error) {
     /* Do nothing */
@@ -120,5 +103,13 @@ export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
 export const deletePinnedQuery = async (id: number) => {
   await queries.deletePinnedQuery(id);
   revalidatePath('/');
+};
+
+export const getSettings = async () => {
+  return await queries.getSettings();
+};
+
+export const setSortingInSettings = async (sorting: SortingOrderVariants) => {
+  await queries.updateSettingsValue('sortLinksBy', sorting);
 };
 

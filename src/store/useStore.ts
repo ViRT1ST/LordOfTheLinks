@@ -1,52 +1,50 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import { DbLinkWithTags, DbPinnedQuery } from '@/types';
-
-type ModalWindowVariants = 
-  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
-  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
-  'settings';
+import {
+  type DbLinkWithTags,
+  type DbPinnedQuery,
+  type ModalWindowVariants,
+  type DbSettings
+} from '@/types';
 
 type StoreState = {
-  currentModalWindow: null | ModalWindowVariants;
-  currentModalWindowPos: null | React.CSSProperties;
-  currentLinkData : null | DbLinkWithTags;
-  currentQueryData : null | DbPinnedQuery;
-  setCurrentModalWindow: (value: null | ModalWindowVariants) => void;
-  setCurrentModalWindowPos: (value: null | React.CSSProperties) => void;
-  setCurrentLinkData: (value: null | DbLinkWithTags) => void;
-  setCurrentQueryData: (value: null | DbPinnedQuery) => void;
+  currentModalWindow: ModalWindowVariants | null;
+  currentModalWindowPos: React.CSSProperties | null;
+  currentLinkData: DbLinkWithTags | null;
+  currentQueryData: DbPinnedQuery | null;
+  settingsFromDb: DbSettings | null;
+
+  setCurrentModalWindow: (value: ModalWindowVariants | null) => void;
+  setCurrentModalWindowPos: (value: React.CSSProperties | null) => void;
+  setCurrentLinkData: (value: DbLinkWithTags | null) => void;
+  setCurrentQueryData: (value: DbPinnedQuery | null) => void;
   resetModalWindowStates: () => void;
+  setSettingsFromDb: (value: DbSettings | null) => void;
 };
 
-export const useStore = create<StoreState>((set, get) => ({
+export const useStore = create<StoreState>((set) => ({
   currentModalWindow: null,
   currentLinkData: null,
   currentQueryData: null,
   currentModalWindowPos: null,
+  currentSortingOrder: null,
+  settingsFromDb: null,
 
-  setCurrentModalWindow: (value: null | ModalWindowVariants) => {
-    set(() => ({
-      currentModalWindow: value
-    }));
+  setCurrentModalWindow: (value) => {
+    set(() => ({ currentModalWindow: value }));
   },
 
-  setCurrentModalWindowPos: (value: null | React.CSSProperties) => {
-    set(() => ({
-      currentModalWindowPos: value
-    }));
+  setCurrentModalWindowPos: (value) => {
+    set(() => ({ currentModalWindowPos: value }));
   },
 
-  setCurrentLinkData: (value: null | DbLinkWithTags) => {
-    set(() => ({
-      currentLinkData: value
-    }));
+  setCurrentLinkData: (value) => {
+    set(() => ({ currentLinkData: value }));
   },
 
-  setCurrentQueryData: (value: null | DbPinnedQuery) => {
-    set(() => ({
-      currentQueryData: value
-    }));
+  setCurrentQueryData: (value) => {
+    set(() => ({ currentQueryData: value }));
   },
 
   resetModalWindowStates: () => {
@@ -57,7 +55,8 @@ export const useStore = create<StoreState>((set, get) => ({
       currentQueryData: null,
     }));
   },
-}));
 
-// TODO:
-// sorting (must save in local storage)
+  setSettingsFromDb: (value) => {
+    set(() => ({ settingsFromDb: value }));
+  }
+}));

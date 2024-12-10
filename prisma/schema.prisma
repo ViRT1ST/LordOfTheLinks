@@ -8,30 +8,37 @@ datasource db {
 }
 
 model Link {
-  id        Int      @id @default(autoincrement())
-  url       String
-  domain    String
-  title     String
-  info      String?
-  priority  Int      @default(10)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  tags      Tag[]    @relation("LinkToTag")
+  id              Int      @id @default(autoincrement())
+  url             String
+  domain          String
+  title           String
+  info            String?
+  priority        Int      @default(10)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  tags            Tag[]    @relation("LinkToTag")
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
-  value     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  links     Link[]   @relation("LinkToTag")
+  id              Int      @id @default(autoincrement())
+  value           String   @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  links           Link[]   @relation("LinkToTag")
 }
 
 model Pinned {
-  id        Int      @id @default(autoincrement())
-  label     String
-  query     String
-  priority  Int      @default(10)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id              Int      @id @default(autoincrement())
+  label           String
+  query           String
+  priority        Int      @default(10)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+model Settings {
+  id                        Int         @id @default(autoincrement())
+  sortLinksBy               String
+  sortLinksByPriorityFirst  Boolean     @default(true)
+  theme                     String      @default("light")
 }

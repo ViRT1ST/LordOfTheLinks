@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { type DbPinnedQuery } from '@/types';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 
 type QueryItemProps = {
   query: DbPinnedQuery;

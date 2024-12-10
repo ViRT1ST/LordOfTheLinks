@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 
 export default function QueryButtonCreate() {

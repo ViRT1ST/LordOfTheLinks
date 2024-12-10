@@ -4,7 +4,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-import { cnJoin } from '@/utils/classes';
+import { cnJoin } from '@/utils/formatting';
 
 type LinksControlsBottomProps = {
   prevPage: number | null;
@@ -106,4 +106,5 @@ const twButton = cnJoin(
   // bg-based on flowers backround
   'bg-[#e9e9e9]'
   // 'bg-white/40'
+  // 'bg-white/10 backdrop-blur-sm'
 );

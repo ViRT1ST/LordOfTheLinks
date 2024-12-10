@@ -4,7 +4,7 @@ import { useRouter, useSearchParams  } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 
-import { cn, cnJoin } from '@/utils/classes';
+import { cn, cnJoin } from '@/utils/formatting';
 
 export default function FormSearch() {
   const searchParams = useSearchParams();

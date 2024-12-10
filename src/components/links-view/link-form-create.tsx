@@ -6,9 +6,8 @@ import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
 import { createLink, fetchLinkDataByUrl } from '@/server-actions';
-import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/classes';
+import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
 export default function LinkFormCreate() {
   const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);

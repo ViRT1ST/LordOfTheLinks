@@ -3,7 +3,7 @@
 import { X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
-import { cn, cnJoin } from '@/utils/classes';
+import { cn, cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 import useKeyDown from '@/hooks/useKeyDown';
 import useClickOnElement from '@/hooks/useClickOnElement';

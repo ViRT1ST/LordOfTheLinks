@@ -4,9 +4,8 @@ import { useState } from 'react';
 
 import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { updateLink } from '@/server-actions';
-import { convertErrorZodResultToMsgArray } from '@/utils/zod';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/classes';
+import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
 type LinkFormEditProps = {
   link: DbLinkWithTags;
