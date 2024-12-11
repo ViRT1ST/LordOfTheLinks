@@ -1,5 +1,3 @@
-import { getDomain } from '@/utils/formatting';
-
 export const getTitleFromHtmlSource = (pageHtml: string) => {
   return pageHtml.match(/<title>(.*?)<\/title>/is)?.[1]?.trim() ?? '';
 };
@@ -81,22 +79,10 @@ export const getIconUrlsFromHtmlSource = (pageHtml: string, pageUrl: string) => 
     }
   }
 
-  // delete later
+  console.log('=========== PARSED ICONS URLS FROM HTML PAGE ===========');
   console.log(iconUrls);
+  console.log('========================================================');
+
   return iconUrls;
 };
 
-export const getShortDomain = (url: string) => {
-  try {
-    const domain  = getDomain(url);
-
-    const parts = domain.split('.');
-    
-    return parts.length > 1
-      ? parts.slice(-2).join('.')
-      : domain;
-
-  } catch (error: any) {
-    return url;
-  }
-};

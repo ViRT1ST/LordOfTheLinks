@@ -1,26 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-
+import { type SortingOrderVariants } from '@/types';
+import { cnJoin, getSortingMenuDropdownLabel } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/formatting';
-import { getSortingMenuDropdownLabel } from '@/utils/formatting';
-import { SortingOrderVariants } from '@/types';
-
 
 type LinksControlsTopProps = {
   totalCount: number;
-  sortParam: SortingOrderVariants | null;
+  sortedBy: SortingOrderVariants;
 };
 
-export default function LinksControlsTop({ totalCount, sortParam }: LinksControlsTopProps) {
+export default function LinksControlsTop({ totalCount, sortedBy }: LinksControlsTopProps) {
   const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
   const setCurrentModalWindowPos = useStore((state) => state.setCurrentModalWindowPos);
-  const settingsFromDb = useStore((state) => state.settingsFromDb);
 
-  const sortingFromDb = settingsFromDb?.sortLinksBy || null;
-  const sortingMenuDropdownLabel = getSortingMenuDropdownLabel(sortingFromDb);
+  const dropdownLabel = getSortingMenuDropdownLabel(sortedBy);
 
   const handleButtonClick = (e: React.MouseEvent) => {
     const menuOffsetTop = 9;
@@ -39,15 +32,15 @@ export default function LinksControlsTop({ totalCount, sortParam }: LinksControl
   return (
     <div className={twContainer}>
       <div className={twSection}>
-        <span className={twInfo}>TOTAL LINKS FOUND: {totalCount}</span>
+        <span className={twInfo}>
+          TOTAL LINKS FOUND: {totalCount}
+        </span>
       </div>
 
       <div className={twSection}>
-        {sortingMenuDropdownLabel && (
-          <button className={twButton} onClick={handleButtonClick}>
-            {sortingMenuDropdownLabel}
-          </button>
-        )}
+        <button className={twButton} onClick={handleButtonClick}>
+          {dropdownLabel}
+        </button>
       </div>
     </div>
   );

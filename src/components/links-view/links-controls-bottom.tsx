@@ -4,6 +4,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
+import { getUpdatedSearchParams } from '@/utils/formatting';
 import { cnJoin } from '@/utils/formatting';
 
 type LinksControlsBottomProps = {
@@ -21,8 +22,6 @@ export default function LinksControlsBottom({
 }: LinksControlsBottomProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
-  const allParamsString = searchParams.toString();
 
   const lastPageNumberLength = String(lastPage).length;
   const paddedCurrentPage = String(currentPage).padStart(lastPageNumberLength, '0');
@@ -32,10 +31,7 @@ export default function LinksControlsBottom({
       return;
     };
 
-    const newParams = searchParams.has('page')
-      ? allParamsString.replace(/page=[0-9]+/, `page=${page}`)
-      : `${allParamsString}&page=${page}`;
-
+    const newParams = getUpdatedSearchParams(searchParams, 'page', String(page));
     router.push(`/?${newParams}`);
   };
 

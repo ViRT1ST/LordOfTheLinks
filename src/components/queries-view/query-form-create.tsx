@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { PinnedFormSchema } from '@/types/index';
+import { PinnedQueryFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
 import { useStore } from '@/store/useStore';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
@@ -18,7 +18,7 @@ export default function QueryFormCreate() {
 
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
-    const result = PinnedFormSchema.safeParse(formDataObject);
+    const result = PinnedQueryFormSchema.safeParse(formDataObject);
 
     if (!result.success) {
       setErrorMessages(convertErrorZodResultToMsgArray(result));

@@ -1,7 +1,14 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import { type DbLinkWithTags, type SortingOrderVariants  } from '@/types';
+import { 
+  type DbLinkWithTags,
+  type SortingOrderVariants,
+  type OrderByVariants
+} from '@/types';
+
+import { useStore } from '@/store/useStore';
+import { getSettings } from '@/server-actions';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -57,7 +64,16 @@ export const getSortingMenuDropdownLabel = (order: SortingOrderVariants | null) 
     : null;
 };
 
-export const getSortingOptionsForPrisma = (order: SortingOrderVariants | null) => {
+export const getOrderByForLinksInPrisma = (
+  order: SortingOrderVariants | null,
+  sortLinksByPriorityFirst: boolean
+) => {
+  const orderBy: OrderByVariants[] = [];
+
+  if (sortLinksByPriorityFirst) {
+    orderBy.push({ priority: 'desc' });
+  }
+
   const sortingOptions = {
     'date-asc': { createdAt: 'asc' },
     'title-asc': { title: 'asc' },
@@ -67,9 +83,11 @@ export const getSortingOptionsForPrisma = (order: SortingOrderVariants | null) =
     'domain-desc': { domain: 'desc' },
   };
 
-  return order && order in sortingOptions
-    ? sortingOptions[order]
-    : {};
+  if (order && order in sortingOptions) {
+    orderBy.push(sortingOptions[order] as OrderByVariants);
+  }
+
+  return orderBy;
 };
 
 export const convertStringTagsToArray = (tags: string) => {
@@ -88,3 +106,11 @@ export const getUpdatedSearchParams = (
 
   return [...paramsWithoutKeyToUpdate, `${key}=${value}`].join('&');
 };
+
+// export const getSortingMenuDropdownLabel = () => {
+//   let currentSorting = useStore.getState().currentSettings?.sortLinksBy || null;
+
+//   return typeof currentSorting === 'string'
+//     ? `SORTED BY ${currentSorting.replace('-', ' ').toUpperCase()}`
+//     : null;
+// };

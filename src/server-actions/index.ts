@@ -1,19 +1,14 @@
-// export { getLinksBySearch } from './all-actions';
-// export { getLinksAll } from './all-actions';
-// export { getLinkById } from './all-actions';
-export { getLinks } from './all-actions';
+export { getLinks } from './actions-db';
+export { createLink } from './actions-db';
+export { updateLink } from './actions-db';
+export { deleteLink } from './actions-db';
 
-export { createLink } from './all-actions';
-export { updateLink } from './all-actions';
-export { deleteLink } from './all-actions';
+export { getPinnedQueries } from './actions-db';
+export { createPinnedQuery } from './actions-db';
+export { updatePinnedQuery } from './actions-db';
+export { deletePinnedQuery } from './actions-db';
 
-export { fetchLinkDataByUrl } from './all-actions';
+export { getSettings } from './actions-db';
+export { saveSettings } from './actions-db';
 
-export { getPinnedQueriesAll } from './all-actions';
-
-export { createPinnedQuery } from './all-actions';
-export { updatePinnedQuery } from './all-actions';
-export { deletePinnedQuery } from './all-actions';
-
-export { getSettings } from './all-actions';
-export { setSortingInSettings } from './all-actions';
+export { fetchLinkDataByUrl } from './actions-utils';

@@ -1,8 +1,28 @@
+import { z } from 'zod';
+
 /* =============================================================
-DB schema types
+Variants
 ============================================================= */
 
-import { z } from 'zod';
+export type ModalWindowVariants = 
+  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
+  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
+  'settings';
+
+export type SortingOrderVariants =
+  'date-asc' | 'title-asc' | 'domain-asc' |
+  'date-desc' | 'title-desc' | 'domain-desc';
+
+export type ThemeVariants = 
+  'light' | 'dark';
+
+export type OrderByVariants =
+  { priority: 'asc' | 'desc' } | { createdAt: 'asc' | 'desc' } |
+  { title: 'asc' | 'desc' } | { domain: 'asc' | 'desc' };
+
+/* =============================================================
+Database types
+============================================================= */
 
 export type DbLink = {
   id: number;
@@ -23,12 +43,14 @@ export type DbTag = {
 }
 
 export type DbLinkWithTags = DbLink & {
-  tags: DbTag[]
+  tags: DbTag[];
 }
 
 export type DbGetLinksResponse = {
-  links: DbLinkWithTags[],
-  totalCount: number
+  links: DbLinkWithTags[];
+  totalCount: number;
+  linksPerPage: number;
+  sortLinksBy: SortingOrderVariants;
 }
 
 export type DbPinnedQuery = {
@@ -42,34 +64,21 @@ export type DbPinnedQuery = {
 
 export type DbSettings = {
   id: number;
+  linksPerPage: number;
   sortLinksBy: SortingOrderVariants;
   sortLinksByPriorityFirst: boolean;
-  theme: 'light' | 'dark';
+  theme: ThemeVariants;
+  background: string;
 }
 
 /* =============================================================
-Zustand state
+Links related types and validation schemas
 ============================================================= */
-
-export type ModalWindowVariants = 
-  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
-  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
-  'settings';
-
-export type SortingOrderVariants =
-  'date-asc' | 'title-asc' | 'domain-asc' |
-  'date-desc' | 'title-desc' | 'domain-desc' ;
-
-/* =============================================================
-Other
-============================================================= */
-
-
 
 const invalidPriorityMsg = 'Priority must be a number between 0 and 100';
 
 export const LinkFormSchema = z.object({
-  url: z.string().trim().url({'message': 'Invalid URL'}),
+  url: z.string().trim().url({ message: 'Invalid URL' }),
   title: z.string().trim().min(2, { message: 'Title must be at least 2 characters' }),
   priority: z
     .string()
@@ -86,22 +95,6 @@ export const LinkFormSchema = z.object({
   tags: z.string(),
 });
 
-export const QueryFormSchema = z.object({
-  label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
-  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
-});
-
-export const PinnedFormSchema = z.object({
-  label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
-  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
-});
-
-export type FetchedUrlData = {
-  title: string;
-  description: string;
-  faviconUrls: string[];
-};
-
 export type NewLinkData = {
   url: string;
   title: string;
@@ -111,26 +104,34 @@ export type NewLinkData = {
   faviconUrls: string[];
 };
 
-// NewLinkData & id must be
-export type UpdateLinkData = {
+export type UpdateLinkData = Omit<NewLinkData, 'faviconUrls'> & {
   id: number;
-  url: string;
-  title: string;
-  info: string | null
-  tags: string;
-  priority: number;
-  // faviconUrls //todo
 }
 
 export type TagId = {
   id: number;
 }
 
+export type ParsedHtmlData = {
+  title: string;
+  description: string;
+  faviconUrls: string[];
+};
+
 export type IconImageData = {
   buffer: Buffer | null;
   width: number;
   height: number;
 }
+
+/* =============================================================
+Pinned queries related types and validation schemas
+============================================================= */
+
+export const PinnedQueryFormSchema = z.object({
+  label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
+  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
+});
 
 export type NewPinnedQueryData = {
   label: string;
@@ -142,4 +143,18 @@ export type UpdatePinnedQueryData = {
   label: string;
   query: string;
 }
+
+/* =============================================================
+Settings related types and validation schemas
+============================================================= */
+
+export type UpdateSettingsData = {
+  linksPerPage?: number;
+  sortLinksBy?: SortingOrderVariants;
+  sortLinksByPriorityFirst?: boolean;
+  theme?: ThemeVariants;
+  background?: string;
+}
+
+
 

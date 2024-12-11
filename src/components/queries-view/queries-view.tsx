@@ -1,13 +1,13 @@
 import { Plus } from 'lucide-react';
 
-import { getPinnedQueriesAll } from '@/server-actions';
+import { getPinnedQueries } from '@/server-actions';
 import { cnJoin } from '@/utils/formatting';
 import QueryButtonCreate from '@/components/queries-view/query-button-create';
 import QueryItem from '@/components/queries-view/query-item';
 import ModalWindow from '../[common-ui]/modal-window';
 
 export default async function QueriesView() {
-  const { pinnedQueries } = await getPinnedQueriesAll();
+  const { pinnedQueries } = await getPinnedQueries();
 
   return (
     <div className={twContainer}>

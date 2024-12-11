@@ -14,12 +14,12 @@ const getIconUrlsFrom3dPartyServices = (pageUrl: string) => {
   let iconsUrls: string[] = [];
 
   try {
-    const pageUrlObj = new URL(pageUrl);
+    const pageUrlHost = new URL(pageUrl).host;
     
     iconsUrls = [
-      `https://www.google.com/s2/favicons?domain_url=${pageUrlObj.host}&sz=96`,
-      `https://api.faviconkit.com/${pageUrlObj.host}`,
-      `https://logo.clearbit.com/${pageUrlObj.host}`,
+      `https://www.google.com/s2/favicons?domain_url=${pageUrlHost}&sz=96`,
+      `https://api.faviconkit.com/${pageUrlHost}`,
+      `https://logo.clearbit.com/${pageUrlHost}`,
     ];
 
   } catch (error) {
@@ -126,9 +126,7 @@ export const createImageForLink = async (data: NewLinkData) => {
 
     for (const faviconUrl of allFaviconUrls) {
       if (!iconIsSavedOnDisk) {
-
-        // delete later
-        console.log(faviconUrl);
+        console.log('Current favicon url fetching: ', faviconUrl);
         const goodBase64Icon  = await getGoodBase64IconFromUrl(faviconUrl);
 
         if (goodBase64Icon) {

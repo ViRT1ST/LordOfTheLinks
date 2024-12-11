@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { type DbPinnedQuery, QueryFormSchema } from '@/types/index';
+import { type DbPinnedQuery, PinnedQueryFormSchema } from '@/types/index';
 import { updatePinnedQuery } from '@/server-actions';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
@@ -22,7 +22,7 @@ export default function QueryFormEdit({ query }: QueryFormEditProps) {
 
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
-    const result = QueryFormSchema.safeParse(formDataObject);
+    const result = PinnedQueryFormSchema.safeParse(formDataObject);
 
     if (!result.success) {
       setErrorMessages(convertErrorZodResultToMsgArray(result));

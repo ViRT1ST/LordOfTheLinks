@@ -1,44 +1,39 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 import { type SortingOrderVariants} from '@/types';
+import { cnJoin, getSortingMenuDropdownLabel } from '@/utils/formatting';
+import { getSettings, saveSettings } from '@/server-actions';
 import { useStore } from '@/store/useStore';
-import { cnJoin, getSortingMenuDropdownLabel, getUpdatedSearchParams } from '@/utils/formatting';
-import { getSettings, setSortingInSettings } from '@/server-actions';
-
 
 export default function LinksControlsSorting() {
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
-  const setSettingsFromDb = useStore((state) => state.setSettingsFromDb);
-  const settingsFromDb = useStore((state) => state.settingsFromDb);
+  const setCurrentSettings = useStore((state) => state.setCurrentSettings);
+  const currentSettings = useStore((state) => state.currentSettings);
 
-  const sortingFromDb = settingsFromDb?.sortLinksBy || null;
-  const sortingMenuDropdownLabel = getSortingMenuDropdownLabel(sortingFromDb);
+  const currentSorting = currentSettings?.sortLinksBy || null;
+  const dropdownLabel = getSortingMenuDropdownLabel(currentSorting);
 
   const handleMenuDropdownClick = () => {
     resetModalWindowStates();
   };
 
   const handleMenuItemClick = async (sorting: SortingOrderVariants) => {
-    const newParams = getUpdatedSearchParams(searchParams, 'sort', sorting);
-
-    await setSortingInSettings(sorting);
+    await saveSettings({ sortLinksBy: sorting });
     const settings = await getSettings();
-    setSettingsFromDb(settings);
+    setCurrentSettings(settings);
 
     resetModalWindowStates();
-    router.push(`/?${newParams}`);
+    router.refresh();
   };
 
   return (
     <div className={twMenu}>
       <button className={twCurrentSortingButton} onClick={handleMenuDropdownClick}>
-        {sortingMenuDropdownLabel}
+        {dropdownLabel}
       </button>
 
       <div className={twMenuItemsContainer}>
@@ -53,6 +48,7 @@ export default function LinksControlsSorting() {
         </button>
         
         <hr className={twMenuDivider} />
+        
         <button className={twMenuItem} onClick={() => handleMenuItemClick('date-desc')}>
           SORT BY DATE DESC
         </button>
