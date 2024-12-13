@@ -72,6 +72,18 @@ export type DbSettings = {
 }
 
 /* =============================================================
+Design system
+============================================================= */
+
+export type DropdownItem = {
+  labelUnselected: string;
+  labelSelected: string;
+  invokeOnClick: () => Promise<void>;
+};
+
+export type DropdownItemsDivider = 'divider';
+
+/* =============================================================
 Links related types and validation schemas
 ============================================================= */
 

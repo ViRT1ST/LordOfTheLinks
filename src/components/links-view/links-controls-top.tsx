@@ -1,8 +1,12 @@
 'use client';
 
-import { type SortingOrderVariants } from '@/types';
+import { useRouter } from 'next/navigation';
+
+import type { SortingOrderVariants, DropdownItem, DropdownItemsDivider } from '@/types';
 import { cnJoin, getSortingMenuDropdownLabel } from '@/utils/formatting';
-import { useStore } from '@/store/useStore';
+import { saveSettings } from '@/server-actions';
+
+import Dropdown from '@/components/[design-system]/dropdown';
 
 type LinksControlsTopProps = {
   totalCount: number;
@@ -10,61 +14,73 @@ type LinksControlsTopProps = {
 };
 
 export default function LinksControlsTop({ totalCount, sortedBy }: LinksControlsTopProps) {
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-  const setCurrentModalWindowPos = useStore((state) => state.setCurrentModalWindowPos);
+  const router = useRouter();
 
-  const dropdownLabel = getSortingMenuDropdownLabel(sortedBy);
+  const dropdownLabel = getSortingMenuDropdownLabel(sortedBy) || '';
 
-  const handleButtonClick = (e: React.MouseEvent) => {
-    const menuOffsetTop = 9;
-    const menuOffsetRight = 9;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cssPosProps: React.CSSProperties = {
-      top: `${rect.top - menuOffsetTop}px`,
-      right: `${window.innerWidth - rect.right - menuOffsetRight}px`,
-    };
-    
-    setCurrentModalWindowPos(cssPosProps);
-    setCurrentModalWindow('links-sorting-menu');
+  const doSorting = async (sorting: SortingOrderVariants) => {
+    await saveSettings({ sortLinksBy: sorting });
+    router.refresh();
   };
+
+  const items: Array<DropdownItem | DropdownItemsDivider> = [
+    {
+      labelUnselected: 'Sort by date ASC',
+      labelSelected: 'SORTED BY DATE ASC',
+      invokeOnClick: async () => doSorting('date-asc')
+    },
+    {
+      labelUnselected: 'Sort by title ASC',
+      labelSelected: 'SORTED BY TITLE ASC',
+      invokeOnClick: async () => doSorting('title-asc')
+    },
+    {
+      labelUnselected: 'Sort by domain ASC',
+      labelSelected: 'SORTED BY DOMAIN ASC',
+      invokeOnClick: async () => doSorting('domain-asc')
+    },
+    'divider',
+    {
+      labelUnselected: 'Sort by date DESC',
+      labelSelected: 'SORTED BY DATE DESC',
+      invokeOnClick: async () => doSorting('date-desc')
+    },
+    {
+      labelUnselected: 'Sort by title DESC',
+      labelSelected: 'SORTED BY TITLE DESC',
+      invokeOnClick: async () => doSorting('title-desc')
+    },
+    {
+      labelUnselected: 'Sort by domain DESC',
+      labelSelected: 'SORTED BY DOMAIN DESC',
+      invokeOnClick: async () => doSorting('domain-desc')
+    },
+  ];
 
   return (
     <div className={twContainer}>
       <div className={twSection}>
-        <span className={twInfo}>
-          TOTAL LINKS FOUND: {totalCount}
-        </span>
+        <span className={twInfo}>TOTAL LINKS FOUND: {totalCount}</span>
       </div>
-
+      
       <div className={twSection}>
-        <button className={twButton} onClick={handleButtonClick}>
-          {dropdownLabel}
-        </button>
+        <Dropdown items={items} defaultTriggerLabel={dropdownLabel} />
       </div>
     </div>
   );
 }
 
 const twContainer = cnJoin(
-  'flex flex-row justify-between items-center mt-4 mb-4',
+  'h-[24px] my-4 flex flex-row justify-between items-center',
   'font-medium font-geistsans',
-  'h-[24px]'
 );
 
 const twSection = cnJoin(
-  'flex flex-row justify-between items-center gap-x-2 text-xs', 
+  'relative flex flex-row justify-between items-center',
 );
 
 const twInfo = cnJoin(
   'text-xs text-black/70',
 );
 
-const twButton = cnJoin(
-  'z-30 h-6 py-2 px-2 inline-flex justify-center items-center gap-2',
-  'bg-transparent border border-black/10 text-black/70 rounded-md',
-  'font-medium whitespace-nowrap text-xs',
-  // 'hover:text-black focus:text-black',
-  'hover:text-black hover:border-black/15',
-  'focus:text-black focus:border-black/15',
-);
+

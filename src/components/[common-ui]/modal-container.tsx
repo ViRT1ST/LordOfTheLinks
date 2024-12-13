@@ -5,7 +5,7 @@ import ModalWindow from '@/components/[common-ui]/modal-window';
 import LinkFormDelete from '@/components/links-view/link-form-delete';
 import LinkFormEdit from '@/components/links-view/link-form-edit';
 import LinkFormCreate from '@/components/links-view/link-form-create';
-import LinksControlsSorting from '@/components/links-view/links-controls-sorting';
+// import LinksControlsSorting from '@/components/links-view/links-controls-sorting';
 import QueryFormCreate from '@/components/queries-view/query-form-create';
 import QueryFormEdit from '@/components/queries-view/query-form-edit';
 import QueryFormDelete from '@/components/queries-view/query-form-delete';
@@ -46,7 +46,7 @@ export default function ModalContaner() {
         />
       )}
 
-      {currentModalWindow === 'links-sorting-menu' && (
+      {/* {currentModalWindow === 'links-sorting-menu' && (
         <ModalWindow
           content={<LinksControlsSorting />}
           isOverlayClickDoClose={true}
@@ -54,7 +54,7 @@ export default function ModalContaner() {
           isCloseButtonVisible={false}
           positionStyles={currentModalWindowPos}
         />
-      )}
+      )} */}
 
       {currentModalWindow === 'query-create' && (
         <ModalWindow

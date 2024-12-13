@@ -223,8 +223,6 @@ export const getLinks = async (searchQuery: string | null, page: number) => {
     response.totalCount = totalCount;
   }
 
-  console.log(response.linksPerPage, response.sortLinksBy);
-
   return response;
 };
 

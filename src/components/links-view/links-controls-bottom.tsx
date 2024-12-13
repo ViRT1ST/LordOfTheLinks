@@ -93,7 +93,7 @@ const twButtonGroup = cnJoin(
 
 const twButton = cnJoin(
   'h-10 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'rounded-md border border-black/15 text-black/40',
+  'rounded-md border border-black/15 text-black/50',
   'text-xs font-medium whitespace-nowrap transition-all',
   
   'hover:text-black/80 hover:border-black/20',
