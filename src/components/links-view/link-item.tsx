@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { type DbLinkWithTags } from '@/types/index';
+import { DropdownItem, type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/formatting';
 import { FAVICON_SIZE } from '@/config/public';
 import LinkItemMenu from '@/components/links-view/link-item-menu';
@@ -20,7 +20,7 @@ export default function LinkItem({ link }: LinkItemProps) {
 
   const linkImageSrc = `/images/site-icons/${link.domain}.png`;
   const linkHint = createTooltipTextForLink(link) || 'N/A';
-  
+
   return (
     <div className={twItemContainer}>
       <div className={twItemLeftPart}>
@@ -52,12 +52,19 @@ export default function LinkItem({ link }: LinkItemProps) {
         </Link>
       </div>
 
+      
       <div className={twItemRightPart}>
         <LinkItemMenu link={link} />
       </div>
     </div>
   );
 }
+
+
+
+
+
+
 const twItemContainer = cnJoin(
   'mb-[4px] flex flex-row',
   'border rounded-sm border-black/20',

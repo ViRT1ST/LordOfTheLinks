@@ -1,57 +1,82 @@
 'use client';
 
-import { type DbPinnedQuery } from '@/types';
-import { useStore } from '@/store/useStore';
-import { cnJoin } from '@/utils/formatting';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
+import type { DropdownItem, DbPinnedQuery } from '@/types';
+import { getModalContainerElement } from '@/utils/dom';
+import Dropdown from '@/components/[design-system]/dropdown';
+import ModalWindow from '@/components/[common-ui]/modal-window-new';
+import QueryFormEdit from '@/components/queries-view/query-form-edit';
+import QueryFormDelete from '@/components/queries-view/query-form-delete';
 
-export default function QueryItemMenu() {
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+type QueryItemMenuProps = {
+  isContextMenuOpen: boolean;
+  setIsContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  query: DbPinnedQuery;
+};
 
-  const handleEditButtonClick = () => {
-    setCurrentModalWindow('query-update');
-  };
+export default function QueryItemMenu({
+  isContextMenuOpen,
+  setIsContextMenuOpen,
+  query
+}: QueryItemMenuProps) {
+  const [ isUpdateModalOpen, setIsUpdateModalOpen ] = useState(false);
+  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState(false);
 
-  const handleDeleteButtonClick = () => {
-    setCurrentModalWindow('query-delete');
-  };
-
-  const handleRightClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    resetModalWindowStates();
-  };
+  const items: Array<DropdownItem> = [
+    { label: 'EDIT', invokeOnClick: () => setIsUpdateModalOpen(true) },
+    { label: 'DELETE', invokeOnClick: () => setIsDeleteModalOpen(true) }
+  ];
 
   return (
-    <div className={twMenu} onContextMenu={handleRightClick}>
+    <>
+      {isContextMenuOpen && (
+        <Dropdown
+          items={items}
+          classNames="w-[110px] -mt-[8px] ml-[18px]"
+          initalState={isContextMenuOpen}
+          setOutsideState={setIsContextMenuOpen}
+        />
+      )}
 
-      <button className={twMenuItem} onClick={handleEditButtonClick}>
-        EDIT QUERY
-      </button>
+      {isUpdateModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isUpdateModalOpen}
+            setIsOpen={setIsUpdateModalOpen}
+            content={
+              <QueryFormEdit
+                query={query}
+                setIsOpen={setIsUpdateModalOpen}
+              />
+            }
+            isOverlayClickDoClose={false}
+            focusOnFirstElement={false}
+            
+          />,
+          getModalContainerElement()
+        )
+      )}
 
-      <button className={twMenuItem} onClick={handleDeleteButtonClick}>
-        DELETE QUERY
-      </button>
-    </div>
+      {isDeleteModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isDeleteModalOpen}
+            setIsOpen={setIsDeleteModalOpen}
+            content={
+              <QueryFormDelete
+                query={query}
+                setIsOpen={setIsDeleteModalOpen}
+              />
+            }
+            isOverlayClickDoClose={true}
+            focusOnFirstElement={false}
+          />,
+          getModalContainerElement()
+        )
+      )}
+    </>
   );
 }
 
-const twMenu = cnJoin(
-
-  'z-20 w-[120px] py-2 px-3 rounded-md border-black/10',
-  'flex flex-col items-end',
-  'bg-white border border-black/40',
-  'opacity-100',
-);
-
-// hover: show arrow icon near text
-const twMenuItem = cnJoin(
-  'h-7 items-center ', //h-7 is 28px
-  'text-sm font-medium whitespace-nowrap text-xs',
-  ' font-geistsans',
-);
-
-const twMenuDivider = cnJoin(
-  'border-black/10 self-center w-full my-[6px]'
-);

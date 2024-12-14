@@ -1,41 +1,35 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { cn, cnJoin } from '@/utils/formatting';
-import { useStore } from '@/store/useStore';
+import { cnJoin } from '@/utils/formatting';
 import useKeyDown from '@/hooks/useKeyDown';
 import useClickOnElement from '@/hooks/useClickOnElement';
 import useTrapFocus from '@/hooks/useTrapFocus';
 
 type ModalWindowProps = {
-  content: React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  content: JSX.Element;
   isOverlayClickDoClose?: boolean;
   isCloseButtonVisible?: boolean;
   focusOnFirstElement?: boolean;
 };
 
 export default function ModalWindow({
+  isOpen,
+  setIsOpen,
   content,
   isOverlayClickDoClose = true,
   isCloseButtonVisible = true,
   focusOnFirstElement = false,
 }: ModalWindowProps) {
-  const [ isOpen, setIsOpen ] = useState(true);
   const modalRef = useRef<HTMLDialogElement>(null);
-
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const isEscPressed = useKeyDown('Escape');
   const isOverlayClicked = useClickOnElement(modalRef);
   useTrapFocus(modalRef, focusOnFirstElement);
-
-  useEffect(() => {
-    if (!isOpen) {
-      resetModalWindowStates();
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (isEscPressed || (isOverlayClickDoClose && isOverlayClicked)) {

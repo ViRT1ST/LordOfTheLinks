@@ -15,9 +15,16 @@ export default function useOutsideClick(
     };
 
     if (state) {
-      document.addEventListener('click', onOutsideClick);  
+      document.addEventListener('click', onOutsideClick);
+      document.addEventListener('contextmenu', onOutsideClick);  
     } else {
       document.removeEventListener('click', onOutsideClick);
+      document.removeEventListener('contextmenu', onOutsideClick);  
     }
+
+    // return () => {
+    //   document.removeEventListener('click', onOutsideClick);
+    //   document.removeEventListener('contextmenu', onOutsideClick);  
+    // };
   }, [state]);
 };

@@ -7,9 +7,6 @@ import {
   type OrderByVariants
 } from '@/types';
 
-import { useStore } from '@/store/useStore';
-import { getSettings } from '@/server-actions';
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -106,11 +103,3 @@ export const getUpdatedSearchParams = (
 
   return [...paramsWithoutKeyToUpdate, `${key}=${value}`].join('&');
 };
-
-// export const getSortingMenuDropdownLabel = () => {
-//   let currentSorting = useStore.getState().currentSettings?.sortLinksBy || null;
-
-//   return typeof currentSorting === 'string'
-//     ? `SORTED BY ${currentSorting.replace('-', ' ').toUpperCase()}`
-//     : null;
-// };

@@ -5,8 +5,8 @@ Variants
 ============================================================= */
 
 export type ModalWindowVariants = 
-  'link-create' | 'link-update' | 'link-delete' | 'links-sorting-menu' |
-  'query-context-menu' | 'query-create' | 'query-update' | 'query-delete' |
+  'link-create' | 'link-update' | 'link-delete' |
+  'query-create' | 'query-update' | 'query-delete' |
   'settings';
 
 export type SortingOrderVariants =
@@ -76,9 +76,8 @@ Design system
 ============================================================= */
 
 export type DropdownItem = {
-  labelUnselected: string;
-  labelSelected: string;
-  invokeOnClick: () => Promise<void>;
+  label: string;
+  invokeOnClick: () => void;
 };
 
 export type DropdownItemsDivider = 'divider';

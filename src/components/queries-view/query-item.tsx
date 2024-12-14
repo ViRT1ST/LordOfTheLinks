@@ -3,41 +3,41 @@
 import Link from 'next/link';
 
 import { type DbPinnedQuery } from '@/types';
-import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/formatting';
+import { useState } from 'react';
+import QueryItemMenu from '@/components/queries-view/query-item-menu';
 
 type QueryItemProps = {
   query: DbPinnedQuery;
 };
 
 export default function QueryItem({ query }: QueryItemProps) {
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-  const setCurrentModalWindowPos = useStore((state) => state.setCurrentModalWindowPos);
-  const setCurrentQueryData = useStore((state) => state.setCurrentQueryData);
+  const [ isContextMenuOpen, setIsContextMenuOpen ] = useState(false);
 
   const correctedQuery = query.query.replaceAll(' ', '+');
 
   const handleRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const reactCssPosStyles = {
-      top: `${rect.top + rect.height / 2 + 8}px`,
-      left: `${rect.left + rect.width / 2 - 8}px`,
-    };
-
-    setCurrentModalWindowPos(reactCssPosStyles);
-    setCurrentQueryData(query);
-    setCurrentModalWindow('query-context-menu');
+    setIsContextMenuOpen((prev) => !prev);
   };
 
   return (
-    <div onContextMenu={handleRightClick}>
-      <Link className={twLink} href={`/?q=${correctedQuery}`}>
+    <>
+      <Link
+        className={twLink}
+        href={`/?q=${correctedQuery}`}
+        onContextMenu={handleRightClick}
+      >
         {query.label}
       </Link>
-    </div>
+
+      <QueryItemMenu
+        query={query}
+        isContextMenuOpen={isContextMenuOpen}
+        setIsContextMenuOpen={setIsContextMenuOpen}
+      />
+    </>
   );
 }
 
