@@ -4,28 +4,29 @@ import { ChevronRight } from 'lucide-react';
 import type { DropdownItem, DropdownItemsDivider } from '@/types';
 import { cnJoin, cn } from '@/utils/formatting';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import useKeyDown from '@/hooks/useKeyDown';
 
 type DropdownProps = {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   items: Array<DropdownItem | DropdownItemsDivider>;
-  menuTrigger?: JSX.Element;
+  trigger?: JSX.Element;
   classNames?: string;
-  initalState?: boolean;
-  setOutsideState?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Dropdown({
-  items, menuTrigger, classNames, initalState, setOutsideState
+  items, trigger, classNames, isOpen, setIsOpen
 }: DropdownProps) {
-  const [ isOpen, setIsOpen ] = useState(initalState || false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, isOpen, setIsOpen);
+  const isEscPressed = useKeyDown('Escape');
 
   useEffect(() => {
-    if (setOutsideState !== undefined) {
-      setOutsideState(isOpen);
+    if (isEscPressed) {
+      setIsOpen(false);
     }
-  }, [isOpen]);
+  }, [isEscPressed]);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -38,9 +39,9 @@ export default function Dropdown({
 
   return (
     <div className={cn(twDropdown)} ref={dropdownRef}>
-      {menuTrigger && (
+      {trigger && (
         <div onClick={toggleDropdown}>
-          {menuTrigger}
+          {trigger}
         </div>
       )}
 

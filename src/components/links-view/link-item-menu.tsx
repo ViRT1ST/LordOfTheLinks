@@ -1,45 +1,82 @@
 'use client';
 
+import { useState } from 'react';
 import { Ellipsis } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
-import { DropdownItem, type DbLinkWithTags } from '@/types/index';
+import type { DropdownItem, DbLinkWithTags } from '@/types/index';
+import { getModalContainerElement } from '@/utils/dom';
 import { cnJoin } from '@/utils/formatting';
-import { useStore } from '@/store/useStore';
 import Dropdown from '@/components/[design-system]/dropdown';
+import ModalWindow from '@/components/[common-ui]/modal-window';
+import LinkFormEdit from '@/components/links-view/link-form-edit';
+import LinkFormDelete from '@/components/links-view/link-form-delete';
 
 type LinkItemMenuProps = {
   link: DbLinkWithTags;
 };
 
 export default function LinkItemMenu({ link }: LinkItemMenuProps) {
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-  const setCurrentLinkData = useStore((state) => state.setCurrentLinkData);
-
-  const handleEditButtonClick = () => {
-    setCurrentLinkData(link);
-    setCurrentModalWindow('link-update');
-  };
-
-  const handleDeleteButtonClick = () => {
-    setCurrentLinkData(link);
-    setCurrentModalWindow('link-delete');
-  };
+  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
+  const [ isUpdateModalOpen, setIsUpdateModalOpen ] = useState(false);
+  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState(false);
 
   const items: Array<DropdownItem> = [
-    { label: 'EDIT', invokeOnClick: () => handleEditButtonClick() },
-    { label: 'DELETE', invokeOnClick: () => handleDeleteButtonClick() }
+    { label: 'EDIT', invokeOnClick: () => setIsUpdateModalOpen(true) },
+    { label: 'DELETE', invokeOnClick: () => setIsDeleteModalOpen(true) }
   ];
 
   return (
-    <Dropdown
-      items={items}
-      classNames="w-[110px] mt-[30px] ml-[-40px]"
-      menuTrigger={(
-        <button className={twMenuTrigger}>
-          <Ellipsis className={twMenuTriggerIcon} />
-        </button>
+    <>
+      <Dropdown
+        isOpen={isDropdownOpen}
+        setIsOpen={setIsDropdownOpen}
+        items={items}
+        classNames="w-[110px] mt-[30px] ml-[-40px]"
+        trigger={(
+          <button className={twMenuTrigger}>
+            <Ellipsis className={twMenuTriggerIcon} />
+          </button>
+        )}
+      />
+    
+      {isUpdateModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isUpdateModalOpen}
+            setIsOpen={setIsUpdateModalOpen}
+            content={
+              <LinkFormEdit
+                link={link}
+                setIsOpen={setIsUpdateModalOpen}
+              />
+            }
+            isOverlayClickDoClose={false}
+            focusOnFirstElement={false}
+            
+          />,
+          getModalContainerElement()
+        )
       )}
-    />
+
+      {isDeleteModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isDeleteModalOpen}
+            setIsOpen={setIsDeleteModalOpen}
+            content={
+              <LinkFormDelete
+                link={link}
+                setIsOpen={setIsDeleteModalOpen}
+              />
+            }
+            isOverlayClickDoClose={true}
+            focusOnFirstElement={false}
+          />,
+          getModalContainerElement()
+        )
+      )}
+    </>
   );
 }
 

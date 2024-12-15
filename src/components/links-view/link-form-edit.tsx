@@ -4,17 +4,15 @@ import { useState } from 'react';
 
 import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { updateLink } from '@/server-actions';
-import { useStore } from '@/store/useStore';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
 type LinkFormEditProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   link: DbLinkWithTags;
 };
 
-export default function LinkFormEdit({ link }: LinkFormEditProps) {
+export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
-
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,7 +39,7 @@ export default function LinkFormEdit({ link }: LinkFormEditProps) {
       });
       //setIsFetchingLinkData(false);
 
-      resetModalWindowStates();
+      setIsOpen(false);
     }
   };
 

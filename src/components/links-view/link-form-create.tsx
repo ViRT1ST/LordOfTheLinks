@@ -6,11 +6,13 @@ import { LoaderCircle } from 'lucide-react';
 
 import { LinkFormSchema } from '@/types/index';
 import { createLink, fetchLinkDataByUrl } from '@/server-actions';
-import { useStore } from '@/store/useStore';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
-export default function LinkFormCreate() {
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+type LinkFormCreateProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
   const router = useRouter();
 
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
@@ -61,7 +63,7 @@ export default function LinkFormCreate() {
       });
       setProcessingMessage(null);
 
-      resetModalWindowStates();
+      setIsOpen(false);
       router.push(`/?q=id:${link.id}`);
     }
   };

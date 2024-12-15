@@ -1,48 +1,33 @@
 'use client';
 
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Plus } from 'lucide-react';
 
 import { cnJoin } from '@/utils/formatting';
-import { useStore } from '@/store/useStore';
-
-import { createPortal } from 'react-dom';
-
-import ModalWindow from '@/components/[common-ui]/modal-window-new';
+import { getModalContainerElement } from '@/utils/dom';
+import ModalWindow from '@/components/[common-ui]/modal-window';
 import QueryFormCreate from './query-form-create';
 
 export default function QueryButtonCreate() {
-  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ isCreateModalOpen, setIsCreateModalOpen ] = useState(false);
 
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-
-  // const handleClick = () => {
-  //   const modalContainer = document.getElementById('modal-container');
-  //   if (modalContainer) {
-
-  //   }
-  //   setCurrentModalWindow('query-create');
-
-  // };
-
-  //() => setCurrentModalWindow('query-create')
   return (
     <>
-      <button className={twButton} onClick={() => setIsModalOpen(true)}>
+      <button className={twButton} onClick={() => setIsCreateModalOpen(true)}>
         <Plus />
       </button>
 
-      {isModalOpen && (
+      {isCreateModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isModalOpen}
-            setIsOpen={setIsModalOpen}
-            content={<QueryFormCreate />}
+            isOpen={isCreateModalOpen}
+            setIsOpen={setIsCreateModalOpen}
+            content={<QueryFormCreate setIsOpen={setIsCreateModalOpen} />}
             isOverlayClickDoClose={false}
             focusOnFirstElement={true}
-  
           />,
-          document.getElementById('modal-container') as HTMLElement
+          getModalContainerElement()
         )
       )}
     </>

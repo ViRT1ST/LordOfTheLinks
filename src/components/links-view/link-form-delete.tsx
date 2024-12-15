@@ -2,20 +2,18 @@
 
 import { type DbLinkWithTags } from '@/types/index';
 import { deleteLink } from '@/server-actions';
-import { useStore } from '@/store/useStore';
 import { cnJoin } from '@/utils/formatting';
 
 type LinkFormDeleteProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   link: DbLinkWithTags;
 };
 
-export default function LinkFormDelete({ link }: LinkFormDeleteProps) {
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
-
+export default function LinkFormDelete({ setIsOpen, link }: LinkFormDeleteProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await deleteLink(link.id);
-    resetModalWindowStates();
+    setIsOpen(false);
   };
 
   return (

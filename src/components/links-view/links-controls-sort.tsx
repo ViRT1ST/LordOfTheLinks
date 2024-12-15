@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type {
@@ -17,6 +18,8 @@ type LinksControlsSortProps = {
 };
 
 export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProps) {
+  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
+
   const router = useRouter();
 
   const sort = async (sorting: SortingOrderVariants) => {
@@ -36,9 +39,11 @@ export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProp
 
   return (
     <Dropdown
+      isOpen={isDropdownOpen}
+      setIsOpen={setIsDropdownOpen}
       items={items}
       classNames="w-[200px] mt-[25px]"
-      menuTrigger={(
+      trigger={(
         <button className={twButton}>
           {buttonLabel}
         </button>

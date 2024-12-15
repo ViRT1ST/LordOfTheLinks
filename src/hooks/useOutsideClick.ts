@@ -22,9 +22,9 @@ export default function useOutsideClick(
       document.removeEventListener('contextmenu', onOutsideClick);  
     }
 
-    // return () => {
-    //   document.removeEventListener('click', onOutsideClick);
-    //   document.removeEventListener('contextmenu', onOutsideClick);  
-    // };
+    return () => {
+      document.removeEventListener('click', onOutsideClick);
+      document.removeEventListener('contextmenu', onOutsideClick);  
+    };
   }, [state]);
 };

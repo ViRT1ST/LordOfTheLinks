@@ -10,10 +10,17 @@ export default function useKey(eventKey: string) {
       }
     };
 
-    document.body.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+
+    // imidiatelly reset state and remove event listener after every trigger
+    // without it will work only once
+    if (isPressed) {
+      setIsPressed(false);
+      document.removeEventListener('keydown', onKeyDown);
+    }
       
     return () => {
-      document.body.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
     };
   });
 

@@ -4,13 +4,15 @@ import { useState } from 'react';
 
 import { PinnedQueryFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
-import { useStore } from '@/store/useStore';
+
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
 
-export default function QueryFormCreate() {
-  const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+type QueryFormCreateProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const resetModalWindowStates = useStore((state) => state.resetModalWindowStates);
+export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
+  const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +33,7 @@ export default function QueryFormCreate() {
         query: result.data.query
       });
 
-      // e.currentTarget.reset();
-      resetModalWindowStates();
+      setIsOpen(false);
     }
   };
 

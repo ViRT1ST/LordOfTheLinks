@@ -1,54 +1,60 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
 import { cnJoin } from '@/utils/formatting';
-import { useStore } from '@/store/useStore';
-import { getSettings } from '@/server-actions';
 import FormSearch from '@/components/header/form-search';
+import ModalWindow from '@/components/[common-ui]/modal-window';
+import LinkFormCreate from '@/components/links-view/link-form-create';
+import { getModalContainerElement } from '@/utils/dom';
 
 export default function Header() {
-  const setCurrentModalWindow = useStore((state) => state.setCurrentModalWindow);
-  const setCurrentSettings = useStore((state) => state.setCurrentSettings);
-  const currentSettings = useStore((state) => state.currentSettings);
-
-  useEffect(() => { 
-    const runOnce = async () => {
-      const settings = await getSettings();
-      setCurrentSettings(settings);
-    };
-
-    if (!currentSettings) {
-      runOnce();
-    }
-  }, []);
+  const [ isCreateLinkModalOpen, setIsCreateLinkModalOpen ] = useState(false);
 
   return (
     <header className={twHeader}>
       {/* <div className={twHeaderLimiter}> */}
 
-        <div className={twContainerLeft}>
-          <Link className={twButton} href="/?v=links">
-            All Links
-          </Link>
-          <Link className={twButton} href="/?v=queries">
-            Pinned Queries
-          </Link>
-        </div>
+      <div className={twContainerLeft}>
+        <Link className={twButton} href="/?v=links">
+          All Links
+        </Link>
+        <Link className={twButton} href="/?v=queries">
+          Pinned Queries
+        </Link>
+      </div>
 
-        <div className={twContainerMiddle}>
-          <FormSearch />
-        </div>
+      <div className={twContainerMiddle}>
+        <FormSearch />
+      </div>
 
-        <div className={twContainerRight}>
-          <button className={twButton} onClick={() => setCurrentModalWindow('link-create')}>
-            Add New Link
-          </button>
-          <button className={twButton} onClick={() => {}}>
-            Settings
-          </button>
-        </div>
+      <div className={twContainerRight}>
+        <button className={twButton} onClick={() => setIsCreateLinkModalOpen(true)}>
+          Add New Link
+        </button>
+        <button className={twButton} onClick={() => {}}>
+          Settings
+        </button>
+      </div>
+
+      {isCreateLinkModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isCreateLinkModalOpen}
+            setIsOpen={setIsCreateLinkModalOpen}
+            content={
+              <LinkFormCreate
+                setIsOpen={setIsCreateLinkModalOpen}
+              />
+            }
+            isOverlayClickDoClose={false}
+            focusOnFirstElement={true}
+          />,
+          getModalContainerElement()
+        )
+      )}
 
       {/* </div> */}
     </header>

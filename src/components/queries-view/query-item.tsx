@@ -14,6 +14,7 @@ type QueryItemProps = {
 export default function QueryItem({ query }: QueryItemProps) {
   const [ isContextMenuOpen, setIsContextMenuOpen ] = useState(false);
 
+  //TODO
   const correctedQuery = query.query.replaceAll(' ', '+');
 
   const handleRightClick = (e: React.MouseEvent) => {
