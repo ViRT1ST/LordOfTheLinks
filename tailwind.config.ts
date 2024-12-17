@@ -16,6 +16,10 @@ const config: Config = {
       rubik: ['var(--font-rubik)', 'system-ui', 'sans-serif'],
       geistsans: ['var(--font-geist-sans)'],
       geistmono: ['var(--font-geist-mono)'],
+
+      librefranklin: ['var(--font-librefranklin)'],
+      inter: ['var(--font-inter)'],
+      notosansdisplay: ['var(--font-notosansdisplay)'],
     },
     extend: {
   		borderRadius: {

@@ -125,15 +125,15 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
 
 const twForm = cnJoin(
   'z-50 w-[800px] p-6 flex flex-col gap-y-2',
-  'bg-white rounded-lg'
+  'bg-white rounded-lg font-inter'
 );
 
 const twTitle = cnJoin(
-  'text-lg font-semibold leading-none tracking-tight'
+  'text-xl  leading-none tracking-tight  font-medium font-rubik'
 );
 
 const twDescription = cnJoin(
-  'text-sm text-neutral-500 mb-6'
+  'text-sm font-semibold text-neutral-500 mb-6 font-inter'
 );
 
 const twInputSection = cnJoin(
@@ -141,20 +141,21 @@ const twInputSection = cnJoin(
 );
 
 const twLabel = cnJoin(
-  'pt-[1px] w-20',
-  'text-sm font-medium leading-none'
+  'pt-[1px] w-24',
+  'text-sm font-semibold leading-none font-inter leading-tight'
 );
 
 const twInput = cnJoin(
   'w-full h-10 px-3 py-2 flex',
   'bg-white outline-none rounded ring-1 ring-neutral-200 ',
   'text-sm placeholder:text-neutral-500',
-  'focus-visible:ring-2 focus-visible:ring-neutral-700'
+  'focus-visible:ring-2 focus-visible:ring-neutral-700',
+  'leading-tight'
 );
 
 const twTextAreaLabel = cnJoin(
-  'pt-[11px] w-20 self-start',
-  'text-sm font-medium leading-none',
+  'pt-[11px] w-24 self-start',
+  'text-sm font-semibold leading-none font-inter',
 );
 
 const twTextArea = cnJoin(

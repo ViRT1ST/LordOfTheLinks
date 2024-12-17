@@ -3,7 +3,11 @@
 import Link from 'next/link';
 
 import { type DbPinnedQuery } from '@/types';
-import { cnJoin } from '@/utils/formatting';
+import {
+  cnJoin,
+  correctSearchQuery,
+  createTooltipTextForPinnedQuery
+} from '@/utils/formatting';
 import { useState } from 'react';
 import QueryItemMenu from '@/components/queries-view/query-item-menu';
 
@@ -14,8 +18,7 @@ type QueryItemProps = {
 export default function QueryItem({ query }: QueryItemProps) {
   const [ isContextMenuOpen, setIsContextMenuOpen ] = useState(false);
 
-  //TODO
-  const correctedQuery = query.query.replaceAll(' ', '+');
+  const queryHint = createTooltipTextForPinnedQuery(query) || 'N/A';
 
   const handleRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,8 +30,9 @@ export default function QueryItem({ query }: QueryItemProps) {
     <>
       <Link
         className={twLink}
-        href={`/?q=${correctedQuery}`}
+        href={`/?q=${correctSearchQuery(query.query)}`}
         onContextMenu={handleRightClick}
+        title={queryHint}
       >
         {query.label}
       </Link>

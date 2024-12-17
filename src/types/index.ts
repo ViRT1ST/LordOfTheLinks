@@ -3,11 +3,8 @@ import { z } from 'zod';
 /* =============================================================
 Variants
 ============================================================= */
-
-export type ModalWindowVariants = 
-  'link-create' | 'link-update' | 'link-delete' |
-  'query-create' | 'query-update' | 'query-delete' |
-  'settings';
+// rename SortingOrderVariants > SortingLinksVariants
+// rename OrderByVariants > SortingLinksVariantsForPrismaOptions
 
 export type SortingOrderVariants =
   'date-asc' | 'title-asc' | 'domain-asc' |
@@ -38,8 +35,6 @@ export type DbLink = {
 export type DbTag = {
   id: number;
   value: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export type DbLinkWithTags = DbLink & {
@@ -57,6 +52,8 @@ export type DbPinnedQuery = {
   id: number;
   label: string;
   query: string;
+  isTagOnlySearch: boolean;
+  info: string | null;
   priority: number;
   createdAt: Date;
   updatedAt: Date;
@@ -91,6 +88,8 @@ const invalidPriorityMsg = 'Priority must be a number between 0 and 100';
 export const LinkFormSchema = z.object({
   url: z.string().trim().url({ message: 'Invalid URL' }),
   title: z.string().trim().min(2, { message: 'Title must be at least 2 characters' }),
+  info: z.string(),
+  tags: z.string(),
   priority: z
     .string()
     .trim()
@@ -102,8 +101,6 @@ export const LinkFormSchema = z.object({
     .transform((val) => Number(val))
     // Checking if it's between 0 and 100
     .refine((val) => val >= 0 && val <= 100, { message: invalidPriorityMsg }),
-  info: z.string(),
-  tags: z.string(),
 });
 
 export type NewLinkData = {
@@ -142,17 +139,31 @@ Pinned queries related types and validation schemas
 export const PinnedQueryFormSchema = z.object({
   label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
   query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
+  info: z.string(),
+  isTagOnlySearch: z.coerce.boolean(),
+  priority: z
+    .string()
+    .trim()
+    // Replacing empty string with "10"
+    .transform((val) => (val === '' ? '10' : val))
+    // Checking if it's a number
+    .refine((val) => !isNaN(Number(val)), { message: invalidPriorityMsg })
+    // Transforming it to number
+    .transform((val) => Number(val))
+    // Checking if it's between 0 and 100
+    .refine((val) => val >= 0 && val <= 100, { message: invalidPriorityMsg }),
 });
 
 export type NewPinnedQueryData = {
   label: string;
   query: string;
+  info: string | null;
+  isTagOnlySearch: boolean;
+  priority: number;
 }
 
-export type UpdatePinnedQueryData = {
+export type UpdatePinnedQueryData = NewPinnedQueryData &{
   id: number;
-  label: string;
-  query: string;
 }
 
 /* =============================================================

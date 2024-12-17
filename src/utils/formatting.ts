@@ -4,7 +4,8 @@ import { twMerge } from 'tailwind-merge';
 import { 
   type DbLinkWithTags,
   type SortingOrderVariants,
-  type OrderByVariants
+  type OrderByVariants,
+  DbPinnedQuery
 } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
@@ -47,12 +48,31 @@ export const createTooltipTextForLink = (link: DbLinkWithTags): string => {
     `Title: ${link.title}\n`,
     `URL: ${link.url}\n\n`,
     `Information: ${link.info || 'N/A'}\n\n`,
-    `Created at: ${formatDate(link.createdAt)}`,
+    `Created at: ${formatDate(link.createdAt)}\n`,
     `Updated at: ${formatDate(link.updatedAt)}\n\n`,
     `Tags: ${tags}\n`,
     `Priority: ${link.priority}\n`,
     `ID: ${link.id}`
   ].join('');
+};
+
+export const createTooltipTextForPinnedQuery = (pq: DbPinnedQuery): string => {
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  return [
+    `Label: ${pq.label}\n`,
+    `Query: ${pq.query}\n\n`,
+    `Information: ${pq.info || 'N/A'}\n\n`,
+    `Created at: ${formatDate(pq.createdAt)}\n`,
+    `Updated at: ${formatDate(pq.updatedAt)}\n\n`,
+    `Priority: ${pq.priority}\n`,
+    `ID: ${pq.id}`
+  ].join('');
+};
+
+export const correctSearchQuery = (searchQuery: string) => {
+  return searchQuery.replaceAll(' ', '+');
 };
 
 export const getSortingMenuDropdownLabel = (order: SortingOrderVariants | null) => {

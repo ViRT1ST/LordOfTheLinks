@@ -8,7 +8,7 @@ import type { DropdownItem, DbLinkWithTags } from '@/types/index';
 import { getModalContainerElement } from '@/utils/dom';
 import { cnJoin } from '@/utils/formatting';
 import Dropdown from '@/components/[design-system]/dropdown';
-import ModalWindow from '@/components/[common-ui]/modal-window';
+import ModalWindow from '@/components/[design-system]/modal-window';
 import LinkFormEdit from '@/components/links-view/link-form-edit';
 import LinkFormDelete from '@/components/links-view/link-form-delete';
 

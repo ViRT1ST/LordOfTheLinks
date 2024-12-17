@@ -24,7 +24,7 @@ export default function LinkItem({ link }: LinkItemProps) {
   return (
     <div className={twItemContainer}>
       <div className={twItemLeftPart}>
-        <Link className={twNextLink} href={link.url}  title={linkHint} target="_blank">
+        <Link className={twNextLink} href={link.url} title={linkHint} target="_blank">
           <div className={twFavicon}>
             <Image
               src={linkImageSrc}
@@ -68,7 +68,7 @@ export default function LinkItem({ link }: LinkItemProps) {
 const twItemContainer = cnJoin(
   'mb-[4px] flex flex-row',
   'border rounded-sm border-black/20',
-  'font-geistsans',
+  'font-inter',
   // 'bg-white/50 '
   // 'bg-[#f3f2f2]'
    'bg-[#f2f2f2]',
@@ -98,7 +98,8 @@ const twTitle = cnJoin(
 const twDomainAndTags = cnJoin(
   'text-sm text-black/50',
   'flex flex-row items-center',
-  'gap-x-1'
+  'gap-x-1 leading-tight',
+
 );
 
 const twItemRightPart = cnJoin(

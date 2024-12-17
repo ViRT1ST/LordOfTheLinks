@@ -157,7 +157,7 @@ export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
 
 const twForm = cnJoin(
   'z-50 w-[800px] p-6 flex flex-col gap-y-2',
-  'bg-white rounded-lg'
+  'bg-white rounded-lg font-inter'
 );
 
 const twTitle = cnJoin(

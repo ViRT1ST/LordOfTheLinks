@@ -97,7 +97,7 @@ const twItemIcon = cnJoin(`
 
 const twItemButton = cnJoin(`
   w-full h-7 py-2 flex items-center
-  text-black uppercase 
+  text-black uppercase font-inter
 `);
 
 const twDividerContainer = cnJoin(`

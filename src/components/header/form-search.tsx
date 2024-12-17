@@ -69,7 +69,7 @@ const twInput = cnJoin(
 
   'w-[600px] h-9 py-2 px-3',
   'rounded-md ', 
-  'text-sm ',
+  'text-sm   font-inter',
   'placeholder:text-neutral-500',
   'outline outline-1 outline-black/20',
 

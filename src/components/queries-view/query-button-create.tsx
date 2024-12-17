@@ -6,7 +6,7 @@ import { Plus } from 'lucide-react';
 
 import { cnJoin } from '@/utils/formatting';
 import { getModalContainerElement } from '@/utils/dom';
-import ModalWindow from '@/components/[common-ui]/modal-window';
+import ModalWindow from '@/components/[design-system]/modal-window';
 import QueryFormCreate from './query-form-create';
 
 export default function QueryButtonCreate() {

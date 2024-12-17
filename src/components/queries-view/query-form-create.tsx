@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { PinnedQueryFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
-
-import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
+import { convertErrorZodResultToMsgArray, cnJoin, cn } from '@/utils/formatting';
+import Checkbox from '@/components/[design-system]/checkbox';
 
 type QueryFormCreateProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,7 +30,10 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
 
       await createPinnedQuery({
         label: result.data.label,
-        query: result.data.query
+        query: result.data.query,
+        info: result.data.info,
+        isTagOnlySearch: result.data.isTagOnlySearch,
+        priority: result.data.priority
       });
 
       setIsOpen(false);
@@ -64,6 +67,33 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
         />
       </div>
 
+      <div className={cn(twInputSection, 'pl-[71px] mt-[-10px]')}>
+        <Checkbox nameAndId="isTagOnlySearch" isChecked={false} >
+          Search in tags only
+        </Checkbox>
+      </div>
+
+      <div className={twInputSection}>
+        <label htmlFor="info" className={twTextAreaLabel}>Info</label>
+        <textarea
+          className={twTextArea}
+          name="info"
+          id="info"
+          placeholder="Notes or description"
+        />
+      </div>
+
+      <div className={twInputSection}>
+        <label htmlFor="priority" className={twInputLabel}>Priority</label>
+        <input
+          className={twInput}
+          name="priority"
+          id="priority"
+          type="text"
+          placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
+        />
+      </div>
+
       <div className={twButtonsAndMsgArea}>
         <div>
           {errorMessages && errorMessages.map((message) => (
@@ -81,7 +111,7 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
 }
 
 const twForm = cnJoin(
-  'z-50 w-[500px] p-6 flex flex-col gap-y-2',
+  'z-50 w-[800px] p-6 flex flex-col gap-y-2',
   'bg-white rounded-lg'
 );
 
@@ -98,13 +128,25 @@ const twInputSection = cnJoin(
 );
 
 const twInputLabel = cnJoin(
-  'pt-[1px] w-16',
+  'pt-[1px] w-20',
   'text-sm font-medium leading-none'
 );
 
 const twInput = cnJoin(
   'w-full h-10 px-3 py-2 flex',
   'bg-white outline-none rounded ring-1 ring-neutral-200',
+  'text-sm placeholder:text-neutral-500',
+  'focus-visible:ring-2 focus-visible:ring-neutral-700'
+);
+
+const twTextAreaLabel = cnJoin(
+  'pt-[11px] w-20 self-start',
+  'text-sm font-medium leading-none',
+);
+
+const twTextArea = cnJoin(
+  'w-full min-h-32 max-h-64 px-3 py-2 flex',
+  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
   'text-sm placeholder:text-neutral-500',
   'focus-visible:ring-2 focus-visible:ring-neutral-700'
 );

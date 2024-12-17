@@ -4,14 +4,25 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
+import { type DbSettings } from '@/types';
 import { cnJoin } from '@/utils/formatting';
-import FormSearch from '@/components/header/form-search';
-import ModalWindow from '@/components/[common-ui]/modal-window';
-import LinkFormCreate from '@/components/links-view/link-form-create';
 import { getModalContainerElement } from '@/utils/dom';
+import FormSearch from '@/components/header/form-search';
+import ModalWindow from '@/components/[design-system]/modal-window';
+import LinkFormCreate from '@/components/links-view/link-form-create';
+import SettingForm from '@/components/settings/settings-form';
+import { getSettings } from '@/server-actions';
 
 export default function Header() {
   const [ isCreateLinkModalOpen, setIsCreateLinkModalOpen ] = useState(false);
+  const [ isSettingsModalOpen, setIsSettingsModalOpen ] = useState(false);
+  const [ settings, setSettings ] = useState<DbSettings | null>(null);
+
+  const handleSettingsButtonClick = async () => {
+    const settings = await getSettings();
+    setSettings(settings);
+    setIsSettingsModalOpen(true);
+  };
 
   return (
     <header className={twHeader}>
@@ -34,7 +45,7 @@ export default function Header() {
         <button className={twButton} onClick={() => setIsCreateLinkModalOpen(true)}>
           Add New Link
         </button>
-        <button className={twButton} onClick={() => {}}>
+        <button className={twButton} onClick={handleSettingsButtonClick}>
           Settings
         </button>
       </div>
@@ -50,6 +61,24 @@ export default function Header() {
               />
             }
             isOverlayClickDoClose={false}
+            focusOnFirstElement={true}
+          />,
+          getModalContainerElement()
+        )
+      )}
+
+      {isSettingsModalOpen && (
+        createPortal(
+          <ModalWindow
+            isOpen={isSettingsModalOpen}
+            setIsOpen={setIsSettingsModalOpen}
+            content={
+              <SettingForm
+                setIsOpen={setIsSettingsModalOpen}
+                settings={settings}
+              />
+            }
+            isOverlayClickDoClose={true}
             focusOnFirstElement={true}
           />,
           getModalContainerElement()
@@ -91,6 +120,7 @@ const twButton = cnJoin(
   'bg-transparent border border-black/10 text-black/60 rounded-md',
   'text-sm font-medium whitespace-nowrap transition-all',
   'hover:text-black hover:border-black/15', 
+  'font-inter',
 
   // bg-based on flowers backround
   'bg-[#f4f4f4]'

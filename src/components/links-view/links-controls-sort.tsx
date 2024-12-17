@@ -59,4 +59,5 @@ const twButton = cnJoin(`
   bg-transparent border-black/10
   hover:border-black/15 hover:text-black
   focus:border-black/15 focus:text-black
+  font-inter
 `);

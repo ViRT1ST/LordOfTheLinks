@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { DropdownItem, DbPinnedQuery } from '@/types';
 import { getModalContainerElement } from '@/utils/dom';
 import Dropdown from '@/components/[design-system]/dropdown';
-import ModalWindow from '@/components/[common-ui]/modal-window';
+import ModalWindow from '@/components/[design-system]/modal-window';
 import QueryFormEdit from '@/components/queries-view/query-form-edit';
 import QueryFormDelete from '@/components/queries-view/query-form-delete';
 

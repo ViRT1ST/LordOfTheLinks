@@ -395,13 +395,15 @@ Create pinned query
 ============================================================= */
 
 export const createPinnedQuery = async (data: NewPinnedQueryData) => {
-  const { label, query } = data;
+  const { label, query, info, isTagOnlySearch, priority } = data;
 
   const pinnedQuery = await prisma.pinned.create({
     data: {
       label,
       query,
-      // priority: priority || undefined,
+      isTagOnlySearch,
+      info: info || null,
+      priority,
     },
   });
 
@@ -434,14 +436,16 @@ Update pinned query
 ============================================================= */
 
 export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
-  const { id, label, query } = data;
+  const { id, label, query, info, isTagOnlySearch, priority } = data;
 
   const pinnedQuery = await prisma.pinned.update({
     where: { id },
     data: {
       label,
       query,
-      // priority later
+      isTagOnlySearch,
+      info: info || null,
+      priority,
     },
   });
 

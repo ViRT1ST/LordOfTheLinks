@@ -1,10 +1,10 @@
 import { cnJoin } from '@/utils/formatting';
 
-type MainContentProps = {
+type MainContainerProps = {
   children: React.ReactNode;
 };
 
-export default function MainContent({ children }: MainContentProps) {
+export default function MainContainer({ children }: MainContainerProps) {
   return (
     <main className={twMain}>
       {children}

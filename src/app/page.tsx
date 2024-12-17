@@ -1,5 +1,5 @@
-import PageWrapper from '@/components/[common-ui]/page-wrapper';
-import MainContent from '@/components/[common-ui]/main-content';
+import BodyContainer from '@/components/[body-children]/body-container';
+import MainContent from '@/components/[body-children]/main-container';
 import Header from '@/components/header/header';
 import LinksView from '@/components/links-view/links-view';
 import QueriesView from '@/components/queries-view/queries-view';
@@ -19,16 +19,16 @@ export default async function MainPage({ searchParams }: MainPageProps) {
   const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
 
   return (
-    <PageWrapper >
-      <MainContent>
+    <BodyContainer >
       <Header />
+      <MainContent>
         {isQueriesView ? (
           <QueriesView />
         ) : (
           <LinksView query={query} page={page} />
         )}
       </MainContent>
-    </PageWrapper>
+    </BodyContainer>
   );
 }
 
