@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus } from 'lucide-react';
 
+import { getModalContainerElement } from '@/utils/others';
 import { cnJoin } from '@/utils/formatting';
-import { getModalContainerElement } from '@/utils/dom';
+import Button from '@/components/[design-system]/button';
 import ModalWindow from '@/components/[design-system]/modal-window';
 import QueryFormCreate from './query-form-create';
 
@@ -14,9 +15,9 @@ export default function QueryButtonCreate() {
 
   return (
     <>
-      <button className={twButton} onClick={() => setIsCreateModalOpen(true)}>
-        <Plus />
-      </button>
+      <Button className={twButtonCreate} element="button" onClick={() => setIsCreateModalOpen(true)}>
+        <Plus size={24} />
+      </Button>
 
       {isCreateModalOpen && (
         createPortal(
@@ -31,17 +32,15 @@ export default function QueryButtonCreate() {
         )
       )}
     </>
-
   );
 }
 
-const twButton = cnJoin(
-  'absolute right-[42px] top-[100px]',
-
-  'text-black rounded-full trasnsition-all duration-150 ',
-  'h-12 w-12 flex items-center justify-center',
-
-  'bg-[#e4e4e4] text-neutral-600 border border-black/10',
-  'hover:bg-[#f4f4f4] hover:text-neutral-800 hover:border-black/20',
+const twButtonCreate = cnJoin(
+  /* common */
+  'absolute right-[40px] top-[100px]',
+  'h-12 w-12 px-2 py-2',
+  'rounded-full duration-150 bg-[#e4e4e4]',
+  /* states */
+  'hover:bg-[#ededed]'
 );
 

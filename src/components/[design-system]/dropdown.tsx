@@ -53,11 +53,17 @@ export default function Dropdown({
             </div>
           ) : (
             <div key={index + item.label} className={twItemContainer}>
-              <button className={twItemButton} onClick={() => handleItemClick(item)}>
+              <button
+                type="button"
+                className={twItemButton}
+                onClick={() => handleItemClick(item)}
+              >
                 <span className={twItemIcon}>
                   <ChevronRight size={16} strokeWidth={2} /> 
                 </span>
-                {item.label}
+                <span>
+                  {item.label}
+                </span>
               </button>
             </div>
           )
@@ -72,9 +78,10 @@ const twDropdown = cnJoin(`
   font-medium font-geistsans text-xs
 `);
 
+// bg-[#fbfbfb]
 const twItemsDefault = cnJoin(`
   z-10 absolute top-0 left-0 px-3 py-3 
-  bg-[#fbfbfb] border-black/35 rounded-md border
+  border-black/35 bg-white rounded-md border
   transition transform opacity-0 scale-95 duration-75
   pointer-events-none
   invisible 
@@ -97,7 +104,7 @@ const twItemIcon = cnJoin(`
 
 const twItemButton = cnJoin(`
   w-full h-7 py-2 flex items-center
-  text-black uppercase font-inter
+  text-black font-inter uppercase
 `);
 
 const twDividerContainer = cnJoin(`

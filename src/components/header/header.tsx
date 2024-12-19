@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+
 
 import { type DbSettings } from '@/types';
 import { cnJoin } from '@/utils/formatting';
-import { getModalContainerElement } from '@/utils/dom';
+import { getModalContainerElement } from '@/utils/others';
+import { getSettings } from '@/server-actions';
 import FormSearch from '@/components/header/form-search';
 import ModalWindow from '@/components/[design-system]/modal-window';
 import LinkFormCreate from '@/components/links-view/link-form-create';
 import SettingForm from '@/components/settings/settings-form';
-import { getSettings } from '@/server-actions';
+import Button from '../[design-system]/button';
 
 export default function Header() {
   const [ isCreateLinkModalOpen, setIsCreateLinkModalOpen ] = useState(false);
@@ -29,12 +30,13 @@ export default function Header() {
       {/* <div className={twHeaderLimiter}> */}
 
       <div className={twContainerLeft}>
-        <Link className={twButton} href="/?v=links">
+        <Button element="a" href="/?v=links">
           All Links
-        </Link>
-        <Link className={twButton} href="/?v=queries">
+        </Button>
+
+        <Button element="a" href="/?v=queries">
           Pinned Queries
-        </Link>
+        </Button>
       </div>
 
       <div className={twContainerMiddle}>
@@ -42,12 +44,12 @@ export default function Header() {
       </div>
 
       <div className={twContainerRight}>
-        <button className={twButton} onClick={() => setIsCreateLinkModalOpen(true)}>
+        <Button element="button" onClick={() => setIsCreateLinkModalOpen(true)}>
           Add New Link
-        </button>
-        <button className={twButton} onClick={handleSettingsButtonClick}>
+        </Button>
+        <Button element="button" onClick={handleSettingsButtonClick}>
           Settings
-        </button>
+        </Button>
       </div>
 
       {isCreateLinkModalOpen && (

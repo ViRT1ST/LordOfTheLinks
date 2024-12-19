@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { DropdownItem, DbPinnedQuery } from '@/types';
-import { getModalContainerElement } from '@/utils/dom';
+import { getModalContainerElement } from '@/utils/others';
 import Dropdown from '@/components/[design-system]/dropdown';
 import ModalWindow from '@/components/[design-system]/modal-window';
 import QueryFormEdit from '@/components/queries-view/query-form-edit';
@@ -35,7 +35,7 @@ export default function QueryItemMenu({
         isOpen={isContextMenuOpen}
         setIsOpen={setIsContextMenuOpen}
         items={items}
-        classNames="w-[110px] -mt-[8px] ml-[18px]"
+        classNames="w-[110px] -mt-[6px] ml-[18px]"
       />
 
       {isUpdateModalOpen && (

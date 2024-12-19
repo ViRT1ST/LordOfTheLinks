@@ -77,6 +77,11 @@ export type DropdownItem = {
   invokeOnClick: () => void;
 };
 
+export type SelectItem = {
+  label: string;
+  value: string;
+};
+
 export type DropdownItemsDivider = 'divider';
 
 /* =============================================================
@@ -86,7 +91,7 @@ Links related types and validation schemas
 const invalidPriorityMsg = 'Priority must be a number between 0 and 100';
 
 export const LinkFormSchema = z.object({
-  url: z.string().trim().url({ message: 'Invalid URL' }),
+  url: z.string().trim().url({ message: 'URL is invalid' }),
   title: z.string().trim().min(2, { message: 'Title must be at least 2 characters' }),
   info: z.string(),
   tags: z.string(),

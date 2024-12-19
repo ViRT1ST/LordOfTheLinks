@@ -4,30 +4,42 @@ import { useState } from 'react';
 
 import { PinnedQueryFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
-import { convertErrorZodResultToMsgArray, cnJoin, cn } from '@/utils/formatting';
-import Checkbox from '@/components/[design-system]/checkbox';
+import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
+
+import Form from '@/components/[design-system]/forms/form';
+import TitlesArea from '@/components/[design-system]/forms/area-titles';
+import Section from '@/components/[design-system]/forms/section';
+import Checkbox from '@/components/[design-system]/forms/checkbox';
+import Label from '@/components/[design-system]/forms/label';
+import Field from '@/components/[design-system]/forms/field';
+import Textarea from '@/components/[design-system]/forms/textarea';
+import ActionsArea from '@/components/[design-system]/forms/area-actions';
 
 type QueryFormCreateProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
-  const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
+  const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
+  const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
+    setErrorMessages(null);
+    setProcessingMessage(null);
 
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
     const result = PinnedQueryFormSchema.safeParse(formDataObject);
 
     if (!result.success) {
-      setErrorMessages(convertErrorZodResultToMsgArray(result));
+      const errorsList = convertErrorZodResultToMsgArray(result);
+      setErrorMessages(errorsList);
 
     } else {
-      setErrorMessages([]);
-
+      setProcessingMessage('Creating pinned query...');
       await createPinnedQuery({
         label: result.data.label,
         query: result.data.query,
@@ -35,132 +47,60 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
         isTagOnlySearch: result.data.isTagOnlySearch,
         priority: result.data.priority
       });
-
       setIsOpen(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={twForm} autoComplete="off">
-      <h1 className={twTitle}>Add Pinned Query</h1>
-      <p className={twDescription}>Create new pinned search query</p>
+    <Form className="w-[900px]" onSubmit={handleSubmit}>
+      <TitlesArea title="Add Pinned Query" subTitle="Fill fields to create new pinned query" />
 
-      <div className={twInputSection}>
-        <label htmlFor="label" className={twInputLabel}>Label</label>
-        <input
-          className={twInput}
+      <Section>
+        <Label className="w-24" htmlFor="label">Label</Label>
+        <Field
           name="label"
-          id="label"
           type="text"
           placeholder="Label text"
         />
-      </div>
+      </Section>
 
-      <div className={twInputSection}>
-        <label htmlFor="query" className={twInputLabel}>Query</label>
-        <input
-          className={twInput}
-          name="query"
-          id="query"
-          type="text"
-          placeholder="Search text"
-        />
-      </div>
+      <Section>
+        <Label className="w-24" htmlFor="query">Query</Label>
+        <div className="w-full">
+          <Field
+            name="query"
+            type="text"
+            placeholder="Search text"
+          />
+          <Checkbox className="mt-1" name="isTagOnlySearch" checkedByDefault={false} >
+            Search in tags only
+          </Checkbox>
+        </div>
+      </Section>
 
-      <div className={cn(twInputSection, 'pl-[71px] mt-[-10px]')}>
-        <Checkbox nameAndId="isTagOnlySearch" isChecked={false} >
-          Search in tags only
-        </Checkbox>
-      </div>
-
-      <div className={twInputSection}>
-        <label htmlFor="info" className={twTextAreaLabel}>Info</label>
-        <textarea
-          className={twTextArea}
+      <Section>
+        <Label className="w-24" htmlFor="info">Info</Label>
+        <Textarea
           name="info"
-          id="info"
           placeholder="Notes or description"
         />
-      </div>
+      </Section>
 
-      <div className={twInputSection}>
-        <label htmlFor="priority" className={twInputLabel}>Priority</label>
-        <input
-          className={twInput}
+      <Section>
+        <Label className="w-24" htmlFor="priority">Priority</Label>
+        <Field
           name="priority"
-          id="priority"
           type="text"
           placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
         />
-      </div>
+      </Section>
 
-      <div className={twButtonsAndMsgArea}>
-        <div>
-          {errorMessages && errorMessages.map((message) => (
-            <span key={message} className={twInputErrorMessage}>
-              {message}
-            </span>
-          ))}
-        </div>
-        <button type="submit" className={twSubmitButton}>
-          Create
-        </button>
-      </div>
-    </form>
+      <ActionsArea
+        errorMessages={errorMessages}
+        processingMessage={processingMessage}
+        submitButtonLabel="Create"
+      />
+    </Form>
   );
 }
 
-const twForm = cnJoin(
-  'z-50 w-[800px] p-6 flex flex-col gap-y-2',
-  'bg-white rounded-lg'
-);
-
-const twTitle = cnJoin(
-  'text-lg font-semibold leading-none tracking-tight'
-);
-
-const twDescription = cnJoin(
-  'text-sm text-neutral-500 mb-6'
-);
-
-const twInputSection = cnJoin(
-  'w-full mb-3 flex flex-row items-center'
-);
-
-const twInputLabel = cnJoin(
-  'pt-[1px] w-20',
-  'text-sm font-medium leading-none'
-);
-
-const twInput = cnJoin(
-  'w-full h-10 px-3 py-2 flex',
-  'bg-white outline-none rounded ring-1 ring-neutral-200',
-  'text-sm placeholder:text-neutral-500',
-  'focus-visible:ring-2 focus-visible:ring-neutral-700'
-);
-
-const twTextAreaLabel = cnJoin(
-  'pt-[11px] w-20 self-start',
-  'text-sm font-medium leading-none',
-);
-
-const twTextArea = cnJoin(
-  'w-full min-h-32 max-h-64 px-3 py-2 flex',
-  'bg-white outline-none rounded ring-1 ring-neutral-200 ',
-  'text-sm placeholder:text-neutral-500',
-  'focus-visible:ring-2 focus-visible:ring-neutral-700'
-);
-
-const twButtonsAndMsgArea = cnJoin(
-  'mt-4 flex flex-row justify-between',
-);
-
-const twInputErrorMessage = cnJoin(
-  'block text-red-500 text-sm font-semibold'
-);
-
-const twSubmitButton = cnJoin(
-  'h-10 px-4 py-2 inline-flex items-center justify-center gap-2',
-  'bg-neutral-900 rounded-md',
-  'text-neutral-50 font-medium text-base'
-);

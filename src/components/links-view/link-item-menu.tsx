@@ -5,7 +5,7 @@ import { Ellipsis } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 import type { DropdownItem, DbLinkWithTags } from '@/types/index';
-import { getModalContainerElement } from '@/utils/dom';
+import { getModalContainerElement } from '@/utils/others';
 import { cnJoin } from '@/utils/formatting';
 import Dropdown from '@/components/[design-system]/dropdown';
 import ModalWindow from '@/components/[design-system]/modal-window';

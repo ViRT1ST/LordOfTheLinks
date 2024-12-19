@@ -2,29 +2,26 @@
 
 import { useState } from 'react';
 
-import { type DbSettings, DropdownItem, LinkFormSchema } from '@/types/index';
+import { type DbSettings, DropdownItem, LinkFormSchema, SelectItem } from '@/types/index';
 import { updateLink } from '@/server-actions';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
-import Dropdown from '@/components/[design-system]/dropdown';
+import Select from '@/components/[design-system]/forms/select';
 
 type SettingsFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   settings: DbSettings | null;
 };
 
-export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps) {
-  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
+const sortByPriorityFirstItems: Array<SelectItem> = [
+  { label: 'true', value: 'true' },
+  { label: 'false', value: 'false' },
+];
 
+export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps) {
   const [ errorMessages, setErrorMessages ] = useState<string[]>([]);
 
-  const items: Array<DropdownItem> = [
-    { label: 'Sort by date ASC', invokeOnClick: () => {} },
-    { label: 'Sort by title ASC', invokeOnClick: () => {} },
-    { label: 'Sort by domain ASC', invokeOnClick: () => {} },
-    { label: 'Sort by date DESC', invokeOnClick: () => {} },
-    { label: 'Sort by title DESC', invokeOnClick: () => {} },
-    { label: 'Sort by domain DESC', invokeOnClick: () => {} }
-  ];
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,9 +30,10 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
     const result = LinkFormSchema.safeParse(formDataObject);
+    console.log(formDataObject);
 
     if (!result.success) {
-      setErrorMessages(convertErrorZodResultToMsgArray(result));
+      // setErrorMessages(convertErrorZodResultToMsgArray(result));
 
     } else {
       setErrorMessages([]);
@@ -82,36 +80,13 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
         <label htmlFor="sortLinksByPriorityFirst" className={twLabel}>
           Sort links by priority first
         </label>
-        <input
-          className={twInput}
-          name="sortLinksByPriorityFirst"
-          id="sortLinksByPriorityFirst"
-          type="text"
-          placeholder="True / False"
+
+        <Select
+          items={sortByPriorityFirstItems}
           defaultValue={String(settings.sortLinksByPriorityFirst)}
+          idAndName="sortLinksByPriorityFirst"
         />
       </div>
-
-      <div className={twInputSection}>
-        <label htmlFor="dp" className={twLabel}>
-          Dropdown option
-        </label>
-
-        <div id="dp">
-          <Dropdown
-            isOpen={isDropdownOpen}
-            setIsOpen={setIsDropdownOpen}
-            items={items}
-            classNames="w-[200px] mt-[25px]"
-            trigger={(
-              <button className={twButton}>
-                Dropdown Title
-              </button>
-            )}
-          />
-        </div>
-      </div>
-
 
       <div className={twButtonsAndErrorsArea}>
         <div>

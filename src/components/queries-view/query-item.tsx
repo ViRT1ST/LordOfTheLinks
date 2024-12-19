@@ -1,15 +1,11 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
 
 import { type DbPinnedQuery } from '@/types';
-import {
-  cnJoin,
-  correctSearchQuery,
-  createTooltipTextForPinnedQuery
-} from '@/utils/formatting';
-import { useState } from 'react';
+import { cnJoin, correctSearchQuery, createTooltipTextForPinnedQuery} from '@/utils/formatting';
 import QueryItemMenu from '@/components/queries-view/query-item-menu';
+import Button from '@/components/[design-system]/button';
 
 type QueryItemProps = {
   query: DbPinnedQuery;
@@ -18,7 +14,7 @@ type QueryItemProps = {
 export default function QueryItem({ query }: QueryItemProps) {
   const [ isContextMenuOpen, setIsContextMenuOpen ] = useState(false);
 
-  const queryHint = createTooltipTextForPinnedQuery(query) || 'N/A';
+  const queryHint = createTooltipTextForPinnedQuery(query);
 
   const handleRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -28,14 +24,15 @@ export default function QueryItem({ query }: QueryItemProps) {
 
   return (
     <>
-      <Link
-        className={twLink}
+      <Button
+        element="a"
+        className={twQuery}
         href={`/?q=${correctSearchQuery(query.query)}`}
-        onContextMenu={handleRightClick}
         title={queryHint}
+        onContextMenu={handleRightClick}
       >
         {query.label}
-      </Link>
+      </Button>
 
       <QueryItemMenu
         query={query}
@@ -46,15 +43,13 @@ export default function QueryItem({ query }: QueryItemProps) {
   );
 }
 
-const twLink = cnJoin(
-  'h-8 inline-flex rounded-md border border-black/20 px-4 pt-[1px] ',
-  'justify-center items-center',
-  ' text-sm font-medium text-black/70',
-  'font-rubik transition-all',
-
-  // bg-white/40
-  // bg-based on flowers backround
-  'bg-[#f4f4f4]',
-  'hover:text-black/90'
+const twQuery = cnJoin(
+  /* common */
+  'pt-[1px]',
+  'text-black/70 font-rubik',
+  'border-black/20',
+  'bg-[#f4f4f4]', //bg-based on flowers pattern
+  /* states */
+  'hover:text-black/90',
+  'hover:border-black/20'
 );
-
