@@ -1,30 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function useOutsideClick(
-  ref: React.RefObject<HTMLElement>,
-  state: boolean,
-  stateSetter: (value: boolean) => void
-) {
-  useEffect(() => {    
-    const onOutsideClick = (e: MouseEvent) => {
-      const refElement = ref.current;
+export default function useOutsideClick(ref: React.RefObject<HTMLElement>) {
+  const [isOutsideClicked, setIsOutsideClicked] = useState(false);
 
-      if (refElement && !refElement.contains(e.target as Node)) {
-        stateSetter(false);
-      }
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) {
+      return;
     };
 
-    if (state) {
-      document.addEventListener('click', onOutsideClick);
-      document.addEventListener('contextmenu', onOutsideClick);  
-    } else {
-      document.removeEventListener('click', onOutsideClick);
-      document.removeEventListener('contextmenu', onOutsideClick);  
-    }
+    const onOutsideClick = (e: MouseEvent) => {
+      if (element && !element.contains(e.target as Node)) {
+        setIsOutsideClicked(true);
+      }
+    };
+  
+    document.addEventListener('click', onOutsideClick);
+    document.addEventListener('contextmenu', onOutsideClick);  
 
     return () => {
       document.removeEventListener('click', onOutsideClick);
       document.removeEventListener('contextmenu', onOutsideClick);  
     };
-  }, [state]);
+  }, []);
+
+  return isOutsideClicked;
 };

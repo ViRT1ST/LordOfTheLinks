@@ -27,7 +27,6 @@ export default function LinksControlsTop({ totalCount, sortedBy }: LinksControls
 
 const twContainer = cnJoin(
   'h-[24px] my-4 flex flex-row justify-between items-center',
-  'font-medium font-geistsans',
 );
 
 const twSection = cnJoin(
@@ -35,7 +34,7 @@ const twSection = cnJoin(
 );
 
 const twInfo = cnJoin(
-  'text-xs text-black/70 font-inter',
+  'text-xs text-black/70 font-inter font-medium font-inter',
 );
 
 

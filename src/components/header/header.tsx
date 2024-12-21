@@ -55,7 +55,6 @@ export default function Header() {
       {isCreateLinkModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isCreateLinkModalOpen}
             setIsOpen={setIsCreateLinkModalOpen}
             content={
               <LinkFormCreate
@@ -72,7 +71,6 @@ export default function Header() {
       {isSettingsModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isSettingsModalOpen}
             setIsOpen={setIsSettingsModalOpen}
             content={
               <SettingForm

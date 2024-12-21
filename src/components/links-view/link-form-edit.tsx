@@ -59,6 +59,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       <Section>
         <Label className="w-24" htmlFor="url">URL</Label>
         <Field
+          id="url"
           name="url"
           type="text"
           placeholder="https://example.com"
@@ -69,6 +70,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       <Section>
         <Label className="w-24" htmlFor="title">Title</Label>
         <Field
+          id="title"
           name="title"
           type="text"
           placeholder="Page title"
@@ -79,6 +81,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       <Section>
         <Label className="w-24" htmlFor="info">Info</Label>
         <Textarea
+          id="info"
           name="info"
           placeholder="Notes or description"
           defaultValue={link.info || ''}
@@ -88,6 +91,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       <Section>
         <Label className="w-24" htmlFor="tags">Tags</Label>
         <Field
+          id="tags"
           name="tags"
           type="text"
           placeholder="Comma separated tags"
@@ -98,6 +102,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       <Section>
         <Label className="w-24" htmlFor="priority">Priority</Label>
         <Field
+          id="priority"
           name="priority"
           type="text"
           placeholder="Set priority in display order from 0 to 100, default (empty) is 10"

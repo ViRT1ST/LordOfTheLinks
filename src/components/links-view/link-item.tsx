@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { DropdownItem, type DbLinkWithTags } from '@/types/index';
+import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/formatting';
 import { FAVICON_SIZE } from '@/config/public';
 import LinkItemMenu from '@/components/links-view/link-item-menu';

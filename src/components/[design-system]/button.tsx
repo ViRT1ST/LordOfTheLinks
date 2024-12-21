@@ -41,13 +41,11 @@ export default function Button({
 }
 
 const twButton = cnJoin(
-  /* common */
   'h-8 px-4',
   'inline-flex justify-center items-center',
   'transition-all',
   'text-black/60 whitespace-nowrap text-sm font-medium font-inter',
   'border-black/10 border rounded-md',
-  /* states */
   'hover:text-black',
   'hover:border-black/15',
 );

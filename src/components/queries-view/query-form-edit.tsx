@@ -60,6 +60,7 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
       <Section>
         <Label className="w-24" htmlFor="label">Label</Label>
         <Field
+          id="label"
           name="label"
           type="text"
           placeholder="Label text"
@@ -71,12 +72,18 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
         <Label className="w-24" htmlFor="query">Query</Label>
         <div className="w-full">
           <Field
+            id="query"  
             name="query"
             type="text"
             placeholder="Search text"
             defaultValue={query.query}
           />
-          <Checkbox className="mt-1" name="isTagOnlySearch" checkedByDefault={query.isTagOnlySearch}>
+          <Checkbox
+            className="mt-1"
+            id="isTagOnlySearch"
+            name="isTagOnlySearch"
+            checkedByDefault={query.isTagOnlySearch}
+          >
             Search in tags only
           </Checkbox>
         </div>
@@ -85,6 +92,7 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
       <Section>
         <Label className="w-24" htmlFor="info">Info</Label>
         <Textarea
+          id="info"
           name="info"
           placeholder="Notes or description"
           defaultValue={query.info || ''}
@@ -94,6 +102,7 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
       <Section>
         <Label className="w-24" htmlFor="priority">Priority</Label>
         <Field
+          id="priority"
           name="priority"
           type="text"
           placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
@@ -104,7 +113,7 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
       <ActionsArea
         errorMessages={errorMessages}
         processingMessage={processingMessage}
-        submitButtonLabel="Create"
+        submitButtonLabel="Update"
       />
     </Form>
   );

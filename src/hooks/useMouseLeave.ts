@@ -4,25 +4,20 @@ export default function useMouseLeave(ref: RefObject<HTMLElement>) {
   const [ isMouseLeaved, setIsMouseLeaved ] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) {
+    const element = ref.current;
+
+    if (!element) {
       return;
     };
 
-    const element = ref.current;
-
     const handleMouseLeave = () => {
       setIsMouseLeaved(true);
-      setTimeout(() => setIsMouseLeaved(false), 10);
     };
-  
-    if (element) {
-      element.addEventListener('mouseleave', handleMouseLeave);
-    }
-    
+
+    element.addEventListener('mouseleave', handleMouseLeave);
+
     return () => {
-      if (element) {
-        element.removeEventListener('mouseleave', handleMouseLeave);
-      }
+      element.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 

@@ -2,11 +2,11 @@ import { useEffect, RefObject } from 'react';
 
 export default function useTrapFocus(ref: RefObject<HTMLElement>, focusOnFirst: boolean) {
   useEffect(() => {
-    if (!ref.current) {
-      return;
-    };
-
     const element = ref.current;
+
+    if (!element) {
+      return;
+    }
 
     const selectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
     const focusableElements = Array.from(element.querySelectorAll(selectors));

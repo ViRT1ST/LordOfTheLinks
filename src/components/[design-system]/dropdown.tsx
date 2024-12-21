@@ -7,26 +7,30 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import useKeyDown from '@/hooks/useKeyDown';
 
 type DropdownProps = {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   items: Array<DropdownItem | DropdownItemsDivider>;
-  trigger?: JSX.Element;
   classNames?: string;
 };
 
-export default function Dropdown({
-  items, trigger, classNames, isOpen, setIsOpen
-}: DropdownProps) {
+export default function Dropdown({ items, classNames, setIsOpen }: DropdownProps) {
+  const [ isRendered, setIsRendered ] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  useOutsideClick(dropdownRef, isOpen, setIsOpen);
+
+  const isOutsideClicked = useOutsideClick(dropdownRef);
   const isEscPressed = useKeyDown('Escape');
 
   useEffect(() => {
-    if (isEscPressed) {
+    if (!isRendered) {
+      setTimeout(() => setIsRendered(true));
+    }
+  }, [dropdownRef.current]);
+
+  useEffect(() => {
+    if (isEscPressed || isOutsideClicked) {
       setIsOpen(false);
     }
-  }, [isEscPressed]);
+  }, [isEscPressed, isOutsideClicked]);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -39,13 +43,7 @@ export default function Dropdown({
 
   return (
     <div className={cn(twDropdown)} ref={dropdownRef}>
-      {trigger && (
-        <div onClick={toggleDropdown}>
-          {trigger}
-        </div>
-      )}
-
-      <div className={cn(twItemsDefault, classNames, isOpen && twItemsVisible)}>
+      <div className={cn(twItemsHidden, isRendered && twItemsVisible, classNames)}>
         {items.map((item: DropdownItem | DropdownItemsDivider, index) => (
           typeof item === 'string' ? (
             <div key={index + item} className={twDividerContainer}>
@@ -79,17 +77,18 @@ const twDropdown = cnJoin(`
 `);
 
 // bg-[#fbfbfb]
-const twItemsDefault = cnJoin(`
+const twItemsHidden = cnJoin(`
   z-10 absolute top-0 left-0 px-3 py-3 
   border-black/35 bg-white rounded-md border
   transition transform opacity-0 scale-95 duration-75
   pointer-events-none
-  invisible 
+  invisible
 `);
 
 const twItemsVisible = cnJoin(`
   scale-100 opacity-100
-  visible pointer-events-auto
+  pointer-events-auto
+  visible
 `);
 
 const twItemContainer = cnJoin(`

@@ -58,6 +58,7 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
       <Section>
         <Label className="w-24" htmlFor="label">Label</Label>
         <Field
+          id="label"
           name="label"
           type="text"
           placeholder="Label text"
@@ -68,11 +69,17 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
         <Label className="w-24" htmlFor="query">Query</Label>
         <div className="w-full">
           <Field
+            id="query"
             name="query"
             type="text"
             placeholder="Search text"
           />
-          <Checkbox className="mt-1" name="isTagOnlySearch" checkedByDefault={false} >
+          <Checkbox
+            className="mt-1"
+            id="isTagOnlySearch"
+            name="isTagOnlySearch"
+            checkedByDefault={false}
+          >
             Search in tags only
           </Checkbox>
         </div>
@@ -81,6 +88,7 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
       <Section>
         <Label className="w-24" htmlFor="info">Info</Label>
         <Textarea
+          id="info"
           name="info"
           placeholder="Notes or description"
         />
@@ -89,6 +97,7 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
       <Section>
         <Label className="w-24" htmlFor="priority">Priority</Label>
         <Field
+          id="prority"
           name="priority"
           type="text"
           placeholder="Set priority in display order from 0 to 100, default (empty) is 10"

@@ -11,6 +11,7 @@ type Props = {
 } & React.ComponentPropsWithoutRef<'div'>
 
 export default function Checkbox({
+  id,
   name,
   checkedByDefault,
   className,
@@ -22,11 +23,12 @@ export default function Checkbox({
   return (
     <div className={cn(twContainer, className)} {...rest}>
       <input
-        className={cn(twCheckbox, twRing)}
         type="checkbox"
+        className={cn(twCheckbox, twRing)}
+        id={id}
         name={name}
         checked={isChecked}
-        onClick={() => setIsChecked((prev) => !prev)}
+        onChange={() => setIsChecked((prev) => !prev)}
       />
 
       <label className={twLabel} htmlFor={name} onClick={() => setIsChecked((prev) => !prev)}>

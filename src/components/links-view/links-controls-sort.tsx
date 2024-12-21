@@ -38,26 +38,30 @@ export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProp
   ];
 
   return (
-    <Dropdown
-      isOpen={isDropdownOpen}
-      setIsOpen={setIsDropdownOpen}
-      items={items}
-      classNames="w-[200px] mt-[25px]"
-      trigger={(
-        <button className={twButton}>
-          {buttonLabel}
-        </button>
+    <div className={twContainer}>
+      <button className={twButton} onClick={() => setIsDropdownOpen((prev) => !prev)}>
+        {buttonLabel}
+      </button>
+
+      {isDropdownOpen && (
+        <Dropdown
+          setIsOpen={setIsDropdownOpen}
+          items={items}
+          classNames="w-[200px] mt-[1px]"
+        />
       )}
-    />
+    </div>
   );
 }
 
+const twContainer = cnJoin(`
+  flex flex-col
+`);
+
 const twButton = cnJoin(`
   h-6 py-2 px-2 inline-flex justify-center items-center gap-2
-  border text-black/70 rounded-md
-  whitespace-nowrap
-  bg-transparent border-black/10
+  font-inter text-xs font-medium whitespace-nowrap
+  bg-transparent border-black/10 text-black/70 rounded-md border
   hover:border-black/15 hover:text-black
   focus:border-black/15 focus:text-black
-  font-inter
 `);

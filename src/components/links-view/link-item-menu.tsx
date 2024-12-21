@@ -28,22 +28,21 @@ export default function LinkItemMenu({ link }: LinkItemMenuProps) {
 
   return (
     <>
-      <Dropdown
-        isOpen={isDropdownOpen}
-        setIsOpen={setIsDropdownOpen}
-        items={items}
-        classNames="w-[110px] mt-[30px] ml-[-40px]"
-        trigger={(
-          <button className={twMenuTrigger}>
-            <Ellipsis className={twMenuTriggerIcon} />
-          </button>
-        )}
-      />
-    
+      <button className={twMenuTrigger} onClick={() => setIsDropdownOpen((prev) => !prev)}>
+        <Ellipsis className={twMenuTriggerIcon} />
+      </button>
+
+      {isDropdownOpen && (
+        <Dropdown
+          setIsOpen={setIsDropdownOpen}
+          items={items}
+          classNames="w-[110px] -mt-[8px] ml-[-80px]"
+        />
+      )}
+
       {isUpdateModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isUpdateModalOpen}
             setIsOpen={setIsUpdateModalOpen}
             content={
               <LinkFormEdit
@@ -62,7 +61,6 @@ export default function LinkItemMenu({ link }: LinkItemMenuProps) {
       {isDeleteModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isDeleteModalOpen}
             setIsOpen={setIsDeleteModalOpen}
             content={
               <LinkFormDelete

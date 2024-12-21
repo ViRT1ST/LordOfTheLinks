@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams  } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Search, X } from 'lucide-react';
 
 import { cn, cnJoin } from '@/utils/formatting';
@@ -10,9 +10,7 @@ export default function FormSearch() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const qParam = searchParams.get('q') || '';
-
-  const [ inputText, setInputText ] = useState(qParam);
+  const [ inputText, setInputText ] = useState(searchParams.get('q') || '');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,10 +20,6 @@ export default function FormSearch() {
     
     router.push(`/?q=${inputText.trim()}`);
   };
-
-  useEffect(() => {
-    setInputText(qParam);
-  }, [qParam]);
 
   const handleCrossButton = () => {
     setInputText('');

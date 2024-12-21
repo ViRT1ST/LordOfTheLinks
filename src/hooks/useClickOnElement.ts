@@ -4,24 +4,24 @@ export default function useClickOnElement(ref: RefObject<HTMLElement>) {
   const [ isClicked, setIsClicked ] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) {
+    const element = ref.current;
+
+    if (!element) {
       return;
     };
 
-    const element = ref.current;
- 
-    const closeOnOverlayClick = (e: MouseEvent) => {
-      if (e.target instanceof HTMLElement && e.target.id === ref?.current?.id) {
+    const onElementClick = (e: MouseEvent) => {
+      if (e.target instanceof HTMLElement && e.target.id === element.id) {
         setIsClicked(true);
       }
     };
 
-    element.addEventListener('click', closeOnOverlayClick);
+    element.addEventListener('click', onElementClick);
 
     return () => {
-      element.removeEventListener('click', closeOnOverlayClick);
+      element.removeEventListener('click', onElementClick);
     };
-  });
+  }, []);
 
   return isClicked;
 }

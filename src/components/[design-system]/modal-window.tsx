@@ -1,7 +1,7 @@
 'use client';
 
-import { X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
 
 import { cnJoin } from '@/utils/formatting';
 import useKeyDown from '@/hooks/useKeyDown';
@@ -9,7 +9,6 @@ import useClickOnElement from '@/hooks/useClickOnElement';
 import useTrapFocus from '@/hooks/useTrapFocus';
 
 type ModalWindowProps = {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   content: JSX.Element;
   isOverlayClickDoClose?: boolean;
@@ -18,7 +17,6 @@ type ModalWindowProps = {
 };
 
 export default function ModalWindow({
-  isOpen,
   setIsOpen,
   content,
   isOverlayClickDoClose = true,
@@ -37,7 +35,7 @@ export default function ModalWindow({
     }
   }, [isEscPressed, isOverlayClickDoClose, isOverlayClicked]);
 
-  return (isOpen ? (
+  return (
     <dialog
       ref={modalRef}
       id="modal-window"
@@ -53,9 +51,7 @@ export default function ModalWindow({
         )}
       </div>
     </dialog>
-  ) : (
-    null
-  ));
+  );
 }
 
 const twModalOverlay = cnJoin(

@@ -31,17 +31,17 @@ export default function QueryItemMenu({
 
   return (
     <>
-      <Dropdown
-        isOpen={isContextMenuOpen}
-        setIsOpen={setIsContextMenuOpen}
-        items={items}
-        classNames="w-[110px] -mt-[6px] ml-[18px]"
-      />
+      {isContextMenuOpen && (
+        <Dropdown
+          setIsOpen={setIsContextMenuOpen}
+          items={items}
+          classNames="w-[110px] -mt-[6px] ml-[18px]"
+        />
+      )}
 
       {isUpdateModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isUpdateModalOpen}
             setIsOpen={setIsUpdateModalOpen}
             content={
               <QueryFormEdit
@@ -60,7 +60,6 @@ export default function QueryItemMenu({
       {isDeleteModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isDeleteModalOpen}
             setIsOpen={setIsDeleteModalOpen}
             content={
               <QueryFormDelete

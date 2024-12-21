@@ -33,23 +33,25 @@ export default function Select({ items, defaultValue, idAndName }: SelectProps) 
   }));
 
   return (
-    <>
-      <input type="hidden" id={idAndName} name={idAndName} value={currentValue} />
+    <div className={twContainer}>
+      <button type="button" className={twButton}>
+        {currentLabel.toUpperCase()}
+      </button>
+
       <Dropdown
-        isOpen={isDropdownOpen}
         setIsOpen={setIsDropdownOpen}
         items={itemsForDropdown}
-        classNames="w-[200px] mt-[41px]"
-        trigger={(
-          <button type="button" className={twButton}>
-            {currentLabel.toUpperCase()}
-          </button>
-        )}
+        classNames="w-[200px] mt-[1px]"
       />
-    </>
+
+      <input type="hidden" id={idAndName} name={idAndName} value={currentValue} />
+    </div>
   );
 }
 
+const twContainer = cnJoin(`
+  flex flex-col
+`);
 
 const twButton = cnJoin(`
   w-[200px] h-10 px-4 py-2 flex-grow flex text-sm  font-inter font-normal

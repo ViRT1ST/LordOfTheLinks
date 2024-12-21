@@ -2,13 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer utilities {
+/* =============================================================
+Utilities
+============================================================= */
+
+@layer utilities {
   .min-h-screen-svh {
     min-height: 100svh;
   }
-} */
+}
 
-/* Custom Scrollbar in Chrome, Edge and Safari */
+/* =============================================================
+Custom classes (c-prefixied)
+============================================================= */
+
+@layer components {
+  .c-input-ring {
+    @apply
+      ring-black/10
+      ring-1
+      outline-none
+      rounded
+      focus-visible:ring-black/80
+      focus-visible:ring-2;
+  }
+
+  .c-input-placeholder {
+    @apply
+      placeholder:text-black/50;
+  }
+}
+
+/* =============================================================
+Custom scrollbar in Chrome, Edge and Safari
+============================================================= */
+
 ::-webkit-scrollbar {
   width: 8px;
 }

@@ -22,7 +22,6 @@ export default function QueryButtonCreate() {
       {isCreateModalOpen && (
         createPortal(
           <ModalWindow
-            isOpen={isCreateModalOpen}
             setIsOpen={setIsCreateModalOpen}
             content={<QueryFormCreate setIsOpen={setIsCreateModalOpen} />}
             isOverlayClickDoClose={false}
