@@ -1,6 +1,6 @@
 import { useState, useEffect, RefObject } from 'react';
 
-export default function useClickOnElement(ref: RefObject<HTMLElement>) {
+export default function useElementClick(ref: RefObject<HTMLElement>) {
   const [ isClicked, setIsClicked ] = useState(false);
 
   useEffect(() => {

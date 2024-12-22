@@ -143,7 +143,7 @@ Pinned queries related types and validation schemas
 
 export const PinnedQueryFormSchema = z.object({
   label: z.string().trim().min(1, { message: 'Label must be at least 1 character' }),
-  query: z.string().trim().min(2, { message: 'Query must be at least 2 characters' }),
+  query: z.string().trim().min(1, { message: 'Query must be at least 1 character' }),
   info: z.string(),
   isTagOnlySearch: z.coerce.boolean(),
   priority: z

@@ -1,5 +1,5 @@
 import BodyContainer from '@/components/[body-children]/body-container';
-import MainContent from '@/components/[body-children]/main-container';
+import MainContent from '@/components/[body-children]/main-content';
 import Header from '@/components/header/header';
 import LinksView from '@/components/links-view/links-view';
 import QueriesView from '@/components/queries-view/queries-view';

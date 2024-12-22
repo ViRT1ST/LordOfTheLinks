@@ -6,13 +6,13 @@ import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { updateLink } from '@/server-actions';
 
-import Form from '@/components/[design-system]/forms/form';
-import TitlesArea from '@/components/[design-system]/forms/area-titles';
-import Section from '@/components/[design-system]/forms/section';
-import Label from '@/components/[design-system]/forms/label';
-import Field from '@/components/[design-system]/forms/field';
-import Textarea from '@/components/[design-system]/forms/textarea';
-import ActionsArea from '@/components/[design-system]/forms/area-actions';
+import Form from '@/components/[design-system]/modal-window-form/form';
+import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
+import Section from '@/components/[design-system]/modal-window-form/section';
+import Label from '@/components/[design-system]/modal-window-form/label';
+import Field from '@/components/[design-system]/modal-window-form/field';
+import Textarea from '@/components/[design-system]/modal-window-form/textarea';
+import ActionsArea from '@/components/[design-system]/modal-window-form/area-actions';
 
 type LinkFormEditProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

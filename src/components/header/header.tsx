@@ -3,16 +3,16 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
-
 import { type DbSettings } from '@/types';
-import { cnJoin } from '@/utils/formatting';
 import { getModalContainerElement } from '@/utils/others';
+import { cnJoin } from '@/utils/formatting';
 import { getSettings } from '@/server-actions';
-import FormSearch from '@/components/header/form-search';
+
 import ModalWindow from '@/components/[design-system]/modal-window';
-import LinkFormCreate from '@/components/links-view/link-form-create';
+import SearchForm from '@/components/header/search-form';
 import SettingForm from '@/components/settings/settings-form';
-import Button from '../[design-system]/button';
+import LinkFormCreate from '@/components/links-view/link-form-create';
+import Button from '@/components/[design-system]/button';
 
 export default function Header() {
   const [ isCreateLinkModalOpen, setIsCreateLinkModalOpen ] = useState(false);
@@ -27,23 +27,20 @@ export default function Header() {
 
   return (
     <header className={twHeader}>
-      {/* <div className={twHeaderLimiter}> */}
-
-      <div className={twContainerLeft}>
+      <div className={twContainerCorner}>
         <Button element="a" href="/?v=links">
           All Links
         </Button>
-
         <Button element="a" href="/?v=queries">
           Pinned Queries
         </Button>
       </div>
 
       <div className={twContainerMiddle}>
-        <FormSearch />
+        <SearchForm />
       </div>
 
-      <div className={twContainerRight}>
+      <div className={twContainerCorner}>
         <Button element="button" onClick={() => setIsCreateLinkModalOpen(true)}>
           Add New Link
         </Button>
@@ -84,44 +81,21 @@ export default function Header() {
           getModalContainerElement()
         )
       )}
-
-      {/* </div> */}
     </header>
   );
 }
 
 const twHeader = cnJoin(
-  'z-10 fixed top-0 left-0 px-5 h-14 w-full flex justify-center',
-  // 'bg-[#cfcecd]',
-  // 'bg-[#dad7d7]',
+  'fixed top-0 left-0',
+  'w-full h-14 px-5',
+  'flex flex-row justify-center',
   'bg-white/50',
 );
 
-// const twHeaderLimiter = cnJoin(
-//   'w-[1320px] px-5 flex flex-row', // w-[1200px] w-full
-  
-// );
-
-const twContainerLeft = cnJoin(
-  'flex items-center gap-x-4' //px-5 
+const twContainerCorner = cnJoin(
+  'flex items-center gap-x-4'
 );
 
 const twContainerMiddle = cnJoin(
-  'flex items-center justify-center flex-grow',
-  // '2xl:pr-12'
-);
-
-const twContainerRight = cnJoin(
-  'flex items-center gap-x-4' //px-5 
-);
-
-const twButton = cnJoin(
-  'h-8 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'bg-transparent border border-black/10 text-black/60 rounded-md',
-  'text-sm font-medium whitespace-nowrap transition-all',
-  'hover:text-black hover:border-black/15', 
-  'font-inter',
-
-  // bg-based on flowers backround
-  'bg-[#f4f4f4]'
+  'w-full flex items-center justify-center flex-grow',
 );

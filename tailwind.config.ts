@@ -14,12 +14,9 @@ const config: Config = {
   		roboto: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
       sofiasans: ['var(--font-sofia-sans)', 'system-ui', 'sans-serif'],
       rubik: ['var(--font-rubik)', 'system-ui', 'sans-serif'],
-      geistsans: ['var(--font-geist-sans)'],
-      geistmono: ['var(--font-geist-mono)'],
-
-      librefranklin: ['var(--font-librefranklin)'],
-      inter: ['var(--font-inter)'],
-      notosansdisplay: ['var(--font-notosansdisplay)'],
+      geistsans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+      geistmono: ['var(--font-geist-mono)', 'system-ui', 'sans-serif'],
+      inter: ['var(--font-inter)', 'system-ui', 'sans-serif'],
     },
     extend: {
   		borderRadius: {

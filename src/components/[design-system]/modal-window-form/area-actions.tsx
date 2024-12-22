@@ -45,7 +45,7 @@ const twActionsArea = cnJoin(
 );
 
 const twMessages = cnJoin(
-  ' w-full flex flex-col gap-y-1 self-center',
+  'w-full flex flex-col gap-y-1 self-center',
   'text-sm'
 );
 

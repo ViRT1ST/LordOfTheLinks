@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { type DbSettings, DropdownItem, LinkFormSchema, SelectItem } from '@/types/index';
 import { updateLink } from '@/server-actions';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
-import Select from '@/components/[design-system]/forms/select';
+import Select from '@/components/[design-system]/modal-window-form/select';
 
 type SettingsFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

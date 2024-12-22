@@ -4,9 +4,7 @@ import {
   Roboto,
   Sofia_Sans,
   Rubik,
-  Libre_Franklin,
   Inter,
-  Noto_Sans_Display
 } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
@@ -54,25 +52,11 @@ const rubik = Rubik({
   variable: '--font-rubik',
 });
 
-const libreFranklin = Libre_Franklin({
-  subsets: ['latin'],
-  weight: ['300','400', '500'],
-  display: 'swap',
-  variable: '--font-librefranklin',
-});
-
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   weight: ['300','400', '500', '600', '700'],
   display: 'swap',
   variable: '--font-inter',
-});
-
-const notoSansDisplay = Noto_Sans_Display({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['300','400', '500'],
-  display: 'swap',
-  variable: '--font-notosansdisplay',
 });
 
 const rootLayoutClasses = [
@@ -83,13 +67,11 @@ const rootLayoutClasses = [
   rubik.variable,
   GeistSans.variable, 
   GeistMono.variable,
+  inter.variable,
   // 'overflow-y-scroll',
   'overflow-hidden',
   'antialiased',
   'bg-[#E4E4E4]',
-  libreFranklin.variable,
-  inter.variable,
-  notoSansDisplay.variable
 ].join(' ');
 
 type Props = Readonly<{

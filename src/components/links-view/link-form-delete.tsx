@@ -3,11 +3,11 @@
 import { type DbLinkWithTags } from '@/types/index';
 import { deleteLink } from '@/server-actions';
 
-import Form from '@/components/[design-system]/forms/form';
-import TitlesArea from '@/components/[design-system]/forms/area-titles';
-import Section from '@/components/[design-system]/forms/section';
-import ActionsArea from '@/components/[design-system]/forms/area-actions';
-import WarningContent from '@/components/[design-system]/forms/warning';
+import Form from '@/components/[design-system]/modal-window-form/form';
+import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
+import Section from '@/components/[design-system]/modal-window-form/section';
+import ActionsArea from '@/components/[design-system]/modal-window-form/area-actions';
+import WarningContent from '@/components/[design-system]/modal-window-form/warning';
 
 type LinkFormDeleteProps = {
   link: DbLinkWithTags;

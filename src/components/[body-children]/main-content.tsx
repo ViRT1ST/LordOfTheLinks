@@ -4,7 +4,7 @@ type MainContainerProps = {
   children: React.ReactNode;
 };
 
-export default function MainContainer({ children }: MainContainerProps) {
+export default function MainContent({ children }: MainContainerProps) {
   return (
     <main className={twMain}>
       {children}
@@ -13,6 +13,6 @@ export default function MainContainer({ children }: MainContainerProps) {
 }
 
 const twMain = cnJoin(`
-  w-[1400px] mx-auto px-16 pt-16 pb-5
+  w-full max-w-[1400px] mx-auto px-16 pt-16 pb-5
   flex flex-col min-h-svh
 `);

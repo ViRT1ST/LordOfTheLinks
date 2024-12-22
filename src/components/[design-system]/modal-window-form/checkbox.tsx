@@ -24,14 +24,14 @@ export default function Checkbox({
     <div className={cn(twContainer, className)} {...rest}>
       <input
         type="checkbox"
-        className={cn(twCheckbox, twRing)}
+        className={twCheckbox}
         id={id}
         name={name}
         checked={isChecked}
         onChange={() => setIsChecked((prev) => !prev)}
       />
 
-      <label className={twLabel} htmlFor={name} onClick={() => setIsChecked((prev) => !prev)}>
+      <label className={twLabel} htmlFor={name}>
         {children}
       </label>
 
@@ -47,16 +47,9 @@ const twContainer = cnJoin(`
 const twCheckbox = cnJoin(`
   relative w-5 h-5
   border-0 rounded
-  peer shrink-0 appearance-none 
+  peer shrink-0 appearance-none
+  c-input-ring
 `);
-
-export const twRing = cnJoin(
-  'outline-none rounded ring-1 ring-black/10',
-  'focus-visible:ring-2',
-  'focus-visible:ring-black/80',
-  'hover:ring-black/20'
-);
-
 
 const twLabel = cnJoin(
   'px-2 font-inter text-sm font-semibold text-black/90',

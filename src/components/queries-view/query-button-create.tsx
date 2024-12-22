@@ -35,11 +35,9 @@ export default function QueryButtonCreate() {
 }
 
 const twButtonCreate = cnJoin(
-  /* common */
-  'absolute right-[40px] top-[100px]',
-  'h-12 w-12 px-2 py-2',
-  'rounded-full duration-150 bg-[#e4e4e4]',
-  /* states */
-  'hover:bg-[#ededed]'
+  'block right-[40px] top-[100px] h-12 w-12 px-1 py-1',
+  'flex justify-center items-center', 
+  'bg-[#e4e4e4] text-black/70 rounded-full duration-150',
+  'lg:absolute',
+  'hover:bg-[#ececec]'
 );
-

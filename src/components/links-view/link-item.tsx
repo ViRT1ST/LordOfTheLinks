@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { type DbLinkWithTags } from '@/types/index';
 import { cnJoin } from '@/utils/formatting';
 import { FAVICON_SIZE } from '@/config/public';
-import LinkItemMenu from '@/components/links-view/link-item-menu';
 import { createTooltipTextForLink } from '@/utils/formatting';
+import LinkItemMenu from '@/components/links-view/link-item-menu';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
@@ -16,7 +16,7 @@ type LinkItemProps = {
 const faviconSize = FAVICON_SIZE / 2;
 
 export default function LinkItem({ link }: LinkItemProps) {
-  link.tags =  [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
+  const tags =  [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
 
   const linkImageSrc = `/images/site-icons/${link.domain}.png`;
   const linkHint = createTooltipTextForLink(link) || 'N/A';
@@ -41,7 +41,7 @@ export default function LinkItem({ link }: LinkItemProps) {
                 {link.domain}
               </span>
 
-              {link.tags.map((tag) => (
+              {tags.map((tag) => (
                 <span key={tag.id} className={twDomainAndTagsItem}>
                   {tag.value}
                 </span> 
@@ -52,17 +52,12 @@ export default function LinkItem({ link }: LinkItemProps) {
         </Link>
       </div>
 
-      
       <div className={twItemRightPart}>
         <LinkItemMenu link={link} />
       </div>
     </div>
   );
 }
-
-
-
-
 
 
 const twItemContainer = cnJoin(
@@ -75,11 +70,11 @@ const twItemContainer = cnJoin(
 );
 
 const twItemLeftPart = cnJoin(
-  'p-3 flex flex-col flex-grow'
+  'p-3 flex flex-col flex-grow truncate'
 );
 
 const twNextLink = cnJoin(
-  'flex flex-row items-center'
+  'flex flex-row items-center '
 );
 
 const twFavicon = cnJoin(
@@ -87,19 +82,18 @@ const twFavicon = cnJoin(
 );
 
 const twTitleAndUrlContainer = cnJoin(
-  'max-w-[1000px] pl-3 h-full flex flex-col justify-between'
+  'max-w-[1100px] pl-3 h-full flex flex-col justify-between truncate'
 );
 
 const twTitle = cnJoin(
-  'text-lg text-black truncate',
+  'text-lg text-black truncate ',
   ' leading-tight '
 );
 
 const twDomainAndTags = cnJoin(
   'text-sm text-black/50',
   'flex flex-row items-center',
-  'gap-x-1 leading-tight',
-
+  'gap-x-1',
 );
 
 const twItemRightPart = cnJoin(

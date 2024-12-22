@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 
 import { cnJoin } from '@/utils/formatting';
 import useKeyDown from '@/hooks/useKeyDown';
-import useClickOnElement from '@/hooks/useClickOnElement';
+import useElementClick from '@/hooks/useElementClick';
 import useTrapFocus from '@/hooks/useTrapFocus';
 
 type ModalWindowProps = {
@@ -16,7 +16,7 @@ type ModalWindowProps = {
   focusOnFirstElement?: boolean;
 };
 
-export default function ModalWindow({
+export default function Modal({
   setIsOpen,
   content,
   isOverlayClickDoClose = true,
@@ -26,7 +26,7 @@ export default function ModalWindow({
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const isEscPressed = useKeyDown('Escape');
-  const isOverlayClicked = useClickOnElement(modalRef);
+  const isOverlayClicked = useElementClick(modalRef);
   useTrapFocus(modalRef, focusOnFirstElement);
 
   useEffect(() => {
