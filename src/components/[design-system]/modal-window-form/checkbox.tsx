@@ -52,7 +52,7 @@ const twCheckbox = cnJoin(`
 `);
 
 const twLabel = cnJoin(
-  'px-2 font-inter text-sm font-semibold text-black/90',
+  'px-2 text-sm font-semibold text-black/90',
 );
 
 const twIcon = cnJoin(`

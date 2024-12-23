@@ -44,7 +44,7 @@ const twButton = cnJoin(
   'h-8 px-4',
   'inline-flex justify-center items-center',
   'transition-all',
-  'text-black/60 whitespace-nowrap text-sm font-medium font-inter',
+  'text-black/60 whitespace-nowrap text-sm font-medium',
   'border-black/10 border rounded-md',
   'hover:text-black',
   'hover:border-black/15',

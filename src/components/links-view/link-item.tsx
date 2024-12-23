@@ -4,110 +4,96 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { type DbLinkWithTags } from '@/types/index';
-import { cnJoin } from '@/utils/formatting';
-import { FAVICON_SIZE } from '@/config/public';
-import { createTooltipTextForLink } from '@/utils/formatting';
+import { createTooltipTextForLink, cnJoin } from '@/utils/formatting';
 import LinkItemMenu from '@/components/links-view/link-item-menu';
 
 type LinkItemProps = {
   link: DbLinkWithTags;
 };
 
-const faviconSize = FAVICON_SIZE / 2;
-
 export default function LinkItem({ link }: LinkItemProps) {
-  const tags =  [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
+  const tags = [...link.tags].sort((a, b) => a.value.localeCompare(b.value));
 
-  const linkImageSrc = `/images/site-icons/${link.domain}.png`;
-  const linkHint = createTooltipTextForLink(link) || 'N/A';
+  const iconSrc = `/images/site-icons/${link.domain}.png`;
+  const tooltip = createTooltipTextForLink(link);
 
   return (
-    <div className={twItemContainer}>
-      <div className={twItemLeftPart}>
-        <Link className={twNextLink} href={link.url} title={linkHint} target="_blank">
-          <div className={twFavicon}>
+    <div className={twContainer}>
+      <div className={twMainPart}>
+        <Link className={twLink} href={link.url} title={tooltip} target="_blank">
+          <div className={twIcon}>
             <Image
-              src={linkImageSrc}
+              src={iconSrc}
               alt="Favicon"
-              width={faviconSize}
-              height={faviconSize}
+              width={48}
+              height={48}
               priority={true}
             />
           </div>
-          <div className={twTitleAndUrlContainer}>
+          <div className={twDetails}>
             <h2 className={twTitle}>{link.title}</h2>
-            <div className={twDomainAndTags}>
-              <span className={twDomainAndTagsItem}>
+            <div className={twKeywords}>
+              <span className={twKeywordsItem}>
                 {link.domain}
               </span>
-
               {tags.map((tag) => (
-                <span key={tag.id} className={twDomainAndTagsItem}>
+                <span key={tag.id} className={twKeywordsItem}>
                   {tag.value}
                 </span> 
               ))}
             </div>
           </div>
-
         </Link>
       </div>
 
-      <div className={twItemRightPart}>
+      <div className={twMenuPart}>
         <LinkItemMenu link={link} />
       </div>
     </div>
   );
 }
 
-
-const twItemContainer = cnJoin(
-  'mb-[4px] flex flex-row',
-  'border rounded-sm border-black/20',
-  'font-inter',
-  // 'bg-white/50 '
-  // 'bg-[#f3f2f2]'
-   'bg-[#f2f2f2]',
+const twContainer = cnJoin(
+  'mb-1 flex flex-row',
+  'bg-[#f2f2f2] border-black/20 border rounded-sm',
 );
 
-const twItemLeftPart = cnJoin(
-  'p-3 flex flex-col flex-grow truncate'
+const twMainPart = cnJoin(
+  'p-3 flex flex-col flex-grow',
+  'truncate'
 );
 
-const twNextLink = cnJoin(
-  'flex flex-row items-center '
+const twLink = cnJoin(
+  'flex flex-row items-center'
 );
 
-const twFavicon = cnJoin(
-  'min-w-[48px] min-h-[48px] flex rounded-sm overflow-hidden'
+const twIcon = cnJoin(
+  'min-w-[48px] min-h-[48px] flex',
+  'rounded-sm overflow-hidden'
 );
 
-const twTitleAndUrlContainer = cnJoin(
-  'max-w-[1100px] pl-3 h-full flex flex-col justify-between truncate'
+const twDetails = cnJoin(
+  'max-w-[1100px] h-full pl-3',
+  'flex flex-col justify-between',
+  'truncate'
 );
 
 const twTitle = cnJoin(
-  'text-lg text-black truncate ',
-  ' leading-tight '
+  'text-lg text-black leading-tight truncate',
 );
 
-const twDomainAndTags = cnJoin(
-  'text-sm text-black/50',
-  'flex flex-row items-center',
-  'gap-x-1',
+const twKeywords = cnJoin(
+  'flex flex-row items-center gap-x-1',
 );
 
-const twItemRightPart = cnJoin(
-  'flex flex-col items-end ',
-);
-
-
-
-const twDomainAndTagsItem = cnJoin(
-  'inline-flex justify-center items-center',
-  'bg-transparent border-black/10 text-black/60',
-  'text-sm whitespace-nowrap leading-none',
-  'rounded-sm border',
+const twKeywordsItem = cnJoin(
   'px-[5px] py-[3px]',
+  'inline-flex justify-center items-center',
+  'bg-transparent border-black/10 text-black/60 rounded-sm border',
+  'text-sm whitespace-nowrap leading-none',
+);
 
+const twMenuPart = cnJoin(
+  'flex flex-col items-end',
 );
 

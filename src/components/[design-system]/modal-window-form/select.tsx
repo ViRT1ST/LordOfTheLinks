@@ -1,18 +1,20 @@
 import { useState } from 'react';
 
 import type { SelectItem } from '@/types';
+import { cnJoin, cn } from '@/utils/formatting';
 import Dropdown from '@/components/[design-system]/dropdown';
-import { cnJoin } from '@/utils/formatting';
 
 type SelectProps = {
+  id?: string;
+  name?: string;
+  className?: string;
   items: Array<SelectItem>;
   defaultValue: string;
-  idAndName?: string;
 };
 
-export default function Select({ items, defaultValue, idAndName }: SelectProps) {
+export default function Select({ id, name, className, items, defaultValue }: SelectProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  
   const [currentLabel, setCurrentLabel] = useState(() => {
     const item = items.find((item) => item.value === defaultValue);
     return item?.label || 'error';
@@ -23,42 +25,54 @@ export default function Select({ items, defaultValue, idAndName }: SelectProps) 
     return item?.value || 'error';
   });
 
-  const itemsForDropdown = items.map((item) => ({
+  const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const dropdownItems = items.map((item) => ({
     label: item.label,
     invokeOnClick: () => {
-      setCurrentLabel(item.label);
+      setCurrentLabel(item.label);  
       setCurrentValue(item.value);
       setIsDropdownOpen(false);
     },
   }));
 
   return (
-    <div className={twContainer}>
-      <button type="button" className={twButton}>
-        {currentLabel.toUpperCase()}
+    <div className={cn(twContainer, className)}>
+      <button
+        type="button"
+        className={twButton}
+        onClick={handleButtonClick}
+      >
+        {currentLabel}
       </button>
 
-      <Dropdown
-        setIsOpen={setIsDropdownOpen}
-        items={itemsForDropdown}
-        classNames="w-[200px] mt-[1px]"
-      />
+      {isDropdownOpen && (
+        <Dropdown
+          classNames="w-full mt-[3px] rounded ring-1 ring-[#d9d9d9] border-0"
+          setIsOpen={setIsDropdownOpen}
+          items={dropdownItems}
+          isNormalFont={true}
+        />
+      )}
 
-      <input type="hidden" id={idAndName} name={idAndName} value={currentValue} />
+      <input type="hidden" id={id} name={name} value={currentValue} />
     </div>
   );
 }
 
-const twContainer = cnJoin(`
-  flex flex-col
-`);
+const twContainer = cnJoin(
+  'flex flex-col'
+);
 
-const twButton = cnJoin(`
-  w-[200px] h-10 px-4 py-2 flex-grow flex text-sm  font-inter font-normal
-  items-center gap-2
-  border text-black/90 rounded-md 
-  whitespace-nowrap
-  bg-transparent border-black/10
-  hover:border-black/15 hover:text-black
-  focus:border-black/15 focus:text-black
-`);
+const twButton = cnJoin(
+  'h-10 px-3 py-2',
+  'flex items-center flex-grow',
+  'ring-1 text-black rounded',
+  'text-sm font-normal whitespace-nowrap',
+  'bg-transparent ring-black/10',
+  'hover:ring-black/15',
+  'focus:ring-black/15',
+);

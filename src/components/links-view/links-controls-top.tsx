@@ -34,7 +34,7 @@ const twSection = cnJoin(
 );
 
 const twInfo = cnJoin(
-  'text-xs text-black/70 font-inter font-medium font-inter',
+  'text-xs text-black/70 font-medium',
 );
 
 

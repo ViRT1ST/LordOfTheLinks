@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { LoaderCircle, CircleX } from 'lucide-react';
-
-import { cnJoin } from '@/utils/formatting';
+import { cnJoin, cn } from '@/utils/formatting';
 
 type ActionsAreaProps = {
   errorMessages: string[] | null;
@@ -19,14 +17,14 @@ export default function ActionsArea({
       <div className={twMessages}>
 
         {errorMessages && errorMessages.map((msg) => (
-          <div className={twErrorContainer} key={msg}>
+          <div className={cn(twMessage, twErrorMessage)} key={msg}>
             <CircleX />
             <span>{msg}</span>
           </div>
         ))}
 
         {processingMessage && (
-          <div className={twProcessingContainer}>
+          <div className={cn(twMessage, twProcessingMessage)}>
             <LoaderCircle className="animate-spin" />
             <span>{processingMessage}</span>
           </div>
@@ -41,26 +39,29 @@ export default function ActionsArea({
 }
 
 const twActionsArea = cnJoin(
-  'w-full min-h-16 flex flex-row gap-x-4',
+  'w-full min-h-16 mt-1 flex flex-row',
 );
 
 const twMessages = cnJoin(
-  'w-full flex flex-col gap-y-1 self-center',
+  'w-full mt-3 flex flex-col gap-y-1 self-center',
   'text-sm'
 );
 
-const twProcessingContainer = cnJoin(
+const twMessage = cnJoin(
   'flex flex-row items-center gap-x-2',
-  'text-teal-500 text-sm font-semibold'
+  'text-sm font-semibold'
 );
 
-const twErrorContainer = cnJoin(
-  'flex flex-row items-center gap-x-2',
-  'text-red-500 text-sm font-semibold'
+const twErrorMessage = cnJoin(
+  'text-red-500'
+);
+
+const twProcessingMessage = cnJoin(
+  'text-teal-500'
 );
 
 const twSubmitButton = cnJoin(
   'h-10 px-4 py-2 inline-flex items-center justify-center self-end',
-  'font-inter text-white/90 font-medium text-base',
+  'text-white/90 font-medium text-base',
   'bg-black/90 rounded-md'
 );

@@ -73,7 +73,7 @@ const twContainer = cnJoin(
 
 const twInput = cn(
   'w-full h-9 py-2 px-3',
-  'font-inter text-sm font-medium',
+  'text-sm font-medium',
   'bg-white/80 rounded-md ring-black/20',
   'placeholder:font-normal',
   'focus-visible:bg-white ',

@@ -19,6 +19,5 @@ export default function BodyContainer({ children }: BodyContainerProps) {
 
 const twContainer = cnJoin(
   'flex flex-col w-full h-full min-h-screen',
-  'font-inter', 
-  'bg-[#e4e4e4]',
+  'font-inter bg-[#e4e4e4]',
 );

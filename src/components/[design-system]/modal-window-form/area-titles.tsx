@@ -23,9 +23,9 @@ const twTitlesArea = cnJoin(
 );
 
 const twTitle = cnJoin(
-  'font-inter text-2xl font-semibold text-black/90 tracking-tight '
+  'text-2xl font-semibold text-black/90 tracking-tight '
 );
 
 const twSubTitle = cnJoin(
-  'font-inter text-sm font-semibold text-black/60 '
+  'text-sm font-semibold text-black/60 '
 );

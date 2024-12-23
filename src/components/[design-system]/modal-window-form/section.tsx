@@ -11,6 +11,6 @@ export default function Section({ children, className, ...rest }: SectionProps) 
 }
 
 const twSection = cnJoin(
-  'w-full mb-3',
-  'flex flex-row'
+  'w-full py-2',
+  'flex flex-row justify-between items-center'
 );

@@ -10,9 +10,10 @@ type DropdownProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   items: Array<DropdownItem | DropdownItemsDivider>;
   classNames?: string;
+  isNormalFont?: boolean;
 };
 
-export default function Dropdown({ items, classNames, setIsOpen }: DropdownProps) {
+export default function Dropdown({ setIsOpen, items, classNames, isNormalFont }: DropdownProps) {
   const [ isRendered, setIsRendered ] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,7 +54,10 @@ export default function Dropdown({ items, classNames, setIsOpen }: DropdownProps
             <div key={index + item.label} className={twItemContainer}>
               <button
                 type="button"
-                className={twItemButton}
+                className={cn(
+                  twItemButton,
+                  isNormalFont ? twItemButtonNormalFont : twItemButtonUppercaseFont
+                )}
                 onClick={() => handleItemClick(item)}
               >
                 <span className={twItemIcon}>
@@ -103,7 +107,15 @@ const twItemIcon = cnJoin(`
 
 const twItemButton = cnJoin(`
   w-full h-7 py-2 flex items-center
-  text-black font-inter uppercase
+  text-black font-inter whitespace-nowrap
+`);
+
+const twItemButtonNormalFont = cnJoin(`
+  text-sm font-normal
+`);
+
+const twItemButtonUppercaseFont = cnJoin(`
+  text-xs font-medium uppercase
 `);
 
 const twDividerContainer = cnJoin(`

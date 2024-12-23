@@ -39,7 +39,7 @@ export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProp
 
   return (
     <div className={twContainer}>
-      <button className={twButton} onClick={() => setIsDropdownOpen((prev) => !prev)}>
+      <button type="button" className={twButton} onClick={() => setIsDropdownOpen((prev) => !prev)}>
         {buttonLabel}
       </button>
 
@@ -60,7 +60,7 @@ const twContainer = cnJoin(`
 
 const twButton = cnJoin(`
   h-6 py-2 px-2 inline-flex justify-center items-center gap-2
-  font-inter text-xs font-medium whitespace-nowrap
+  text-xs font-medium whitespace-nowrap
   bg-transparent border-black/10 text-black/70 rounded-md border
   hover:border-black/15 hover:text-black
   focus:border-black/15 focus:text-black

@@ -11,7 +11,7 @@ export default function Form({ children, className, ...rest }: FormProps) {
 }
 
 const twForm = cnJoin(
-  'p-6 flex flex-col gap-y-2',
+  'p-6 flex flex-col',
   'bg-white rounded-lg font-inter',
   // 'min-w-full sm:min-w-[600px]'
 );
