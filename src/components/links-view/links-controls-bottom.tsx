@@ -1,8 +1,7 @@
 'use client';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 import { getUpdatedSearchParams } from '@/utils/formatting';
 import { cnJoin } from '@/utils/formatting';

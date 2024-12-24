@@ -10,7 +10,7 @@ import type {
 } from '@/types';
 
 import { cnJoin } from '@/utils/formatting';
-import { saveSettings } from '@/server-actions';
+import { updateSettings } from '@/server-actions';
 import Dropdown from '@/components/[design-system]/dropdown';
 
 type LinksControlsSortProps = {
@@ -23,7 +23,7 @@ export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProp
   const router = useRouter();
 
   const sort = async (sorting: SortingOrderVariants) => {
-    await saveSettings({ sortLinksBy: sorting });
+    await updateSettings({ sortLinksBy: sorting });
     router.refresh();
   };
 

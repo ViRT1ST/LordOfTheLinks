@@ -13,22 +13,17 @@ type SelectProps = {
 };
 
 export default function Select({ id, name, className, items, defaultValue }: SelectProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
   
-  const [currentLabel, setCurrentLabel] = useState(() => {
+  const [ currentLabel, setCurrentLabel ] = useState(() => {
     const item = items.find((item) => item.value === defaultValue);
     return item?.label || 'error';
   });
 
-  const [currentValue, setCurrentValue] = useState(() => {
+  const [ currentValue, setCurrentValue ] = useState(() => {
     const item = items.find((item) => item.value === defaultValue);
     return item?.value || 'error';
   });
-
-  const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-    setIsDropdownOpen((prev) => !prev);
-  };
 
   const dropdownItems = items.map((item) => ({
     label: item.label,
@@ -44,7 +39,7 @@ export default function Select({ id, name, className, items, defaultValue }: Sel
       <button
         type="button"
         className={twButton}
-        onClick={handleButtonClick}
+        onClick={() => setIsDropdownOpen((prev) => !prev)}
       >
         {currentLabel}
       </button>

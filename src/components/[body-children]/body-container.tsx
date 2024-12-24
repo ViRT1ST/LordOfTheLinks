@@ -7,7 +7,8 @@ type BodyContainerProps = {
 
 export default function BodyContainer({ children }: BodyContainerProps) {
   const style: CSSProperties = {
-    backgroundImage: `url('/background/vecteezy-floral-pattern-01.png')`
+    backgroundImage: `url('/background/vecteezy-floral-pattern-01.png')`,
+    backgroundRepeat: 'repeat',
   };
 
   return (

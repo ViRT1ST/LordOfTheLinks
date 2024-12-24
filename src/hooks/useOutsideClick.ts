@@ -16,8 +16,11 @@ export default function useOutsideClick(ref: React.RefObject<HTMLElement>) {
       }
     };
   
-    document.addEventListener('click', onOutsideClick);
-    document.addEventListener('contextmenu', onOutsideClick);  
+    // setTimeout prevents the event listener from being added too early
+    setTimeout(() => {
+      document.addEventListener('click', onOutsideClick);
+      document.addEventListener('contextmenu', onOutsideClick);  
+    });
 
     return () => {
       document.removeEventListener('click', onOutsideClick);

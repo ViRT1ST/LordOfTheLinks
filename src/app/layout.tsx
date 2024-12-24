@@ -69,7 +69,7 @@ const rootLayoutClasses = [
   GeistMono.variable,
   inter.variable,
   // 'overflow-y-scroll',
-  'overflow-hidden',
+
   'antialiased',
   'bg-[#E4E4E4]',
 ].join(' ');

@@ -70,7 +70,7 @@ export const getSettings = async () => {
   return await queries.getSettings();
 };
 
-export const saveSettings = async (settings: UpdateSettingsData) => {
-  await queries.updateSettings(settings);
+export const updateSettings = async (settings: UpdateSettingsData) => {
+  return await queries.updateSettings(settings);
 };
 

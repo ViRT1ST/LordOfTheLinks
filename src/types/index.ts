@@ -61,11 +61,12 @@ export type DbPinnedQuery = {
 
 export type DbSettings = {
   id: number;
+  theme: ThemeVariants;
+  background: string;
   linksPerPage: number;
   sortLinksBy: SortingOrderVariants;
   sortLinksByPriorityFirst: boolean;
-  theme: ThemeVariants;
-  background: string;
+  hideVerticalScrollbar: boolean;
 }
 
 /* =============================================================
@@ -175,13 +176,36 @@ export type UpdatePinnedQueryData = NewPinnedQueryData &{
 Settings related types and validation schemas
 ============================================================= */
 
+const invalidLinksPerPageMsg = 'Links per page must be a number between 1 and 1000';
+
+export const SettingsFormSchema = z.object({
+  theme: z.string(),
+  background: z.string(),
+  linksPerPage: z
+    .string()
+    .trim()
+    // Checking if it's a number
+    .refine((val) => !isNaN(Number(val)), { message: invalidLinksPerPageMsg })
+    // Transforming it to number
+    .transform((val) => Number(val))
+    // Checking if it's between 1 and 1000
+    .refine((val) => val >= 1 && val <= 1000, { message: invalidLinksPerPageMsg }),
+  // sortLinksBy: z.string(),
+  sortLinksByPriorityFirst: z.coerce.boolean(),
+  hideVerticalScrollbar: z.coerce.boolean(),
+});
+
 export type UpdateSettingsData = {
-  linksPerPage?: number;
-  sortLinksBy?: SortingOrderVariants;
-  sortLinksByPriorityFirst?: boolean;
-  theme?: ThemeVariants;
+  theme?: string;
   background?: string;
+  linksPerPage?: number;
+  // sortLinksBy?: string;
+  sortLinksByPriorityFirst?: boolean;
+  hideVerticalScrollbar?: boolean;
 }
+
+
+
 
 
 

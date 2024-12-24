@@ -1,24 +1,26 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-import { type DbSettings, DropdownItem, LinkFormSchema, SelectItem } from '@/types/index';
-import { updateLink } from '@/server-actions';
+import { type UpdateSettingsData, type SelectItem, SettingsFormSchema } from '@/types/index';
+import { updateSettings } from '@/server-actions';
 import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
+import { useStore } from '@/store/useStore';
+
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
 import Section from '@/components/[design-system]/modal-window-form/section';
 import Label from '@/components/[design-system]/modal-window-form/label';
 import Field from '@/components/[design-system]/modal-window-form/field';
-import Textarea from '@/components/[design-system]/modal-window-form/textarea';
 import ActionsArea from '@/components/[design-system]/modal-window-form/area-actions';
 import Select from '@/components/[design-system]/modal-window-form/select';
 import Checkbox from '@/components/[design-system]/modal-window-form/checkbox';
 
 type SettingsFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: DbSettings | null;
+  // settings: DbSettings | null;
 };
 
 const priorityFirstSelectItems: Array<SelectItem> = [
@@ -28,47 +30,48 @@ const priorityFirstSelectItems: Array<SelectItem> = [
 
 const backgroundSelectItems: Array<SelectItem> = [
   { label: 'flowers', value: 'flowers' },
-  { label: 'tropics', value: 'tropics' },
+  { label: 'none', value: 'none' },
 ];
 
-export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps) {
+export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const currentSettings = useStore((state) => state.currentSettings);
+  const setCurrentSettings = useStore((state) => state.setCurrentSettings);
+
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
-
-
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
+    setErrorMessages(null);
+    setProcessingMessage(null);
+
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
-    const result = LinkFormSchema.safeParse(formDataObject);
+    const result = SettingsFormSchema.safeParse(formDataObject);
     console.log(formDataObject);
 
     if (!result.success) {
-      // setErrorMessages(convertErrorZodResultToMsgArray(result));
+      const errorsList = convertErrorZodResultToMsgArray(result);
+      setErrorMessages(errorsList);
 
     } else {
-      setErrorMessages([]);
-
-      //setIsFetchingLinkData(true);
-      // await updateLink({
-      //   id: link.id,
-      //   url: result.data.url,
-      //   title: result.data.title,
-      //   info: result.data.info,
-      //   tags: result.data.tags,
-      //   priority: result.data.priority
-      // });
-      //setIsFetchingLinkData(false);
-
+      setProcessingMessage('Updating settings...');
+      const settings = await updateSettings({ ...result.data });
+      setCurrentSettings(settings);
+      // router.push(`/?${searchParams.toString()}`, { scroll: false });
+      
       setIsOpen(false);
+      router.refresh();
     }
   };
 
-  if (settings === null) {
+  if (currentSettings === null) {
     return null;
   }
 
@@ -83,18 +86,18 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
           id="theme"
           name="theme"
           items={priorityFirstSelectItems}
-          defaultValue={settings.theme}
+          defaultValue={currentSettings.theme}
         />
       </Section>
 
       <Section>
-        <Label htmlFor="bgPattern">Background pattern</Label>
+        <Label htmlFor="background">Background pattern</Label>
         <Select
           className="w-[220px]"
-          id="bgPattern"
-          name="bgPattern"
+          id="background"
+          name="background"
           items={backgroundSelectItems}
-          defaultValue={'flowers'}
+          defaultValue={currentSettings.background}
         />
       </Section>
 
@@ -106,7 +109,7 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
           name="linksPerPage"
           type="text"
           placeholder="Any number larger than 0"
-          defaultValue={settings.linksPerPage}
+          defaultValue={currentSettings.linksPerPage}
         />
       </Section>
 
@@ -114,7 +117,7 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
         <Checkbox
           id="sortLinksByPriorityFirst"
           name="sortLinksByPriorityFirst"
-          checkedByDefault={settings.sortLinksByPriorityFirst}
+          checkedByDefault={currentSettings.sortLinksByPriorityFirst}
         >
           Sort links by priority first
         </Checkbox>
@@ -122,9 +125,9 @@ export default function SettingsForm({ setIsOpen, settings }: SettingsFormProps)
 
       <Section>
         <Checkbox
-          id="hideVerticalScrollBar"
-          name="hideVerticalScrollBar"
-          checkedByDefault={settings.sortLinksByPriorityFirst}
+          id="hideVerticalScrollbar"
+          name="hideVerticalScrollbar"
+          checkedByDefault={currentSettings.hideVerticalScrollbar}
         >
           Hide vertical scrollbar
         </Checkbox>

@@ -486,8 +486,10 @@ Update settings
 ============================================================= */
 
 export const updateSettings = async (settings: UpdateSettingsData) => {
-  await prisma.settings.update({
+  const updatedSettings = await prisma.settings.update({
     where: { id: 1 },
     data: settings
   });
+
+  return updatedSettings as DbSettings;
 };

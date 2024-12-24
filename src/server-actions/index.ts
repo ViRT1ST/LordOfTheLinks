@@ -9,6 +9,6 @@ export { updatePinnedQuery } from './actions-db';
 export { deletePinnedQuery } from './actions-db';
 
 export { getSettings } from './actions-db';
-export { saveSettings } from './actions-db';
+export { updateSettings } from './actions-db';
 
 export { fetchLinkDataByUrl } from './actions-utils';
