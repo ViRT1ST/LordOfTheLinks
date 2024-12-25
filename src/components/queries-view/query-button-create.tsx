@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus } from 'lucide-react';
 
-import { getModalContainerElement } from '@/utils/others';
+import { getModalContainerElement } from '@/utils/dom';
 import { cnJoin } from '@/utils/formatting';
 import Button from '@/components/[design-system]/button';
 import ModalWindow from '@/components/[design-system]/modal-window';

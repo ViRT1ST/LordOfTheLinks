@@ -4,21 +4,21 @@ import { persist } from 'zustand/middleware';
 import { type DbSettings } from '@/types';
 
 type StoreState = {
-  currentSettings: DbSettings | null;
-  setCurrentSettings: (value: DbSettings | null) => void;
+  clientSettings: DbSettings | null;
+  setClientSettings: (value: DbSettings | null) => void;
 };
 
 export const useStore = create<StoreState>()(
   persist(
     (set) => ({
-      currentSettings: null,
-      setCurrentSettings: (value) => {
-        set(() => ({ currentSettings: value }));
+      clientSettings: null,
+      setClientSettings: (value) => {
+        set(() => ({ clientSettings: value }));
       }
     }),
     {
       name: 'zustand-store',
-      partialize: (state) => ({ currentSettings: state.currentSettings })
+      partialize: (state) => ({ clientSettings: state.clientSettings })
     }
   )
 );

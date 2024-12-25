@@ -1,13 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-import { type UpdateSettingsData, type SelectItem, SettingsFormSchema } from '@/types/index';
+import {
+  type DbSettings,
+  type SelectItem,
+  type UpdateSettingsData,
+  SettingsFormSchema
+} from '@/types/index';
+import { setScrollbarVisibility } from '@/utils/dom';
 import { updateSettings } from '@/server-actions';
-import { convertErrorZodResultToMsgArray, cnJoin } from '@/utils/formatting';
+import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
-
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -20,7 +25,6 @@ import Checkbox from '@/components/[design-system]/modal-window-form/checkbox';
 
 type SettingsFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // settings: DbSettings | null;
 };
 
 const priorityFirstSelectItems: Array<SelectItem> = [
@@ -34,15 +38,13 @@ const backgroundSelectItems: Array<SelectItem> = [
 ];
 
 export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
-  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentSettings = useStore((state) => state.currentSettings);
-  const setCurrentSettings = useStore((state) => state.setCurrentSettings);
+  const clientSettings = useStore((state) => state.clientSettings);
+  const setClientSettings = useStore((state) => state.setClientSettings);
 
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,16 +64,15 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
 
     } else {
       setProcessingMessage('Updating settings...');
-      const settings = await updateSettings({ ...result.data });
-      setCurrentSettings(settings);
-      // router.push(`/?${searchParams.toString()}`, { scroll: false });
-      
-      setIsOpen(false);
+      const serverSettings = await updateSettings({ ...result.data });
+      setClientSettings(serverSettings);
+      setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
       router.refresh();
+      setIsOpen(false);
     }
   };
 
-  if (currentSettings === null) {
+  if (clientSettings === null) {
     return null;
   }
 
@@ -86,18 +87,18 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
           id="theme"
           name="theme"
           items={priorityFirstSelectItems}
-          defaultValue={currentSettings.theme}
+          defaultValue={clientSettings.theme}
         />
       </Section>
 
       <Section>
-        <Label htmlFor="background">Background pattern</Label>
+        <Label htmlFor="background">Background</Label>
         <Select
           className="w-[220px]"
           id="background"
           name="background"
           items={backgroundSelectItems}
-          defaultValue={currentSettings.background}
+          defaultValue={clientSettings.background}
         />
       </Section>
 
@@ -108,8 +109,8 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
           id="linksPerPage"
           name="linksPerPage"
           type="text"
-          placeholder="Any number larger than 0"
-          defaultValue={currentSettings.linksPerPage}
+          placeholder="Number between 1 and 1000"
+          defaultValue={clientSettings.linksPerPage}
         />
       </Section>
 
@@ -117,7 +118,7 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
         <Checkbox
           id="sortLinksByPriorityFirst"
           name="sortLinksByPriorityFirst"
-          checkedByDefault={currentSettings.sortLinksByPriorityFirst}
+          checkedByDefault={clientSettings.sortLinksByPriorityFirst}
         >
           Sort links by priority first
         </Checkbox>
@@ -127,7 +128,7 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
         <Checkbox
           id="hideVerticalScrollbar"
           name="hideVerticalScrollbar"
-          checkedByDefault={currentSettings.hideVerticalScrollbar}
+          checkedByDefault={clientSettings.hideVerticalScrollbar}
         >
           Hide vertical scrollbar
         </Checkbox>

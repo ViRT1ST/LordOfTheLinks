@@ -1,13 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { type DbSettings } from '@/types';
-import { getModalContainerElement } from '@/utils/others';
+import { getModalContainerElement } from '@/utils/dom';
 import { cnJoin } from '@/utils/formatting';
-import { getSettings } from '@/server-actions';
-import { useStore } from '@/store/useStore';
 
 import ModalWindow from '@/components/[design-system]/modal-window';
 import SearchForm from '@/components/header/search-form';
@@ -16,39 +13,10 @@ import LinkFormCreate from '@/components/links-view/link-form-create';
 import Button from '@/components/[design-system]/button';
 
 export default function Header() {
-  const currentSettings = useStore((state) => state.currentSettings);
-  const setCurrentSettings = useStore((state) => state.setCurrentSettings);
-
   const [ isCreateLinkModalOpen, setIsCreateLinkModalOpen ] = useState(false);
   const [ isSettingsModalOpen, setIsSettingsModalOpen ] = useState(false);
-  // const [ settings, setSettings ] = useState<DbSettings | null>(null);
 
-  useEffect(() => {
-    const onLoad = async () => {
-      const settings = await getSettings();
-      setCurrentSettings(settings);
-
-      // if (settings.hideVerticalScrollbar) {
-      //   document.body.classList.add('overflow-hidden');
-      // }
-    };
-
-    if (!currentSettings) {
-      onLoad();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (currentSettings?.hideVerticalScrollbar) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-    }
-  }, [currentSettings?.hideVerticalScrollbar]);
-
-  const handleSettingsButtonClick = async () => {
-    // const settings = await getSettings();
-    // setSettings(settings);
+  const handleSettingsButtonClick = () => {
     setIsSettingsModalOpen(true);
   };
 
@@ -99,7 +67,6 @@ export default function Header() {
             content={
               <SettingForm
                 setIsOpen={setIsSettingsModalOpen}
-                // settings={settings}
               />
             }
             isOverlayClickDoClose={true}
@@ -113,7 +80,7 @@ export default function Header() {
 }
 
 const twHeader = cnJoin(
-  'fixed top-0 left-0',
+  'z-10 fixed top-0 left-0',
   'w-full h-14 px-5',
   'flex flex-row justify-center',
   'bg-white/50',

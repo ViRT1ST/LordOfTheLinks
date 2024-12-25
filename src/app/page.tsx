@@ -1,4 +1,4 @@
-import BodyContainer from '@/components/[body-children]/body-container';
+import BodyContainer from '@/components/[body-children]/body-inner';
 import MainContent from '@/components/[body-children]/main-content';
 import Header from '@/components/header/header';
 import LinksView from '@/components/links-view/links-view';
