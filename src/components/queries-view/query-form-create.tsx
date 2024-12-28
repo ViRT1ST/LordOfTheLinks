@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { PinnedQueryFormSchema } from '@/types/index';
 import { createPinnedQuery } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
+import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -20,6 +21,8 @@ type QueryFormCreateProps = {
 };
 
 export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
+  const clientSettings = useStore((state) => state.clientSettings);
+
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
@@ -49,6 +52,10 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
       });
       setIsOpen(false);
     }
+  };
+
+  if (!clientSettings) {
+    return null;
   };
 
   return (
@@ -100,7 +107,10 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
           id="prority"
           name="priority"
           type="text"
-          placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
+          placeholder={
+            'Set priority in display order from 0 to 100, default (empty) is '
+              + clientSettings.defaultPriorityForPinned
+          }
         />
       </Section>
 

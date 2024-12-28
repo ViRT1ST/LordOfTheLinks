@@ -3,8 +3,8 @@ import { twMerge } from 'tailwind-merge';
 
 import { 
   type DbLinkWithTags,
-  type SortingOrderVariants,
-  type OrderByVariants,
+  type SortingLinksVariants,
+  type SortingLinksVariantsForPrismaQuery,
   DbPinnedQuery
 } from '@/types';
 
@@ -75,17 +75,17 @@ export const correctSearchQuery = (searchQuery: string) => {
   return searchQuery.replaceAll(' ', '+');
 };
 
-export const getSortingMenuDropdownLabel = (order: SortingOrderVariants | null) => {
+export const getSortingMenuDropdownLabel = (order: SortingLinksVariants | null) => {
   return typeof order === 'string'
     ? `SORTED BY ${order.replace('-', ' ').toUpperCase()}`
     : null;
 };
 
 export const getOrderByForLinksInPrisma = (
-  order: SortingOrderVariants | null,
+  order: SortingLinksVariants | null,
   sortLinksByPriorityFirst: boolean
 ) => {
-  const orderBy: OrderByVariants[] = [];
+  const orderBy: SortingLinksVariantsForPrismaQuery[] = [];
 
   if (sortLinksByPriorityFirst) {
     orderBy.push({ priority: 'desc' });
@@ -101,7 +101,7 @@ export const getOrderByForLinksInPrisma = (
   };
 
   if (order && order in sortingOptions) {
-    orderBy.push(sortingOptions[order] as OrderByVariants);
+    orderBy.push(sortingOptions[order] as SortingLinksVariantsForPrismaQuery);
   }
 
   return orderBy;

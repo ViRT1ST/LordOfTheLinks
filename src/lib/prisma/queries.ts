@@ -5,9 +5,9 @@ import { type Tag as TagRecord } from '@prisma/client';
 import {
   type NewLinkData,
   type UpdateLinkData,
-  type TagId,
   type NewPinnedQueryData,
   type UpdatePinnedQueryData,
+  type DbTagId,
   type DbGetLinksResponse,
   type DbSettings,
   type UpdateSettingsData
@@ -261,11 +261,16 @@ Create new link
 ============================================================= */
 
 export const createLink = async (data: NewLinkData) => {
-  const { url, title, info, tags, priority } = data;
+  let { url, title, info, tags, priority } = data;
+
+  if (priority === null) {
+    const settings = await getSettings();
+    priority = settings.defaultPriorityForLinks;
+  }
 
   const tagsArray: string[] = convertStringTagsToArray(tags || '');
 
-  let tagIds: TagId[] = [];
+  let tagIds: DbTagId[] = [];
 
   // creating or updating tags and getting their ids
   if (tagsArray.length > 0) {
@@ -335,13 +340,18 @@ Update link
 ============================================================= */
 
 export const updateLink = async (data: UpdateLinkData) => {
-  const { id, url, title, info, tags, priority } = data;
+  let { id, url, title, info, tags, priority } = data;
+
+  if (priority === null) {
+    const settings = await getSettings();
+    priority = settings.defaultPriorityForLinks;
+  }
 
   const newTagsArray: string[] = convertStringTagsToArray(tags || '');
   const existingTagsArray = await getTagsFromLink(id);
   const deletedTagsArray = existingTagsArray.filter((tag) => !newTagsArray?.includes(tag));
 
-  let tagIds: TagId[] = [];
+  let tagIds: DbTagId[] = [];
 
   // creating or updating tags and getting their ids
   if (newTagsArray.length > 0) {
@@ -395,7 +405,12 @@ Create pinned query
 ============================================================= */
 
 export const createPinnedQuery = async (data: NewPinnedQueryData) => {
-  const { label, query, info, isTagOnlySearch, priority } = data;
+  let { label, query, info, isTagOnlySearch, priority } = data;
+
+  if (priority === null) {
+    const settings = await getSettings();
+    priority = settings.defaultPriorityForPinned;
+  }
 
   const pinnedQuery = await prisma.pinned.create({
     data: {
@@ -436,7 +451,12 @@ Update pinned query
 ============================================================= */
 
 export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
-  const { id, label, query, info, isTagOnlySearch, priority } = data;
+  let { id, label, query, info, isTagOnlySearch, priority } = data;
+
+  if (priority === null) {
+    const settings = await getSettings();
+    priority = settings.defaultPriorityForPinned;
+  }
 
   const pinnedQuery = await prisma.pinned.update({
     where: { id },

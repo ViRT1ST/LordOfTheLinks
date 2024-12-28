@@ -37,11 +37,13 @@ model Pinned {
 }
 
 model Settings {
-  id                        Int         @id @default(autoincrement())
-  theme                     String      @default("light")
-  background                String      @default("flowers")
-  linksPerPage              Int         @default(10)
-  sortLinksBy               String      @default("domain-asc")
-  sortLinksByPriorityFirst  Boolean     @default(true)
-  hideVerticalScrollbar     Boolean     @default(false)
+  id                                Int         @id @default(autoincrement())
+  theme                             String      @default("light")
+  background                        String      @default("flowers")
+  linksPerPage                      Int         @default(10)
+  sortLinksBy                       String      @default("domain-asc")
+  sortLinksByPriorityFirst          Boolean     @default(true)
+  hideVerticalScrollbar             Boolean     @default(false)
+  defaultPriorityForLinks           Int         @default(10)
+  defaultPriorityForPinned          Int         @default(10)
 }

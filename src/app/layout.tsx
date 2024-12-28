@@ -68,10 +68,7 @@ const rootLayoutClasses = [
   GeistSans.variable, 
   GeistMono.variable,
   inter.variable,
-  // 'overflow-y-scroll',
-
   'antialiased',
-  'bg-[#E4E4E4]',
 ].join(' ');
 
 type Props = Readonly<{

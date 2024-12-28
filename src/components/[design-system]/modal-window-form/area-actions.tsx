@@ -38,30 +38,31 @@ export default function ActionsArea({
   );
 }
 
-const twActionsArea = cnJoin(
-  'w-full min-h-16 mt-1 flex flex-row',
-);
+const twActionsArea = cnJoin(`
+  w-full min-h-16 mt-1 flex flex-row
+`);
 
-const twMessages = cnJoin(
-  'w-full mt-3 flex flex-col gap-y-1 self-center',
-  'text-sm'
-);
+const twMessages = cnJoin(`
+  w-full mt-3 flex flex-col gap-y-1 self-center
+  text-sm
+`);
 
-const twMessage = cnJoin(
-  'flex flex-row items-center gap-x-2',
-  'text-sm font-semibold'
-);
+const twMessage = cnJoin(`
+  flex flex-row items-center gap-x-2
+  text-sm font-semibold
+`);
 
-const twErrorMessage = cnJoin(
-  'text-red-500'
-);
+const twErrorMessage = cnJoin(`
+  text-red-500
+`);
 
-const twProcessingMessage = cnJoin(
-  'text-teal-500'
-);
+const twProcessingMessage = cnJoin(`
+  text-teal-500
+`);
 
-const twSubmitButton = cnJoin(
-  'h-10 px-4 py-2 inline-flex items-center justify-center self-end',
-  'text-white/90 font-medium text-base',
-  'bg-black/90 rounded-md'
-);
+const twSubmitButton = cnJoin(`
+  h-10 px-4 py-2 inline-flex items-center justify-center self-end
+  text-white/90 font-medium text-base
+  bg-black/90 rounded-md
+  disabled:bg-black/50
+`);

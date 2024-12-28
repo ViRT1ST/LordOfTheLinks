@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { type DbPinnedQuery, PinnedQueryFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { updatePinnedQuery } from '@/server-actions';
+import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -21,6 +22,8 @@ type QueryFormEditProps = {
 };
 
 export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) {
+  const clientSettings = useStore((state) => state.clientSettings);
+
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
@@ -51,6 +54,10 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
       });
       setIsOpen(false);
     }
+  };
+
+  if (!clientSettings) {
+    return null;
   };
 
   return (
@@ -105,7 +112,10 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
           id="priority"
           name="priority"
           type="text"
-          placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
+          placeholder={
+            'Set priority in display order from 0 to 100, default (empty) is '
+              + clientSettings.defaultPriorityForPinned
+          }
           defaultValue={query.priority}
         />
       </Section>

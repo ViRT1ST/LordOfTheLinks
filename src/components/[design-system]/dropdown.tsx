@@ -76,23 +76,19 @@ export default function Dropdown({ setIsOpen, items, classNames, isNormalFont }:
 }
 
 const twDropdown = cnJoin(`
-  relative
-  font-medium font-geistsans text-xs
+  relative font-medium text-xs
 `);
 
-// bg-[#fbfbfb]
 const twItemsHidden = cnJoin(`
   z-10 absolute top-0 left-0 px-3 py-3 
   border-black/35 bg-white rounded-md border
-  transition transform opacity-0 scale-95 duration-75
-  pointer-events-none
-  invisible
+  transition transform duration-75 scale-95 opacity-0
+  invisible pointer-events-none
 `);
 
 const twItemsVisible = cnJoin(`
   scale-100 opacity-100
-  pointer-events-auto
-  visible
+  visible pointer-events-auto
 `);
 
 const twItemContainer = cnJoin(`

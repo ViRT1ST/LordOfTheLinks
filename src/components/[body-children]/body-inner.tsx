@@ -36,7 +36,7 @@ export default function BodyInner({ children }: BodyInnerProps) {
   );
 }
 
-const twContainer = cnJoin(
-  'flex flex-col w-full h-full min-h-screen',
-  'font-inter bg-[#e4e4e4]',
-);
+const twContainer = cnJoin(`
+  w-full h-full min-h-screen flex flex-col 
+  font-inter bg-[#e4e4e4]
+`);

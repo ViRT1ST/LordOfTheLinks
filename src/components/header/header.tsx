@@ -79,17 +79,17 @@ export default function Header() {
   );
 }
 
-const twHeader = cnJoin(
-  'z-10 fixed top-0 left-0',
-  'w-full h-14 px-5',
-  'flex flex-row justify-center',
-  'bg-white/50',
-);
+const twHeader = cnJoin(`
+  z-10 fixed top-0 left-0
+  w-full h-14 px-5
+  flex flex-row justify-center
+  bg-white/50
+`);
 
-const twContainerCorner = cnJoin(
-  'flex items-center gap-x-4'
-);
+const twContainerCorner = cnJoin(`
+  flex items-center gap-x-4
+`);
 
-const twContainerMiddle = cnJoin(
-  'w-full flex items-center justify-center flex-grow',
-);
+const twContainerMiddle = cnJoin(`
+  w-full flex items-center justify-center flex-grow
+`);

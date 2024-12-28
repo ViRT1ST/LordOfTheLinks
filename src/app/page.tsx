@@ -16,7 +16,7 @@ export default async function MainPage({ searchParams }: MainPageProps) {
   const isQueriesView = searchParams.v !== 'links' && searchParams.q === undefined;
 
   const query = searchParams.q || null;
-  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   return (
     <BodyContainer >

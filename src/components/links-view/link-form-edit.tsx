@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { updateLink } from '@/server-actions';
+import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -20,6 +21,8 @@ type LinkFormEditProps = {
 };
 
 export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
+  const clientSettings = useStore((state) => state.clientSettings);
+
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
@@ -50,6 +53,10 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
       });
       setIsOpen(false);
     }
+  };
+
+  if (!clientSettings) {
+    return null;
   };
 
   return (
@@ -105,7 +112,10 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
           id="priority"
           name="priority"
           type="text"
-          placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
+          placeholder={
+            'Set priority in display order from 0 to 100, default (empty) is '
+              + clientSettings.defaultPriorityForLinks
+          }
           defaultValue={link.priority}
         />
       </Section>

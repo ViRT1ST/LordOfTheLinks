@@ -27,6 +27,7 @@ type SettingsFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+// convert from types ?
 const priorityFirstSelectItems: Array<SelectItem> = [
   { label: 'light', value: 'light' },
   { label: 'dark', value: 'dark' },
@@ -56,7 +57,6 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
     const formData = new FormData(e.currentTarget);
     const formDataObject = Object.fromEntries(formData.entries());
     const result = SettingsFormSchema.safeParse(formDataObject);
-    console.log(formDataObject);
 
     if (!result.success) {
       const errorsList = convertErrorZodResultToMsgArray(result);
@@ -64,7 +64,15 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
 
     } else {
       setProcessingMessage('Updating settings...');
-      const serverSettings = await updateSettings({ ...result.data });
+      const serverSettings = await updateSettings({ 
+        theme: result.data.theme,
+        background: result.data.background,
+        linksPerPage: result.data.linksPerPage,
+        sortLinksByPriorityFirst: result.data.sortLinksByPriorityFirst,
+        hideVerticalScrollbar: result.data.hideVerticalScrollbar,
+        defaultPriorityForLinks: result.data.defaultPriorityForLinks,
+        defaultPriorityForPinned: result.data.defaultPriorityForPinned
+       });
       setClientSettings(serverSettings);
       setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
       router.refresh();
@@ -77,13 +85,13 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
   }
 
   return (
-    <Form className="w-[600px]" onSubmit={handleSubmit}>
+    <Form className="w-[700px]" onSubmit={handleSubmit}>
       <TitlesArea title="Edit Settings" subTitle="Update settings with new information" />
 
       <Section>
         <Label htmlFor="theme">Theme</Label>
         <Select
-          className="w-[220px]"
+          className="w-[300px]"
           id="theme"
           name="theme"
           items={priorityFirstSelectItems}
@@ -94,7 +102,7 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
       <Section>
         <Label htmlFor="background">Background</Label>
         <Select
-          className="w-[220px]"
+          className="w-[300px]"
           id="background"
           name="background"
           items={backgroundSelectItems}
@@ -103,14 +111,38 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
       </Section>
 
       <Section>
+        <Label htmlFor="defaultPriorityForLinks">Default priority for new links</Label>
+        <Field
+          className="w-[300px]"
+          id="defaultPriorityForLinks"
+          name="defaultPriorityForLinks"
+          type="text"
+          placeholder="Number between 0 and 100"
+          defaultValue={String(clientSettings.defaultPriorityForLinks)}
+        />
+      </Section>
+
+      <Section>
+        <Label htmlFor="defaultPriorityForPinned">Default priority for new pinned queries</Label>
+        <Field
+          className="w-[300px]"
+          id="defaultPriorityForPinned"
+          name="defaultPriorityForPinned"
+          type="text"
+          placeholder="Number between 0 and 100"
+          defaultValue={String(clientSettings.defaultPriorityForPinned)}
+        />
+      </Section>
+
+      <Section>
         <Label htmlFor="linksPerPage">Links per page</Label>
         <Field
-          className="w-[220px]"
+          className="w-[300px]"
           id="linksPerPage"
           name="linksPerPage"
           type="text"
           placeholder="Number between 1 and 1000"
-          defaultValue={clientSettings.linksPerPage}
+          defaultValue={String(clientSettings.linksPerPage)}
         />
       </Section>
 

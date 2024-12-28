@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { LinkFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { createLink, fetchLinkDataByUrl } from '@/server-actions';
+import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -20,6 +21,8 @@ type LinkFormCreateProps = {
 };
 
 export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
+  const clientSettings = useStore((state) => state.clientSettings);
+
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
   const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
 
@@ -77,6 +80,10 @@ export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
     }
   };
 
+  if (!clientSettings) {
+    return null;
+  };
+
   return (
     <Form className="w-[900px]" onSubmit={handleSubmit}>
       <TitlesArea title="Add New Link" subTitle="Fill fields to create new link" />
@@ -131,7 +138,10 @@ export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
           id="priority"
           name="priority"
           type="text"
-          placeholder="Set priority in display order from 0 to 100, default (empty) is 10"
+          placeholder={
+            'Set priority in display order from 0 to 100, default (empty) is '
+              + clientSettings.defaultPriorityForLinks
+          }
         />
       </Section>
 

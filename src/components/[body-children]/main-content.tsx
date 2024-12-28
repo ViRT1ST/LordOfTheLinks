@@ -13,6 +13,7 @@ export default function MainContent({ children }: MainContainerProps) {
 }
 
 const twMain = cnJoin(`
-  w-full max-w-[1400px] mx-auto px-16 pt-16 pb-5
-  flex flex-col min-h-svh
+  w-full max-w-[1400px] min-h-svh
+  mx-auto px-16 pt-16 pb-5
+  flex flex-col 
 `);
