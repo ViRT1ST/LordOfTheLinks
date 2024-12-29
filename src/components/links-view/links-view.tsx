@@ -11,7 +11,11 @@ type LinksViewProps = {
 };
 
 export default async function LinksView({ query, page }: LinksViewProps) { 
-  const { links, totalCount, linksPerPage, sortLinksBy } = await getLinks(query, page);
+  const { links, totalCount, linksPerPage, sortLinksBy } = await getLinks(query, page) || {};
+
+  if (!links || !totalCount || !linksPerPage || !sortLinksBy) {
+    return null;
+  }
 
   const totalPages = Math.ceil(totalCount / linksPerPage);
   const prevPage = page === 1 ? null : page - 1;
@@ -36,4 +40,3 @@ export default async function LinksView({ query, page }: LinksViewProps) {
 const twContainer = cnJoin(
   'relative grow flex flex-col'
 );
-

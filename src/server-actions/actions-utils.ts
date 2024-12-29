@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { decode } from 'html-entities';
 
 import { type ParsedHtmlData } from '@/types/index';
@@ -37,4 +38,8 @@ export const fetchLinkDataByUrl = async (url: string): Promise<ParsedHtmlData> =
   }
 
   return data;
+};
+
+export const revalidateRootPath = () => {
+  revalidatePath('/');
 };

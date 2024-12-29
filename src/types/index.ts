@@ -1,20 +1,4 @@
-import { z, ZodError } from 'zod';
-
-/* =============================================================
-Design system
-============================================================= */
-
-export type DropdownItem = {
-  label: string;
-  invokeOnClick: () => void;
-};
-
-export type DropdownItemsDivider = 'divider';
-
-export type SelectItem = {
-  label: string;
-  value: string;
-};
+import { z } from 'zod';
 
 /* =============================================================
 Common schemas
@@ -81,7 +65,7 @@ export type DbGetLinksResponse = {
 };
 
 const invalidLinkUrlMsg = 'URL is invalid';
-const invalidLinkTitleMsg = 'Ttle must be from 1 to 300 characters length';
+const invalidLinkTitleMsg = 'Title must be from 1 to 300 characters length';
 
 const LinkUrlchema = z.string().trim()
   .url({ message: invalidLinkUrlMsg });
@@ -148,14 +132,14 @@ const PinnedQueryQuerySchema = z.string().trim()
   .min(1, { message: invalidPinnedQueryQueryMsg })
   .max(100, { message: invalidPinnedQueryQueryMsg });
 
-const PinnedQueryIsTagOnlySearch = z.coerce.boolean();
+const PinnedQueryIsTagOnlySearchSchema = z.coerce.boolean();
 
 const PinnedQueryInfoSchema = z.string().trim();
 
 export const PinnedQueryFormSchema = z.object({
   label: PinnedQueryLabelSchema,
   query: PinnedQueryQuerySchema,
-  isTagOnlySearch: PinnedQueryIsTagOnlySearch,
+  isTagOnlySearch: PinnedQueryIsTagOnlySearchSchema,
   info: PinnedQueryInfoSchema,
   priority: PrioritySchema
 });
@@ -205,8 +189,8 @@ const HideVerticalScrollbarSchema = z.coerce.boolean();
 
 const DefaultPrioritySchema = z.coerce
   .number({ message: invalidPriorityMsg })
-  .min(1, { message: invalidPriorityMsg })
-  .max(1000, { message: invalidPriorityMsg });
+  .min(0, { message: invalidPriorityMsg })
+  .max(100, { message: invalidPriorityMsg });
 
 export const SettingsFormSchema = z.object({
   theme: ThemeVariantsSchema,
@@ -218,7 +202,25 @@ export const SettingsFormSchema = z.object({
   defaultPriorityForPinned: DefaultPrioritySchema
 });
 
-export type UpdateSettingsData = z.infer<typeof SettingsFormSchema>;
 export type ThemeVariants = z.infer<typeof ThemeVariantsSchema>;
 export type BackgroundVariants = z.infer<typeof BackgroundVariantsSchema>;
 
+export type UpdateSettingsData = Partial<z.infer<typeof SettingsFormSchema>> & {
+  sortLinksBy?: SortingLinksVariants;
+};
+
+/* =============================================================
+Design system
+============================================================= */
+
+export type DropdownItem = {
+  label: string;
+  invokeOnClick: () => void;
+};
+
+export type DropdownItemsDivider = 'divider';
+
+export type SelectItem = {
+  label: string;
+  value: string;
+};

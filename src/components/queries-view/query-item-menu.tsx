@@ -7,7 +7,7 @@ import type { DropdownItem, DbPinnedQuery } from '@/types';
 import { getModalContainerElement } from '@/utils/dom';
 import Dropdown from '@/components/[design-system]/dropdown';
 import ModalWindow from '@/components/[design-system]/modal-window';
-import QueryFormEdit from '@/components/queries-view/query-form-edit';
+import QueryFormUpdate from '@/components/queries-view/query-form-update';
 import QueryFormDelete from '@/components/queries-view/query-form-delete';
 
 type QueryItemMenuProps = {
@@ -44,7 +44,7 @@ export default function QueryItemMenu({
           <ModalWindow
             setIsOpen={setIsUpdateModalOpen}
             content={
-              <QueryFormEdit
+              <QueryFormUpdate
                 query={query}
                 setIsOpen={setIsUpdateModalOpen}
               />

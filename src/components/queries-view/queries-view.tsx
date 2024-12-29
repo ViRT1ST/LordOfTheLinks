@@ -4,7 +4,11 @@ import QueryButtonCreate from '@/components/queries-view/query-button-create';
 import QueryItem from '@/components/queries-view/query-item';
 
 export default async function QueriesView() {
-  const { pinnedQueries } = await getPinnedQueries();
+  const pinnedQueries = await getPinnedQueries();
+
+  if (!pinnedQueries) {
+    return null;
+  };
 
   return (
     <div className={twContainer}>

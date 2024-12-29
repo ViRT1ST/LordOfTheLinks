@@ -108,9 +108,14 @@ export const getOrderByForLinksInPrisma = (
 };
 
 export const convertStringTagsToArray = (tags: string) => {
-  return tags.split(',')
-    .map((tag) => tag.trim())
-    .filter((tag) => tag !== '');
+  try {
+    return tags.split(',')
+      .map((tag) => tag.trim())
+      .filter((tag) => tag !== '');
+
+  } catch (error) {
+    return [];
+  }
 };
 
 export const getUpdatedSearchParams = (

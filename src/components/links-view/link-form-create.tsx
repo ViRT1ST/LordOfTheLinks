@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { LinkFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
-import { createLink, fetchLinkDataByUrl } from '@/server-actions';
+import { fetchLinkDataByUrl, createLink, revalidateRootPath } from '@/server-actions';
 import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
@@ -67,7 +67,7 @@ export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
 
     } else {
       setProcessingMessage('Looking for icon...');
-      const link = await createLink({
+      const createdLink = await createLink({
         url: result.data.url,
         title: result.data.title,
         info: result.data.info,
@@ -75,8 +75,15 @@ export default function LinkFormCreate({ setIsOpen }: LinkFormCreateProps) {
         priority: result.data.priority,
         faviconUrls,
       });
-      setIsOpen(false);
-      router.push(`/?q=id:${link.id}`);
+
+      if (!createdLink) {
+        setProcessingMessage(null);
+        setErrorMessages(['Failed to create link']);
+      } else {
+        setIsOpen(false);
+        revalidateRootPath();
+        router.push(`/?q=id:${createdLink.id}`);
+      }
     }
   };
 

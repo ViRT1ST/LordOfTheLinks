@@ -1,12 +1,12 @@
 'use client';
 
-import type { SortingOrderVariants } from '@/types';
+import type { SortingLinksVariants } from '@/types';
 import { cnJoin, getSortingMenuDropdownLabel } from '@/utils/formatting';
 import LinksControlsSort from '@/components/links-view/links-controls-sort';
 
 type LinksControlsTopProps = {
   totalCount: number;
-  sortedBy: SortingOrderVariants;
+  sortedBy: SortingLinksVariants;
 };
 
 export default function LinksControlsTop({ totalCount, sortedBy }: LinksControlsTopProps) {

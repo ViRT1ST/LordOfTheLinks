@@ -1,7 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-
 import {
   type NewLinkData,
   type UpdateLinkData,
@@ -21,20 +19,19 @@ export const getLinks = async (searchQuery: string | null, page: number) => {
 };
 
 export const createLink = async (data: NewLinkData) => {
-  await icons.createImageForLink(data); // move
   const link = await queries.createLink(data);
-  revalidatePath('/');
+  await icons.createImageForLink(data);
   return link;
 };
 
 export const updateLink = async (data: UpdateLinkData) => {
-  await queries.updateLink(data);
-  revalidatePath('/');
+  const link = await queries.updateLink(data);
+  return link;
 };
 
 export const deleteLink = async (id: number) => {
-  await queries.deleteLink(id);
-  revalidatePath('/');
+  const link = await queries.deleteLink(id);
+  return link;
 };
 
 /* =============================================================
@@ -47,19 +44,17 @@ export const getPinnedQueries = async () => {
 
 export const createPinnedQuery = async (data: NewPinnedQueryData) => {
   const pinnedQuery = await queries.createPinnedQuery(data);
-  revalidatePath('/');
   return pinnedQuery;
 };
 
 export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
   const pinnedQuery = await queries.updatePinnedQuery(data);
-  revalidatePath('/');
   return pinnedQuery;
 };
 
 export const deletePinnedQuery = async (id: number) => {
-  await queries.deletePinnedQuery(id);
-  revalidatePath('/');
+  const pinnedQuery = await queries.deletePinnedQuery(id);
+  return pinnedQuery;
 };
 
 /* =============================================================

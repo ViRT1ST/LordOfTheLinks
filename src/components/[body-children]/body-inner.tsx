@@ -17,8 +17,11 @@ export default function BodyInner({ children }: BodyInnerProps) {
   useEffect(() => {
     const onLoad = async () => {
       const serverSettings = await getSettings();
-      setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
-      setClientSettings(serverSettings);
+      
+      if (serverSettings) {
+        setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
+        setClientSettings(serverSettings);
+      }
     };
 
     onLoad();
@@ -28,6 +31,10 @@ export default function BodyInner({ children }: BodyInnerProps) {
     backgroundImage: `url('/background/vecteezy-floral-pattern-01.png')`,
     backgroundRepeat: 'repeat',
   };
+
+  if (!setClientSettings) {
+    return null;
+  }
 
   return (
     <div className={twContainer} style={style}>

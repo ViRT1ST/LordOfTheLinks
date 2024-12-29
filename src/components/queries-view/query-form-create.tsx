@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { PinnedQueryFormSchema } from '@/types/index';
-import { createPinnedQuery } from '@/server-actions';
+import { createPinnedQuery, revalidateRootPath } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 
@@ -43,14 +43,21 @@ export default function QueryFormCreate({ setIsOpen }: QueryFormCreateProps) {
 
     } else {
       setProcessingMessage('Creating pinned query...');
-      await createPinnedQuery({
+      const createdPinnedQuery = await createPinnedQuery({
         label: result.data.label,
         query: result.data.query,
         info: result.data.info,
         isTagOnlySearch: result.data.isTagOnlySearch,
         priority: result.data.priority
       });
-      setIsOpen(false);
+
+      if (!createdPinnedQuery) {
+        setProcessingMessage(null);
+        setErrorMessages(['Failed to create pinned query']);
+      } else {
+        revalidateRootPath();
+        setIsOpen(false);
+      }
     }
   };
 

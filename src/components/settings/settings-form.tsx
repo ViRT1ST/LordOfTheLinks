@@ -10,7 +10,7 @@ import {
   SettingsFormSchema
 } from '@/types/index';
 import { setScrollbarVisibility } from '@/utils/dom';
-import { updateSettings } from '@/server-actions';
+import { updateSettings, revalidateRootPath } from '@/server-actions';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
 import { useStore } from '@/store/useStore';
 
@@ -73,10 +73,16 @@ export default function SettingsForm({ setIsOpen }: SettingsFormProps) {
         defaultPriorityForLinks: result.data.defaultPriorityForLinks,
         defaultPriorityForPinned: result.data.defaultPriorityForPinned
        });
-      setClientSettings(serverSettings);
-      setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
-      router.refresh();
-      setIsOpen(false);
+
+      if (!serverSettings) {
+        setProcessingMessage(null);
+        setErrorMessages(['Failed to update settings']);
+      } else {
+        setClientSettings(serverSettings);
+        setScrollbarVisibility(serverSettings.hideVerticalScrollbar);
+        setIsOpen(false);
+        revalidateRootPath();
+      }
     }
   };
 

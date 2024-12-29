@@ -3,14 +3,14 @@ import 'server-only';
 import { type Tag as TagRecord } from '@prisma/client';
 
 import {
+  type DbTagId,
+  type DbGetLinksResponse,
+  type DbSettings,
   type NewLinkData,
   type UpdateLinkData,
   type NewPinnedQueryData,
   type UpdatePinnedQueryData,
-  type DbTagId,
-  type DbGetLinksResponse,
-  type DbSettings,
-  type UpdateSettingsData
+  type UpdateSettingsData,
 } from '@/types/index';
 
 import {
@@ -22,285 +22,56 @@ import {
 import prisma from '@/lib/prisma/connect';
 
 /* =============================================================
-Links utils
+Utils
 ============================================================= */
 
 const getVariablesForLinks = async () => {
-  const {
-    sortLinksBy,
-    sortLinksByPriorityFirst,
-    linksPerPage
-  } = await getSettings();
+  const settings = await getSettings();
 
-  const orderBy = getOrderByForLinksInPrisma(
-    sortLinksBy, sortLinksByPriorityFirst
-  );
-
-  return {
-    sortLinksBy,
-    linksPerPage,
-    orderBy
-  };
-};
-
-/* =============================================================
-Get all links
-============================================================= */
-
-export const getAllLinks = async (page: number) => {
-  const { linksPerPage, orderBy } = await getVariablesForLinks();
-
-  const links = await prisma.link.findMany({
-    include: {
-      tags: true,
-    },
-    take: linksPerPage,
-    skip: (page - 1) * linksPerPage,
-    orderBy: orderBy,
-  });
-
-  const totalCount = await prisma.link.count();
-
-  return {
-    links,
-    totalCount
-  };
-};
-
-/* =============================================================
-Get links by search text
-============================================================= */
-
-export const getLinksBySearch = async (
-  searchQuery: string,
-  page: number,
-) => {
-  const searchTerms = searchQuery.toLowerCase().split(' ');
-
-  // Creating condition for each search term
-  const searchConditions = searchTerms.map(term => ({
-    OR: [
-      {
-        title: {
-          contains: term,
-        },
-      },
-      {
-        domain: {
-          contains: term,
-        },
-      },
-      {
-        tags: {
-          some: {
-            value: {
-              contains: term,
-            },
-          },
-        },
-      },
-    ],
-  }));
-
-  const { linksPerPage, orderBy } = await getVariablesForLinks();
-
-  const links = await prisma.link.findMany({
-    where: {
-      AND: searchConditions,
-    },
-    include: {
-      tags: true,
-    },
-    take: linksPerPage,
-    skip: (page - 1) * linksPerPage,
-    orderBy: orderBy
-  });
-
-  const totalCount = await prisma.link.count({
-    where: {
-      AND: searchConditions,
-    },
-  });
-
-  return {
-    links,
-    totalCount
-  };
-};
-
-/* =============================================================
-Get links by tag
-============================================================= */
-
-export const getLinksByTag = async (tag: string, page: number) => {
-  const { linksPerPage, orderBy } = await getVariablesForLinks();
-
-  const searchConditions = {
-    tags: {
-      some: {
-        value: tag,
-      },
-    },
-  };
-
-  const links = await prisma.link.findMany({
-    where: searchConditions,
-    include: {
-      tags: true,
-    },
-    take: linksPerPage,
-    skip: (page - 1) * linksPerPage,
-    orderBy: orderBy
-  });
-
-  const totalCount = await prisma.link.count({
-    where: searchConditions
-  });
-
-  return {
-    links,
-    totalCount 
-  };
-};
-
-/* =============================================================
-Get link by id
-============================================================= */
-
-export const getLinkById = async (id: number) => {
-  return await prisma.link.findUnique({
-    where: { id },
-    include: {
-      tags: true,
-    },
-  });
-};
-
-/* =============================================================
-Get links
-============================================================= */
-
-export const getLinks = async (searchQuery: string | null, page: number) => {
-  const { linksPerPage, sortLinksBy } = await getVariablesForLinks();
-
-  const response: DbGetLinksResponse = {
-    links: [],
-    totalCount: 0,
-    linksPerPage,
-    sortLinksBy
-  };
-
-  const isSearchById =  searchQuery && searchQuery.match(/^id:\d+$/);
-  const isSearchByTag = searchQuery && searchQuery.match(/^tag:\w+$/);
-  const isSearchByText = searchQuery && !isSearchById;
-
-  if (isSearchById) {
-    const id = parseInt(searchQuery.replace('id:', ''), 10);
-    const link = await getLinkById(id);
-
-    if (link) {
-      response.links = [link];
-      response.totalCount = 1;
-    }
-
-  } else if (isSearchByTag) {
-    const tag = searchQuery.replace('tag:', '');
-    const { links, totalCount } = await getLinksByTag(tag, page);
-
-    response.links = links;
-    response.totalCount = totalCount;
-
-  } else if (isSearchByText) {
-    const { links, totalCount } = await getLinksBySearch(searchQuery, page);
-
-    response.links = links;
-    response.totalCount = totalCount;
-
-  } else {
-    const { links, totalCount } = await getAllLinks(page);
-
-    response.links = links;
-    response.totalCount = totalCount;
+  if (!settings) {
+    return;
   }
 
-  return response;
+  try {
+    return {
+      sortLinksBy: settings.sortLinksBy,
+      linksPerPage: settings.linksPerPage,
+      orderBy: getOrderByForLinksInPrisma(
+        settings.sortLinksBy,
+        settings.sortLinksByPriorityFirst
+      )
+    };
+
+  } catch (error) {
+    console.error(`Failed to get variables for links | ${error}`);
+  }
 };
 
-/* =============================================================
-Create or update tag and return it record
-============================================================= */
-
-const upsertTag = async (tag: string): Promise<TagRecord> => {
-  const value = tag.toLowerCase().trim();
-
-  return await prisma.tag.upsert({
-    where: {
-      value
-    },
-    create: {
-      value
-    },
-    update: {},
-  });
-};
-
-/* =============================================================
-Create or update tags and return it records
-============================================================= */
-
-const upsertTags = async (tags: string[]): Promise<TagRecord[]>  => {
-  return await Promise.all(
-    tags.map(async (tag) => {
-      return upsertTag(tag);
-    })
-  );
-};
-
-/* =============================================================
-Create new link
-============================================================= */
-
-export const createLink = async (data: NewLinkData) => {
-  let { url, title, info, tags, priority } = data;
-
-  if (priority === null) {
+const getPrority = async (priority: unknown, isLink: boolean) => {
+  if (typeof priority !== 'number') {
     const settings = await getSettings();
-    priority = settings.defaultPriorityForLinks;
+
+    if (settings) {
+      return isLink
+        ? settings.defaultPriorityForPinned
+        : settings.defaultPriorityForLinks;
+    } else {
+      return;
+    }
   }
 
-  const tagsArray: string[] = convertStringTagsToArray(tags || '');
-
-  let tagIds: DbTagId[] = [];
-
-  // creating or updating tags and getting their ids
-  if (tagsArray.length > 0) {
-    const tagRecords = await upsertTags(tagsArray);
-    tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
-  }
-
-  // creating new link and connecting it with tags
-  const newLink = await prisma.link.create({
-    data: {
-      url,
-      domain: getDomain(url),
-      title,
-      info: info || null,
-      priority,
-      tags: {
-        connect: tagIds,
-      },
-    },
-    include: {
-      tags: true,
-    },
-  });
-
-  return newLink;
+  return priority;
 };
 
-/* =============================================================
-Delete non existing tags
-============================================================= */
+const getTagsFromLink = async (linkId: number) => {
+  const link = await getLinkById(linkId);
+
+  if (!link) {
+    return [];
+  } else {
+    return link.tags.map((tag) => tag.value);
+  }
+};
 
 const deleteNonExistingTags = async (tags: string[]) => {
   for (const tag of tags) {
@@ -326,13 +97,303 @@ const deleteNonExistingTags = async (tags: string[]) => {
   }
 };
 
+const upsertOneTag = async (tag: string): Promise<TagRecord> => {
+  // Create or update one tag and return it record
+
+  const value = tag.toLowerCase().trim();
+
+  return await prisma.tag.upsert({
+    where: {
+      value
+    },
+    create: {
+      value
+    },
+    update: {},
+  });
+};
+
+const upsertManyTags = async (tags: string[]): Promise<TagRecord[]>  => {
+  // Create or update bunch of tags and return it records
+
+  return await Promise.all(
+    tags.map(async (tag) => {
+      return upsertOneTag(tag);
+    })
+  );
+};
+
 /* =============================================================
-Get tags strings from link
+Get all links
 ============================================================= */
 
-const getTagsFromLink = async (linkId: number) => {
-  const link = await getLinkById(linkId);
-  return link?.tags.map((tag) => tag.value) || [];
+const getAllLinks = async (page: number) => {
+  const variables = await getVariablesForLinks();
+
+  if (!variables) {
+    return;
+  }
+
+  try {
+    const links = await prisma.link.findMany({
+      include: {
+        tags: true,
+      },
+      take: variables.linksPerPage,
+      skip: (page - 1) * variables.linksPerPage,
+      orderBy: variables.orderBy,
+    });
+  
+    const totalCount = await prisma.link.count();
+  
+    return {
+      links,
+      totalCount
+    };
+
+  } catch (error) {
+    console.error(`Failed to get all links | ${error}`);
+  }
+};
+
+/* =============================================================
+Get links by search term
+============================================================= */
+
+const getLinksBySearch = async (searchTerm: string, page: number) => {
+  const variables = await getVariablesForLinks();
+
+  if (!variables) {
+    return;
+  }
+
+  try {
+    const searchTermWords = searchTerm.toLowerCase().split(' ');
+
+    // Creating condition for each search term
+    const searchConditions = searchTermWords.map(word => ({
+      OR: [
+        {
+          title: {
+            contains: word,
+          },
+        },
+        {
+          domain: {
+            contains: word,
+          },
+        },
+        {
+          tags: {
+            some: {
+              value: {
+                contains: word,
+              },
+            },
+          },
+        },
+      ],
+    }));
+  
+    const links = await prisma.link.findMany({
+      where: {
+        AND: searchConditions,
+      },
+      include: {
+        tags: true,
+      },
+      take: variables.linksPerPage,
+      skip: (page - 1) * variables.linksPerPage,
+      orderBy: variables.orderBy
+    });
+  
+    const totalCount = await prisma.link.count({
+      where: {
+        AND: searchConditions,
+      },
+    });
+  
+    return {
+      links,
+      totalCount
+    };
+
+  } catch (error) {
+    console.error(`Failed to get links by search term | ${error}`);
+  }
+};
+
+/* =============================================================
+Get links by tag
+============================================================= */
+
+const getLinksByTag = async (tag: string, page: number) => {
+  const variables = await getVariablesForLinks();
+
+  if (!variables) {
+    return;
+  }
+
+  try {
+    const searchConditions = {
+      tags: {
+        some: {
+          value: tag,
+        },
+      },
+    };
+  
+    const links = await prisma.link.findMany({
+      where: searchConditions,
+      include: {
+        tags: true,
+      },
+      take: variables.linksPerPage,
+      skip: (page - 1) * variables.linksPerPage,
+      orderBy: variables.orderBy
+    });
+  
+    const totalCount = await prisma.link.count({
+      where: searchConditions
+    });
+  
+    return {
+      links,
+      totalCount 
+    };
+
+  } catch (error) {
+    console.error(`Failed to get links by tag | ${error}`);
+  }
+};
+
+/* =============================================================
+Get link by id
+============================================================= */
+
+const getLinkById = async (id: number) => {
+  return await prisma.link.findUnique({
+    where: { id },
+    include: {
+      tags: true,
+    },
+  });
+};
+
+/* =============================================================
+Get links
+============================================================= */
+
+export const getLinks = async (searchQuery: string | null, page: number) => {
+  const variables = await getVariablesForLinks();
+
+  if (!variables) {
+    return;
+  }
+
+  try {
+    const response: DbGetLinksResponse = {
+      links: [],
+      totalCount: 0,
+      linksPerPage: variables.linksPerPage,
+      sortLinksBy: variables.sortLinksBy
+    };
+
+    const isSearchById =  searchQuery && searchQuery.match(/^id:\d+$/);
+    const isSearchByTag = searchQuery && searchQuery.match(/^tag:\w+$/);
+    const isSearchByText = searchQuery && !isSearchById;
+
+    if (isSearchById) {
+      const id = parseInt(searchQuery.replace('id:', ''), 10);
+      const link = await getLinkById(id);
+
+      response.links = link === null ? [] : [link];
+      response.totalCount = link === null ? 0 : 1;
+
+    } else if (isSearchByTag) {
+      const tag = searchQuery.replace('tag:', '');
+      const { links, totalCount } = await getLinksByTag(tag, page) || {};
+
+      if (links === undefined || totalCount === undefined) {
+        return;
+      } else {
+        response.links = links;
+        response.totalCount = totalCount;
+      }
+  
+    } else if (isSearchByText) {
+      const { links, totalCount } = await getLinksBySearch(searchQuery, page) || {};
+  
+      if (links === undefined || totalCount === undefined) {
+        return;
+      } else {
+        response.links = links;
+        response.totalCount = totalCount;
+      }
+
+    } else {
+      const { links, totalCount } = await getAllLinks(page) || {};
+  
+      if (links === undefined || totalCount === undefined) {
+        return;
+      } else {
+        response.links = links;
+        response.totalCount = totalCount;
+      }
+    }
+  
+    return response;
+
+  } catch (error) {
+    console.error(`Failed to get links | ${error}`);
+  }
+};
+
+/* =============================================================
+Create new link
+============================================================= */
+
+export const createLink = async (data: NewLinkData) => {
+  let { url, title, info, tags, priority } = data;
+
+  const priorityToSave = await getPrority(priority, true);
+  if (priorityToSave === undefined) {
+    return;
+  }
+
+  try {
+    const tagsArray: string[] = convertStringTagsToArray(tags);
+
+    let tagIds: DbTagId[] = [];
+  
+    // creating or updating tags and getting their ids
+    if (tagsArray.length > 0) {
+      const tagRecords = await upsertManyTags(tagsArray);
+      tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
+    }
+  
+    // creating new link and connecting it with tags
+    const newLink = await prisma.link.create({
+      data: {
+        url,
+        domain: getDomain(url),
+        title,
+        info: info || null,
+        priority: priorityToSave,
+        tags: {
+          connect: tagIds,
+        },
+      },
+      include: {
+        tags: true,
+      },
+    });
+  
+    return newLink;
+
+  } catch (error) {
+    console.error(`Failed to create link | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -342,45 +403,49 @@ Update link
 export const updateLink = async (data: UpdateLinkData) => {
   let { id, url, title, info, tags, priority } = data;
 
-  if (priority === null) {
-    const settings = await getSettings();
-    priority = settings.defaultPriorityForLinks;
+  const priorityToSave = await getPrority(priority, true);
+  if (priorityToSave === undefined) {
+    return;
   }
 
-  const newTagsArray: string[] = convertStringTagsToArray(tags || '');
-  const existingTagsArray = await getTagsFromLink(id);
-  const deletedTagsArray = existingTagsArray.filter((tag) => !newTagsArray?.includes(tag));
+  try {
+    const newTagsArray: string[] = convertStringTagsToArray(tags);
+    const existingTagsArray = await getTagsFromLink(id);
+    const deletedTagsArray = existingTagsArray.filter((tag) => !newTagsArray?.includes(tag));
+    
+    let tagIds: DbTagId[] = [];
 
-  let tagIds: DbTagId[] = [];
-
-  // creating or updating tags and getting their ids
-  if (newTagsArray.length > 0) {
-    const tagRecords = await upsertTags(newTagsArray);
-    tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
-  }
-
-  // updating link
-  const updatedLink = await prisma.link.update({
-    where: { id },
-    data: {
-      url,
-      domain: getDomain(url),
-      title,
-      info: info || null,
-      priority,
-      tags: {
-        // replacing tags connections
-        set: tagIds, 
+    // creating or updating tags and getting their ids
+    if (newTagsArray.length > 0) {
+      const tagRecords = await upsertManyTags(newTagsArray);
+      tagIds = tagRecords.map((tagRecord) => ({ id: tagRecord.id }));
+    }
+  
+    // updating link
+    const updatedLink = await prisma.link.update({
+      where: { id },
+      data: {
+        url,
+        domain: getDomain(url),
+        title,
+        info: info || null,
+        priority: priorityToSave,
+        tags: {
+          // replacing tags connections
+          set: tagIds, 
+        },
       },
-    },
-    include: {
-      tags: true,
-    },
-  });
-
-  await deleteNonExistingTags(deletedTagsArray);
-
-  return updatedLink;
+      include: {
+        tags: true,
+      },
+    });
+  
+    await deleteNonExistingTags(deletedTagsArray);
+    return updatedLink;
+    
+  } catch (error) {
+    console.error(`Failed to update link with id ${id} | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -396,7 +461,7 @@ export const deleteLink = async (id: number) => {
     return deletedLink;
     
   } catch (error) {
-    console.error(`Failed to delete link with id ${id}:`, error);
+    console.error(`Failed to delete link with id ${id} | ${error}`);
   }
 };
 
@@ -407,22 +472,27 @@ Create pinned query
 export const createPinnedQuery = async (data: NewPinnedQueryData) => {
   let { label, query, info, isTagOnlySearch, priority } = data;
 
-  if (priority === null) {
-    const settings = await getSettings();
-    priority = settings.defaultPriorityForPinned;
+  const priorityToSave = await getPrority(priority, false);
+  if (priorityToSave === undefined) {
+    return;
   }
 
-  const pinnedQuery = await prisma.pinned.create({
-    data: {
-      label,
-      query,
-      isTagOnlySearch,
-      info: info || null,
-      priority,
-    },
-  });
+  try {
+    const pinnedQuery = await prisma.pinned.create({
+      data: {
+        label,
+        query,
+        isTagOnlySearch,
+        info: info || null,
+        priority: priorityToSave,
+      },
+    });
+  
+    return pinnedQuery; 
 
-  return pinnedQuery;
+  } catch (error) {
+    console.error(`Failed to create pinned query | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -430,20 +500,20 @@ Get all pinned queries
 ============================================================= */
 
 export const getAllPinnedQueries = async () => {
-  const totalCount = await prisma.pinned.count();
+  try {
+    const pinnedQueries = await prisma.pinned.findMany({
+      orderBy: [
+        {
+          priority: 'desc',
+        },
+      ],
+    });
+  
+    return pinnedQueries;
 
-  const pinnedQueries = await prisma.pinned.findMany({
-    orderBy: [
-      {
-        priority: 'desc',
-      },
-    ],
-  });
-
-  return {
-    pinnedQueries: pinnedQueries,
-    totalCount
-  };
+  } catch (error) {
+    console.error(`Failed to get all pinned queries | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -453,23 +523,28 @@ Update pinned query
 export const updatePinnedQuery = async (data: UpdatePinnedQueryData) => {
   let { id, label, query, info, isTagOnlySearch, priority } = data;
 
-  if (priority === null) {
-    const settings = await getSettings();
-    priority = settings.defaultPriorityForPinned;
+  const priorityToSave = await getPrority(priority, false);
+  if (priorityToSave === undefined) {
+    return;
   }
 
-  const pinnedQuery = await prisma.pinned.update({
-    where: { id },
-    data: {
-      label,
-      query,
-      isTagOnlySearch,
-      info: info || null,
-      priority,
-    },
-  });
+  try {
+    const pinnedQuery = await prisma.pinned.update({
+      where: { id },
+      data: {
+        label,
+        query,
+        isTagOnlySearch,
+        info: info || null,
+        priority: priorityToSave,
+      },
+    });
+  
+    return pinnedQuery;
 
-  return pinnedQuery;
+  } catch (error) {
+    console.error(`Failed to update pinned query with id ${id} | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -485,7 +560,7 @@ export const deletePinnedQuery = async (id: number) => {
     return pinnedQuery;
     
   } catch (error) {
-    console.error(`Failed to delete pinned query with id ${id}:`, error);
+    console.error(`Failed to delete pinned query with id ${id} | ${error}`);
   }
 };
 
@@ -494,11 +569,16 @@ Get settings
 ============================================================= */
 
 export const getSettings = async () => {
-  const settings = await prisma.settings.findUnique({
-    where: { id: 1 },
-  });
+  try {
+    const settings = await prisma.settings.findUnique({
+      where: { id: 1 },
+    });
+  
+    return settings as DbSettings;
 
-  return settings as DbSettings;
+  } catch (error) {
+    console.error(`Failed to find settings | ${error}`);
+  }
 };
 
 /* =============================================================
@@ -506,10 +586,15 @@ Update settings
 ============================================================= */
 
 export const updateSettings = async (settings: UpdateSettingsData) => {
-  const updatedSettings = await prisma.settings.update({
-    where: { id: 1 },
-    data: settings
-  });
+  try {
+    const updatedSettings = await prisma.settings.update({
+      where: { id: 1 },
+      data: settings
+    });
+  
+    return updatedSettings as DbSettings;
 
-  return updatedSettings as DbSettings;
+  } catch (error) {
+    console.error(`Failed to update settings | ${error}`);
+  }
 };

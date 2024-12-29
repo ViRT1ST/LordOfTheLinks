@@ -9,7 +9,7 @@ import { getModalContainerElement } from '@/utils/dom';
 import { cnJoin } from '@/utils/formatting';
 import Dropdown from '@/components/[design-system]/dropdown';
 import ModalWindow from '@/components/[design-system]/modal-window';
-import LinkFormEdit from '@/components/links-view/link-form-edit';
+import LinkFormUpdate from '@/components/links-view/link-form-update';
 import LinkFormDelete from '@/components/links-view/link-form-delete';
 
 type LinkItemMenuProps = {
@@ -45,7 +45,7 @@ export default function LinkItemMenu({ link }: LinkItemMenuProps) {
           <ModalWindow
             setIsOpen={setIsUpdateModalOpen}
             content={
-              <LinkFormEdit
+              <LinkFormUpdate
                 link={link}
                 setIsOpen={setIsUpdateModalOpen}
               />

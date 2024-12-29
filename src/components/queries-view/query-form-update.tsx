@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { type DbPinnedQuery, PinnedQueryFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
-import { updatePinnedQuery } from '@/server-actions';
+import { updatePinnedQuery, revalidateRootPath } from '@/server-actions';
 import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
@@ -16,12 +16,12 @@ import Field from '@/components/[design-system]/modal-window-form/field';
 import Textarea from '@/components/[design-system]/modal-window-form/textarea';
 import ActionsArea from '@/components/[design-system]/modal-window-form/area-actions';
 
-type QueryFormEditProps = {
+type QueryFormUpdateProps = {
   query: DbPinnedQuery;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) {
+export default function QueryFormUpdate({ query, setIsOpen }: QueryFormUpdateProps) {
   const clientSettings = useStore((state) => state.clientSettings);
 
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
@@ -44,7 +44,7 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
 
     } else {
       setProcessingMessage('Updating pinned query...');
-      await updatePinnedQuery({
+      const updatedPinnedQuery = await updatePinnedQuery({
         id: query.id,
         label: result.data.label,
         query: result.data.query,
@@ -52,7 +52,14 @@ export default function QueryFormEdit({ query, setIsOpen }: QueryFormEditProps) 
         isTagOnlySearch: result.data.isTagOnlySearch,
         priority: result.data.priority
       });
-      setIsOpen(false);
+
+      if (!updatedPinnedQuery) {
+        setProcessingMessage(null);
+        setErrorMessages(['Failed to update link']);
+      } else {
+        revalidateRootPath();
+        setIsOpen(false);
+      }
     }
   };
 

@@ -1,6 +1,6 @@
-import type { DbLinkWithTags, SortingOrderVariants } from '@/types';
-import LinkItem from '@/components/links-view/link-item';
+import type { DbLinkWithTags } from '@/types';
 import { cnJoin } from '@/utils/formatting';
+import LinkItem from '@/components/links-view/link-item';
 
 type LinksListProps = {
   links: DbLinkWithTags[];

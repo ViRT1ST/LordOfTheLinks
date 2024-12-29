@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import { type DbPinnedQuery } from '@/types/index';
-import { deletePinnedQuery } from '@/server-actions';
+import { deletePinnedQuery, revalidateRootPath } from '@/server-actions';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -15,12 +17,24 @@ type QueryFormDeleteProps = {
 };
 
 export default function QueryFormDelete({ query, setIsOpen }: QueryFormDeleteProps) {
+  const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
+  const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    await deletePinnedQuery(query.id);
-    setIsOpen(false);
+    setErrorMessages(null);
+    setProcessingMessage(null);
+
+    const deletedPinnedQuery = await deletePinnedQuery(query.id);
+
+    if (!deletedPinnedQuery) {
+      setErrorMessages(['Failed to delete pinned query']);
+    } else {
+      setIsOpen(false);
+      revalidateRootPath();
+    }
   };
 
   return (
@@ -37,8 +51,8 @@ export default function QueryFormDelete({ query, setIsOpen }: QueryFormDeletePro
       </Section>
 
       <ActionsArea
-        errorMessages={null}
-        processingMessage={null}
+        errorMessages={errorMessages}
+        processingMessage={processingMessage}
         submitButtonLabel="Delete"
       />
     </Form>

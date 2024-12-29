@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { type DbLinkWithTags, LinkFormSchema } from '@/types/index';
 import { convertErrorZodResultToMsgArray } from '@/utils/formatting';
-import { updateLink } from '@/server-actions';
+import { updateLink, revalidateRootPath } from '@/server-actions';
 import { useStore } from '@/store/useStore';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
@@ -15,12 +15,12 @@ import Field from '@/components/[design-system]/modal-window-form/field';
 import Textarea from '@/components/[design-system]/modal-window-form/textarea';
 import ActionsArea from '@/components/[design-system]/modal-window-form/area-actions';
 
-type LinkFormEditProps = {
+type LinkFormUpdateProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   link: DbLinkWithTags;
 };
 
-export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
+export default function LinkFormUpdate({ setIsOpen, link }: LinkFormUpdateProps) {
   const clientSettings = useStore((state) => state.clientSettings);
 
   const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
@@ -43,7 +43,7 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
 
     } else {
       setProcessingMessage('Updating link...');
-      await updateLink({
+      const updatedLink = await updateLink({
         id: link.id,
         url: result.data.url,
         title: result.data.title,
@@ -51,7 +51,14 @@ export default function LinkFormEdit({ setIsOpen, link }: LinkFormEditProps) {
         tags: result.data.tags,
         priority: result.data.priority
       });
-      setIsOpen(false);
+
+      if (!updatedLink) {
+        setProcessingMessage(null);
+        setErrorMessages(['Failed to update link']);
+      } else {
+        revalidateRootPath();
+        setIsOpen(false);
+      }
     }
   };
 

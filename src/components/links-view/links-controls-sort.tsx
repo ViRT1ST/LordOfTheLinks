@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type {
-  SortingOrderVariants,
+  SortingLinksVariants,
   DropdownItem,
   DropdownItemsDivider
 } from '@/types';
@@ -22,7 +22,7 @@ export default function LinksControlsSort({ buttonLabel }: LinksControlsSortProp
 
   const router = useRouter();
 
-  const sort = async (sorting: SortingOrderVariants) => {
+  const sort = async (sorting: SortingLinksVariants) => {
     await updateSettings({ sortLinksBy: sorting });
     router.refresh();
   };

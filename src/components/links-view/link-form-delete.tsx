@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import { type DbLinkWithTags } from '@/types/index';
-import { deleteLink } from '@/server-actions';
+import { deleteLink, revalidateRootPath } from '@/server-actions';
 
 import Form from '@/components/[design-system]/modal-window-form/form';
 import TitlesArea from '@/components/[design-system]/modal-window-form/area-titles';
@@ -15,12 +17,24 @@ type LinkFormDeleteProps = {
 };
 
 export default function LinkFormDelete({ link, setIsOpen }: LinkFormDeleteProps) {
+  const [ errorMessages, setErrorMessages ] = useState<string[] | null>(null);
+  const [ processingMessage, setProcessingMessage ] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    await deleteLink(link.id);
-    setIsOpen(false);
+    setErrorMessages(null);
+    setProcessingMessage(null);
+
+    const deletedLink = await deleteLink(link.id);
+
+    if (!deletedLink) {
+      setErrorMessages(['Failed to delete link']);
+    } else {
+      setIsOpen(false);
+      revalidateRootPath();
+    }
   };
 
   return (
@@ -34,8 +48,8 @@ export default function LinkFormDelete({ link, setIsOpen }: LinkFormDeleteProps)
       </Section>
 
       <ActionsArea
-        errorMessages={null}
-        processingMessage={null}
+        errorMessages={errorMessages}
+        processingMessage={processingMessage}
         submitButtonLabel="Delete"
       />
     </Form>
