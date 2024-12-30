@@ -1,13 +1,5 @@
-import {
-  Open_Sans,
-  Lato,
-  Roboto,
-  Sofia_Sans,
-  Rubik,
-  Inter,
-} from 'next/font/google';
+import { Roboto, Rubik, Inter } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -17,32 +9,11 @@ export const metadata: Metadata = {
   title: 'Lord of the Links',
 };
 
-const open_sans = Open_Sans({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['300', '400', '500'],
-  display: 'swap',
-  variable: '--font-open-sans',
-});
-
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['300', '400'],
-  display: 'swap',
-  variable: '--font-lato',
-});
-
 const roboto = Roboto({
   subsets: ['latin', 'cyrillic'],
   weight: ['300', '400', '500'],
   display: 'swap',
   variable: '--font-roboto',
-});
-
-const sofia_sans = Sofia_Sans({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['300','400', '500'],
-  display: 'swap',
-  variable: '--font-sofia-sans',
 });
 
 const rubik = Rubik({
@@ -60,13 +31,9 @@ const inter = Inter({
 });
 
 const rootLayoutClasses = [
-  open_sans.variable,
-  lato.variable,
   roboto.variable,
-  sofia_sans.variable,
   rubik.variable,
-  GeistSans.variable, 
-  GeistMono.variable,
+  GeistSans.variable,
   inter.variable,
   'antialiased',
 ].join(' ');

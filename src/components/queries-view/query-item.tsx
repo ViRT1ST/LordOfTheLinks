@@ -43,13 +43,11 @@ export default function QueryItem({ query }: QueryItemProps) {
   );
 }
 
-const twQuery = cnJoin(
-  /* common */
-  'pt-[1px]',
-  'text-black/70 font-rubik',
-  'border-black/20',
-  'bg-[#f4f4f4]', //bg-based on flowers pattern
-  /* states */
-  'hover:text-black/90',
-  'hover:border-black/20'
-);
+// bg-[#f4f4f4] is based on flowers pattern
+const twQuery = cnJoin(`
+  pt-[1px]
+  bg-[#f4f4f4]
+  text-black/70 font-rubik
+  border-black/20
+  hover:text-black/90
+`);

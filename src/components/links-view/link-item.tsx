@@ -53,47 +53,47 @@ export default function LinkItem({ link }: LinkItemProps) {
   );
 }
 
-const twContainer = cnJoin(
-  'mb-1 flex flex-row',
-  'bg-[#f2f2f2] border-black/20 border rounded-sm',
-);
+const twContainer = cnJoin(`
+  mb-1 flex flex-row
+  bg-[#f2f2f2] border-black/20 border rounded-sm
+`);
 
-const twMainPart = cnJoin(
-  'p-3 flex flex-col flex-grow',
-  'truncate'
-);
+const twMainPart = cnJoin(`
+  p-3 flex flex-col flex-grow
+  truncate
+`);
 
-const twLink = cnJoin(
-  'flex flex-row items-center'
-);
+const twLink = cnJoin(`
+  flex flex-row items-center
+`);
 
-const twIcon = cnJoin(
-  'min-w-[48px] min-h-[48px] flex',
-  'rounded-sm overflow-hidden'
-);
+const twIcon = cnJoin(`
+  min-w-[48px] min-h-[48px] flex
+  rounded-sm overflow-hidden
+`);
 
-const twDetails = cnJoin(
-  'max-w-[1100px] h-full pl-3',
-  'flex flex-col justify-between',
-  'truncate'
-);
+const twDetails = cnJoin(`
+  max-w-[1100px] h-full pl-3
+  flex flex-col justify-between
+  truncate
+`);
 
-const twTitle = cnJoin(
-  'text-lg text-black leading-tight truncate',
-);
+const twTitle = cnJoin(`
+  text-black text-lg leading-tight truncate
+`);
 
-const twKeywords = cnJoin(
-  'flex flex-row items-center gap-x-1',
-);
+const twKeywords = cnJoin(`
+  flex flex-row items-center gap-x-1
+`);
 
-const twKeywordsItem = cnJoin(
-  'px-[5px] py-[3px]',
-  'inline-flex justify-center items-center',
-  'bg-transparent border-black/10 text-black/60 rounded-sm border',
-  'text-sm whitespace-nowrap leading-none',
-);
+const twKeywordsItem = cnJoin(`
+  px-[5px] py-[3px]
+  inline-flex justify-center items-center
+  text-black/60 border-black/10 bg-transparent rounded-sm border
+  text-sm whitespace-nowrap leading-none
+`);
 
-const twMenuPart = cnJoin(
-  'flex flex-col items-end',
-);
+const twMenuPart = cnJoin(`
+  flex flex-col items-end
+`);
 

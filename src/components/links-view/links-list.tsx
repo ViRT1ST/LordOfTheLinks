@@ -16,6 +16,6 @@ export default function LinksList({ links }: LinksListProps) {
   );
 }
 
-const twLinksContainer = cnJoin(
-  'flex flex-col grow',
-);
+const twLinksContainer = cnJoin(`
+  flex flex-col grow
+`);

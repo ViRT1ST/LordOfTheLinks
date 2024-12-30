@@ -97,8 +97,8 @@ const twItemContainer = cnJoin(`
 
 const twItemIcon = cnJoin(`
   pr-1.5 -mt-[0.5px]
-  text-black/70 transition-opacity
-  invisible group-hover:visible 
+  text-black/70 transition-opacity invisible
+  group-hover:visible 
 `);
 
 const twItemButton = cnJoin(`

@@ -68,38 +68,37 @@ export default function LinksControlsBottom({
   );
 }
 
-const twContainer = cnJoin(
-  'h-14 w-full mt-2 flex flex-row items-center justify-center gap-x-6',
-  'font-roboto '
-);
+const twContainer = cnJoin(`
+  w-full h-14 mt-2
+  flex flex-row items-center justify-center gap-x-6
+  font-roboto
+`);
 
-const twPagesInfo = cnJoin(
-  'whitespace-nowrap text-black/70 text-center text-sm font-medium',
-  // 'min-w-24',
-);
+const twPagesInfo = cnJoin(`
+  text-black/70 text-sm font-medium text-center whitespace-nowrap
+`);
 
-const twPagesInfoMonoNumber = cnJoin(
-  'font-roboto'
-);
+const twPagesInfoMonoNumber = cnJoin(`
+  font-roboto
+`);
 
-const twIcon = cnJoin(
-  'w-8 h-8'
-);
+const twIcon = cnJoin(`
+  w-8 h-8
+`);
 
-const twButtonGroup = cnJoin(
-  'flex items-center justify-center gap-x-4'
-);
+const twButtonGroup = cnJoin(`
+  flex items-center justify-center gap-x-4
+`);
 
-const twButton = cnJoin(
-  'h-10 py-2 px-4 inline-flex justify-center items-center gap-2',
-  'rounded-md border border-black/15 text-black/50',
-  'text-xs font-medium whitespace-nowrap transition-all',
-  
-  'hover:text-black/80 hover:border-black/20',
-  'disabled:text-black/10 disabled:border-black/10',
-
-  // bg-based on flowers backround
-  'bg-[#e9e9e9]'
-  // 'bg-white/40'
-  // 'bg-white/10 backdrop-blur-sm'
-);
+// bg-white/10 backdrop-blur-sm
+const twButton = cnJoin(`
+  h-10 py-2 px-4
+  inline-flex justify-center items-center gap-2
+  bg-[#e9e9e9]
+  border-black/15 rounded-md border 
+  text-black/50 text-xs font-medium whitespace-nowrap transition-all
+  hover:border-black/20
+  hover:text-black/80
+  disabled:border-black/10
+  disabled:text-black/10 
+`);

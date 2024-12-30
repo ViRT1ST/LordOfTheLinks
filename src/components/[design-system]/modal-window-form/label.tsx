@@ -10,7 +10,7 @@ export default function Label({ children, className, ...rest }: LabelProps) {
   );
 }
 
-const twLabel = cnJoin(
-  'h-10 pt-[10.5px] self-start',
-  'text-sm font-semibold text-black/90'
-);
+const twLabel = cnJoin(`
+  h-10 pt-[10.5px] self-start
+  text-sm font-semibold text-black/90
+`);

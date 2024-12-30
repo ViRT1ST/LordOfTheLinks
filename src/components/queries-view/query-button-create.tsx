@@ -34,10 +34,10 @@ export default function QueryButtonCreate() {
   );
 }
 
-const twButtonCreate = cnJoin(
-  'block right-[40px] top-[100px] h-12 w-12 px-1 py-1',
-  'flex justify-center items-center', 
-  'bg-[#e4e4e4] text-black/70 rounded-full duration-150',
-  'lg:absolute',
-  'hover:bg-[#ececec]'
-);
+const twButtonCreate = cnJoin(`
+  right-[40px] top-[100px] h-12 w-12 px-1 py-1
+  flex justify-center items-center
+  bg-[#e4e4e4] text-black/70 rounded-full duration-150
+  hover:bg-[#ececec]
+  static lg:absolute
+`);

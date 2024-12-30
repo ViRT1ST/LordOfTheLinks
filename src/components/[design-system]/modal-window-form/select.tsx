@@ -58,16 +58,15 @@ export default function Select({ id, name, className, items, defaultValue }: Sel
   );
 }
 
-const twContainer = cnJoin(
-  'flex flex-col'
-);
+const twContainer = cnJoin(`
+  flex flex-col
+`);
 
-const twButton = cnJoin(
-  'h-10 px-3 py-2',
-  'flex items-center flex-grow',
-  'ring-1 text-black rounded',
-  'text-sm font-normal whitespace-nowrap',
-  'bg-transparent ring-black/10',
-  'hover:ring-black/15',
-  'focus:ring-black/15',
-);
+const twButton = cnJoin(`
+  h-10 px-3 py-2
+  flex items-center flex-grow
+  text-black text-sm font-normal whitespace-nowrap
+  ring-black/10 ring-1 rounded bg-transparent
+  hover:ring-black/15
+  focus:ring-black/15
+`);

@@ -28,24 +28,25 @@ export default async function QueriesView() {
   );
 }
 
-const twContainer = cnJoin(
-  'w-full mt-10 mb-10',
-  'flex flex-col items-center gap-y-8 flex-grow'
-);
+const twContainer = cnJoin(`
+  w-full mt-10 mb-10
+  flex flex-col flex-grow items-center gap-y-8 
+`);
 
-const twTitle = cnJoin(
-  'font-geistsans text-3xl font-light text-black/70',
-);
+const twTitle = cnJoin(`
+  text-black/70 font-geistsans text-3xl font-light 
+`);
 
-const twGrowingContainer = cnJoin(
-  'w-full flex-grow'
-);
+const twGrowingContainer = cnJoin(`
+  w-full flex-grow
+`);
 
-const twQueriesContainer = cnJoin(
-  'w-full lg:w-[700px] flex flex-row flex-wrap justify-center', // items-center
-);
+const twQueriesContainer = cnJoin(`
+  flex flex-row flex-wrap justify-center
+  w-full lg:w-[700px] 
+`);
 
-const twQueryContainer = cnJoin(
-  'inline-block px-1 py-1'
-);
+const twQueryContainer = cnJoin(`
+  px-1 py-1
+`);
 

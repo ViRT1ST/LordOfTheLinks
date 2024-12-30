@@ -62,31 +62,31 @@ export default function SearchForm() {
   );
 }
 
-const twForm = cnJoin(
-  'w-full px-4 flex flex-row justify-center',
-);
+const twForm = cnJoin(`
+  w-full px-4 flex flex-row justify-center
+`);
 
-const twContainer = cnJoin(
-  'relative text-center',
-  'w-full lg:w-[450px] xl:w-[600px]'
-);
+const twContainer = cnJoin(`
+  relative
+  text-center
+  w-full lg:w-[450px] xl:w-[600px]
+`);
 
-const twInput = cn(
-  'w-full h-9 py-2 px-3',
-  'text-sm font-medium',
-  'bg-white/80 rounded-md ring-black/20',
-  'placeholder:font-normal',
-  'focus-visible:bg-white ',
-  'c-input-ring',
-  'c-input-placeholder',
-);
+const twInput = cn(`
+  w-full h-9 py-2 px-3
+  text-sm font-medium
+  bg-white/80 ring-black/20 rounded-md
+  placeholder:font-normal
+  focus-visible:bg-white
+  c-input-ring c-input-placeholder
+`);
 
-const twButton = cnJoin(
-  'absolute top-[2px] right-[0px] h-8 w-10 px-1.5 py-2',
-  'inline-flex items-center justify-center',
-  'bg-transparent rounded-sm',
-  'text-sm font-medium',
-);
+const twButton = cnJoin(`
+  absolute top-[2px] right-[0px] h-8 w-10 px-1.5 py-2
+  inline-flex items-center justify-center
+  bg-transparent rounded-sm
+  text-sm font-medium
+`);
 
 const twButtonIcon = cnJoin(
   'w-4 h-4'

@@ -37,6 +37,6 @@ export default async function LinksView({ query, page }: LinksViewProps) {
   );
 }
 
-const twContainer = cnJoin(
-  'relative grow flex flex-col'
-);
+const twContainer = cnJoin(`
+  relative grow flex flex-col
+`);

@@ -25,16 +25,16 @@ export default function LinksControlsTop({ totalCount, sortedBy }: LinksControls
   );
 }
 
-const twContainer = cnJoin(
-  'h-[24px] my-4 flex flex-row justify-between items-center',
-);
+const twContainer = cnJoin(`
+  h-[24px] my-4 flex flex-row justify-between items-center
+`);
 
-const twSection = cnJoin(
-  'relative flex flex-row justify-between items-center',
-);
+const twSection = cnJoin(`
+  relative flex flex-row justify-between items-center
+`);
 
-const twInfo = cnJoin(
-  'text-xs text-black/70 font-medium',
-);
+const twInfo = cnJoin(`
+  text-xs text-black/70 font-medium
+`);
 
 

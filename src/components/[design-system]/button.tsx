@@ -40,12 +40,10 @@ export default function Button({
   }
 }
 
-const twButton = cnJoin(
-  'h-8 px-4',
-  'inline-flex justify-center items-center',
-  'transition-all',
-  'text-black/60 whitespace-nowrap text-sm font-medium',
-  'border-black/10 border rounded-md',
-  'hover:text-black',
-  'hover:border-black/15',
-);
+const twButton = cnJoin(`
+  h-8 px-4 inline-flex justify-center items-center
+  text-black/60 whitespace-nowrap text-sm font-medium
+  border-black/10 border rounded-md transition-all
+  hover:text-black
+  hover:border-black/15
+`);

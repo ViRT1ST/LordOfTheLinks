@@ -58,10 +58,15 @@ const twContainer = cnJoin(`
   flex flex-col
 `);
 
+
+
 const twButton = cnJoin(`
-  h-6 py-2 px-2 inline-flex justify-center items-center gap-2
-  text-xs font-medium whitespace-nowrap
-  bg-transparent border-black/10 text-black/70 rounded-md border
-  hover:border-black/15 hover:text-black
-  focus:border-black/15 focus:text-black
+  h-6 py-2 px-2
+  inline-flex justify-center items-center gap-2
+  border-black/10 rounded-md border 
+  text-black/70 text-xs font-medium whitespace-nowrap transition-all
+  hover:border-black/15
+  hover:text-black
+  focus:border-black/15
+  focus:text-black
 `);

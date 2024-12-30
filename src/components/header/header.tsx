@@ -80,8 +80,7 @@ export default function Header() {
 }
 
 const twHeader = cnJoin(`
-  z-10 fixed top-0 left-0
-  w-full h-14 px-5
+  z-10 fixed top-0 left-0 w-full h-14 px-5
   flex flex-row justify-center
   bg-white/50
 `);

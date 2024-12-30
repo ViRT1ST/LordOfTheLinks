@@ -78,10 +78,11 @@ export default function LinkItemMenu({ link }: LinkItemMenuProps) {
   );
 }
 
-const twMenuTrigger = cnJoin(
-  'px-3 py-2 opacity-30 transition-all',
-  'hover:opacity-60',
-);
-const twMenuTriggerIcon = cnJoin(
-  'h-6 w-6',
-);
+const twMenuTrigger = cnJoin(`
+  px-3 py-2 opacity-30 transition-all
+  hover:opacity-60
+`);
+const twMenuTriggerIcon = cnJoin(`
+  h-6 w-6
+  text-black
+`);

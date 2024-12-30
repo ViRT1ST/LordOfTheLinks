@@ -54,16 +54,17 @@ export default function Modal({
   );
 }
 
-const twModalOverlay = cnJoin(
-  'z-50 w-screen h-screen fixed pb-8',
-  'flex flex-col justify-center items-center',
-  'bg-black/80'
-);
+const twModalOverlay = cnJoin(`
+  z-50 fixed w-screen h-screen pb-8
+  flex flex-col justify-center items-center
+  bg-black/80
+`);
 
-const twCloseButton = cnJoin(
-  'absolute top-4 right-4 h-8 w-8 p-1',
-  'text-neutral-600 border-0 rounded-sm',
-  'cursor-pointer transition-all duration-75',
-  'ring-offset-0 ring-offset-transparent',
-  'hover:ring-1 hover:ring-neutral-500 hover:text-black/80',
-);
+const twCloseButton = cnJoin(`
+  absolute top-4 right-4 h-8 w-8 p-1
+  text-neutral-600 cursor-pointer transition-all duration-75
+  border-0 rounded-sm ring-offset-0 ring-offset-transparent
+  hover:ring-1
+  hover:ring-neutral-500 
+  hover:text-neutral-950
+`);

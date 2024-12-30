@@ -51,9 +51,9 @@ const twCheckbox = cnJoin(`
   c-input-ring
 `);
 
-const twLabel = cnJoin(
-  'px-2 text-sm font-semibold text-black/90',
-);
+const twLabel = cnJoin(`
+  px-2 text-sm font-semibold text-black/90
+`);
 
 const twIcon = cnJoin(`
   absolute w-3 h-3 ml-1 mt-[1px]

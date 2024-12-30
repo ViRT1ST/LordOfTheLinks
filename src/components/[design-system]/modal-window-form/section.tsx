@@ -10,7 +10,7 @@ export default function Section({ children, className, ...rest }: SectionProps) 
   );
 }
 
-const twSection = cnJoin(
-  'w-full py-2',
-  'flex flex-row justify-between items-center'
-);
+const twSection = cnJoin(`
+  w-full py-2
+  flex flex-row justify-between items-center
+`);

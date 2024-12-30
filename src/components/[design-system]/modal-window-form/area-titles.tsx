@@ -18,14 +18,14 @@ export default function TitlesArea({ title, subTitle, className, ...props }: Tit
   );
 }
 
-const twTitlesArea = cnJoin(
-  'mb-8 flex flex-col gap-y-1'
-);
+const twTitlesArea = cnJoin(`
+  mb-8 flex flex-col gap-y-1
+`);
 
-const twTitle = cnJoin(
-  'text-2xl font-semibold text-black/90 tracking-tight '
-);
+const twTitle = cnJoin(`
+  text-2xl font-semibold text-black/90 tracking-tight 
+`);
 
-const twSubTitle = cnJoin(
-  'text-sm font-semibold text-black/60 '
-);
+const twSubTitle = cnJoin(`
+  text-sm font-semibold text-black/60 
+`);
